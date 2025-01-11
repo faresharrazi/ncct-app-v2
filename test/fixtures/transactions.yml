@@ -1,0 +1,23 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  sub_account: one
+  category: one
+  creator: one
+  title: MyString
+  description: MyText
+  amount: 9.99
+  transaction_type: 1
+  frequency: 1
+  frequency_unit: MyString
+
+two:
+  sub_account: two
+  category: two
+  creator: two
+  title: MyString
+  description: MyText
+  amount: 9.99
+  transaction_type: 1
+  frequency: 1
+  frequency_unit: MyString

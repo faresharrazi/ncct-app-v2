@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  main_account: one
+  title: MyString
+  description: MyString
+  balance: 9.99
+  percentage: 9.99
+
+two:
+  main_account: two
+  title: MyString
+  description: MyString
+  balance: 9.99
+  percentage: 9.99
