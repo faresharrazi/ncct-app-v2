@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  
+  after_create :create_main_account
 
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
   
@@ -12,4 +14,16 @@ class User < ApplicationRecord
   
   validates :first_name, presence: true
   validates :last_name, presence: true
+
+    
+
+  private
+
+  def create_main_account
+    main_accounts.create!(
+      title: "Main Account",
+      available_percentage: 100.0,
+      currency: "EUR"
+    )
+  end
 end

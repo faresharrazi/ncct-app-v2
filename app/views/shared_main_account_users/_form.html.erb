@@ -1,0 +1,22 @@
+<%= form_with(model: [@main_account, shared_main_account_user], local: true) do |form| %>
+  <% if shared_main_account_user.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(shared_main_account_user.errors.count, "error") %> prohibited this Partner from being saved:</h2>
+
+      <ul>
+        <% shared_main_account_user.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :user_id, "Partner Email" %><br>
+    <%= form.collection_select :user_id, User.where.not(id: @main_account.owner_id).where.not(id: @main_account.shared_main_accounts.pluck(:id)).distinct, :id, :email, prompt: "Select a User" %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

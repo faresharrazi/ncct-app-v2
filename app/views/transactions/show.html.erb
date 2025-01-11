@@ -1,0 +1,29 @@
+<h1><%= @transaction.title %></h1>
+
+<p>
+  <strong>Description:</strong>
+  <%= @transaction.description %>
+</p>
+
+<p>
+  <strong>Amount:</strong>
+  <%= number_to_currency(@transaction.amount, unit: "") %>
+</p>
+
+<p>
+  <strong>Type:</strong>
+  <%= @transaction.transaction_type.capitalize %>
+</p>
+
+<p>
+  <strong>Category:</strong>
+  <%= @transaction.category&.title || "Uncategorized" %>
+</p>
+
+<p>
+  <strong>Creator:</strong>
+  <%= @transaction.creator.first_name %> <%= @transaction.creator.last_name %>
+</p>
+
+<%= link_to "Edit", edit_account_transaction_path(@account, @transaction) %> |
+<%= link_to "Back", account_transactions_path(@account) %>

@@ -1,0 +1,5 @@
+<h1><%= action_name.capitalize %> Transaction</h1>
+
+<%= render 'form', transaction: @transaction, account: @account %>
+
+<%= link_to "Back", account_transactions_path(@account) %>

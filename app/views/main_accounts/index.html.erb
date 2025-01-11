@@ -1,0 +1,34 @@
+<h1>Main Accounts</h1>
+
+<%= link_to "New Main Account", new_main_account_path, class: "button" %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Currency</th>
+      <th>Balance</th>
+      <th>Available Percentage</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @main_accounts.each do |main_account| %>
+      <tr>
+        <td><%= link_to main_account.title, main_account_path(main_account) %></td>
+        <td><%= main_account.currency %></td>
+        <td><%= number_to_currency(main_account.balance, unit: "") %></td>
+        <td><%= main_account.available_percentage %>%</td>
+        <td>
+          <% if main_account.owner == current_user %>
+            <%= link_to "Edit", edit_main_account_path(main_account) %> |
+            <%= link_to "Delete", main_account_path(main_account), method: :delete, data: { confirm: "Are you sure you want to delete this Main Account?" } %>
+          <% else %>
+            <span>—</span>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

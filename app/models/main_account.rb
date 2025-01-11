@@ -5,6 +5,7 @@ class MainAccount < ApplicationRecord
   belongs_to :owner, class_name: 'User'
   
   has_many :sub_accounts, dependent: :destroy
+  has_many :transactions, dependent: :destroy
   has_many :shared_main_account_users, dependent: :destroy
   has_many :partners, through: :shared_main_account_users, source: :user
 

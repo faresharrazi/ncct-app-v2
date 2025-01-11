@@ -1,0 +1,46 @@
+<%= form_with(model: [@account, transaction], local: true) do |form| %>
+  <% if transaction.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(transaction.errors.count, "error") %> prohibited this Transaction from being saved:</h2>
+
+      <ul>
+        <% transaction.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :title %><br>
+    <%= form.text_field :title %>
+  </div>
+
+  <div>
+    <%= form.label :description %><br>
+    <%= form.text_area :description %>
+  </div>
+
+  <div>
+    <%= form.label :amount %><br>
+    <%= form.number_field :amount, step: 0.01 %>
+  </div>
+
+  <div>
+    <%= form.label :transaction_type %><br>
+    <%= form.select :transaction_type, Transaction.transaction_types.keys.map { |k| [k.capitalize, k] }, prompt: "Select Type" %>
+  </div>
+
+  <div>
+    <%= form.label :category_id, "Category" %><br>
+    <% if @account.is_a?(MainAccount) %>
+      <%= form.collection_select :category_id, Category.joins(:sub_account).where(sub_accounts: { main_account_id: @account.id }), :id, :title, include_blank: true %>
+    <% elsif @account.is_a?(SubAccount) %>
+      <%= form.collection_select :category_id, @account.categories, :id, :title, include_blank: true %>
+    <% end %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

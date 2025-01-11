@@ -1,0 +1,14 @@
+<h1>SubAccounts for <%= @main_account.title %></h1>
+
+<%= link_to "New SubAccount", new_main_account_sub_account_path(@main_account) if @main_account.owner == current_user %>
+
+<ul>
+  <% @sub_accounts.each do |sub_account| %>
+    <li>
+      <%= link_to sub_account.title, main_account_sub_account_path(@main_account, sub_account) %>
+      (Percentage: <%= sub_account.percentage %>% - Balance: <%= sub_account.balance %>)
+    </li>
+  <% end %>
+</ul>
+
+<%= link_to "Back to Main Accounts", main_accounts_path %>

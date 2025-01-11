@@ -1,0 +1,19 @@
+<h1>Partner Details</h1>
+
+<p>
+  <strong>Name:</strong>
+  <%= @shared_main_account_user.user.first_name %> <%= @shared_main_account_user.user.last_name %>
+</p>
+
+<p>
+  <strong>Email:</strong>
+  <%= @shared_main_account_user.user.email %>
+</p>
+
+<p>
+  <strong>Joined At:</strong>
+  <%= @shared_main_account_user.created_at.strftime("%B %d, %Y") %>
+</p>
+
+<%= link_to "Edit Partner", edit_main_account_shared_main_account_user_path(@main_account, @shared_main_account_user), class: "button" %> |
+<%= link_to "Back to Partners", main_account_shared_main_account_users_path(@main_account), class: "button" %>

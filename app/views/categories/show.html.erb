@@ -1,0 +1,9 @@
+<h1><%= @category.title %></h1>
+
+<p>
+  <strong>Description:</strong>
+  <%= @category.description %>
+</p>
+
+<%= link_to "Edit", edit_main_account_sub_account_category_path(@main_account, @sub_account, @category) if @main_account.owner == current_user %> |
+<%= link_to "Back", main_account_sub_account_categories_path(@main_account, @sub_account) %>

@@ -1,0 +1,24 @@
+<h1><%= @sub_account.title %></h1>
+
+<p>
+  <strong>Description:</strong>
+  <%= @sub_account.description %>
+</p>
+
+<p>
+  <strong>Percentage:</strong>
+  <%= @sub_account.percentage %>%
+</p>
+
+<p>
+  <strong>Balance:</strong>
+  <%= @sub_account.balance %>
+</p>
+
+<p>
+  <strong>Default Category:</strong>
+  <%= @sub_account.default_category.title if @sub_account.default_category %>
+</p>
+
+<%= link_to "Edit", edit_main_account_sub_account_path(@main_account, @sub_account) if @main_account.owner == current_user %> |
+<%= link_to "Back", main_account_sub_accounts_path(@main_account) %>

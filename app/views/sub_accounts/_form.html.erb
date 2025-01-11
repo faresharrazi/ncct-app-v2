@@ -1,0 +1,32 @@
+<%= form_with(model: [@main_account, sub_account], local: true) do |form| %>
+  <% if sub_account.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(sub_account.errors.count, "error") %> prohibited this SubAccount from being saved:</h2>
+
+      <ul>
+        <% sub_account.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :title %><br>
+    <%= form.text_field :title %>
+  </div>
+
+  <div>
+    <%= form.label :description %><br>
+    <%= form.text_area :description %>
+  </div>
+
+  <div>
+    <%= form.label :percentage %><br>
+    <%= form.number_field :percentage, step: 0.01 %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

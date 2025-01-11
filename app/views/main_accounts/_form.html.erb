@@ -1,0 +1,32 @@
+<%= form_with(model: main_account, local: true) do |form| %>
+  <% if main_account.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(main_account.errors.count, "error") %> prohibited this MainAccount from being saved:</h2>
+
+      <ul>
+        <% main_account.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :title %><br>
+    <%= form.text_field :title, autofocus: true %>
+  </div>
+
+  <div class="field">
+    <%= form.label :available_percentage %><br>
+    <%= form.number_field :available_percentage, step: 0.01 %>
+  </div>
+
+  <div class="field">
+    <%= form.label :currency %><br>
+    <%= form.select :currency, options_for_select(['EUR', 'USD', 'GBP', 'JPY', 'CHF', 'CAD', 'AUD'], selected: main_account.currency), prompt: "Select Currency" %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

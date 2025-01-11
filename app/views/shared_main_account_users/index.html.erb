@@ -1,0 +1,29 @@
+<h1>Partners for <%= @main_account.title %></h1>
+
+<%= link_to "Add Partner", new_main_account_shared_main_account_user_path(@main_account), class: "button" %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Joined At</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @shared_users.each do |shared_user| %>
+      <tr>
+        <td><%= shared_user.user.first_name %> <%= shared_user.user.last_name %></td>
+        <td><%= shared_user.user.email %></td>
+        <td><%= shared_user.created_at.strftime("%B %d, %Y") %></td>
+        <td>
+          <%= link_to "Remove", main_account_shared_main_account_user_path(@main_account, shared_user), method: :delete, data: { confirm: "Are you sure you want to remove this partner?" }, class: "button delete-button" %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "Back to Main Account", main_account_path(@main_account), class: "button" %>

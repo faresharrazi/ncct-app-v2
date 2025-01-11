@@ -1,11 +1,12 @@
+# app/models/transaction.rb
 class Transaction < ApplicationRecord
 
   after_create  :handle_after_create
   after_destroy :handle_after_destroy
   before_update :handle_before_update, if: :transaction_changed?
-
+  
+  belongs_to :main_account, optional: true
   belongs_to :sub_account,   optional: true
-  belongs_to :main_account,  optional: true
   belongs_to :category,      optional: true
   belongs_to :creator,       class_name: 'User'
 
@@ -36,7 +37,7 @@ class Transaction < ApplicationRecord
   # If this is an expense tied to a single subaccount,
   # ensure it doesn't exceed that subaccount's balance
   def cannot_exceed_sub_account_balance
-    if amount > sub_account.balance
+    if sub_account.present? && amount > sub_account.balance
       errors.add(:amount, "cannot exceed the subaccount's current balance (#{sub_account.balance})")
     end
   end

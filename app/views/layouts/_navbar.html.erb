@@ -1,36 +1,83 @@
+<!-- app/views/layouts/_navbar.html.erb -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#">Home</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-        </li>
-      </ul>
-      <form class="d-flex">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
-    </div>
+    <% if user_signed_in? %>
+      <!-- Left-aligned navbar when signed in -->
+      <%= link_to "NCCT", root_path, class: "navbar-brand fs-3 fw-bold" %>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
+              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+  
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          
+          <!-- Dashboard -->
+          <li class="nav-item">
+            <%= link_to "Dashboard", main_account_path(current_user.main_accounts.first), class: "nav-link #{'active' if current_page?(main_account_path(current_user.main_accounts.first))}" %>
+          </li>
+          
+          <!-- Accounts Dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle #{'active' if current_page?(main_account_sub_accounts_path(current_user.main_accounts.first)) || 
+                                                    current_page?(new_main_account_sub_account_path(current_user.main_accounts.first))}" 
+               href="#" id="accountsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Accounts (Available %)
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="accountsDropdown">
+              <li>
+                <%= link_to "List of Subaccounts", main_account_sub_accounts_path(current_user.main_accounts.first), class: "dropdown-item #{'active' if current_page?(main_account_sub_accounts_path(current_user.main_accounts.first))}" %>
+              </li>
+              <li>
+                <%= link_to "Create", new_main_account_sub_account_path(current_user.main_accounts.first), class: "dropdown-item #{'active' if current_page?(new_main_account_sub_account_path(current_user.main_accounts.first))}" %>
+              </li>
+            </ul>
+          </li>
+          
+          <!-- Transactions -->
+          <li class="nav-item">
+            <%= link_to "Transactions", main_account_transactions_path(current_user.main_accounts.first), class: "nav-link #{'active' if current_page?(main_account_transactions_path(current_user.main_accounts.first))}" %>
+          </li>
+          
+          <!-- Profile Dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle #{'active' if current_page?(edit_user_registration_path(current_user))}" 
+               href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Profile
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+              <li>
+                <%= link_to "Settings", edit_user_registration_path(current_user), class: "dropdown-item #{'active' if current_page?(edit_user_registration_path(current_user))}" %>
+              </li>
+            </ul>
+          </li>
+          
+          <!-- Partners -->
+          <li class="nav-item">
+            <%= link_to "Partners", main_account_shared_main_account_users_path(current_user.main_accounts.first), class: "nav-link #{'active' if current_page?(main_account_shared_main_account_users_path(current_user.main_accounts.first))}" %>
+          </li>
+        </ul>
+
+        <!-- Sign Out -->
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          <li class="nav-item">
+            <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "nav-link btn btn-link p-0 m-0 align-baseline" %>
+          </li>
+        </ul>
+      </div>
+    <% else %>
+      <!-- Centered brand when not signed in -->
+      <div class="w-100 text-center">
+        <%= link_to "NCCT", root_path, class: "navbar-brand fs-3 fw-bold" %>
+      </div>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
+              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent">
+        <!-- No Login & Sign Up links in navbar -->
+      </div>
+    <% end %>
   </div>
 </nav>

@@ -1,0 +1,39 @@
+<h1>Transactions for <%= @account.is_a?(MainAccount) ? @account.title : @account.title %></h1>
+
+<% if @account.is_a?(MainAccount) %>
+  <%= link_to "New Transaction", new_main_account_transaction_path(@account), class: "button" %>
+<% elsif @account.is_a?(SubAccount) %>
+  <%= link_to "New Transaction", new_main_account_sub_account_transaction_path(@account.main_account, @account), class: "button" %>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Amount</th>
+      <th>Type</th>
+      <th>Category</th>
+      <th>Creator</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @transactions.each do |transaction| %>
+      <tr>
+        <td><%= transaction.title %></td>
+        <td><%= number_to_currency(transaction.amount, unit: "") %></td>
+        <td><%= transaction.transaction_type.capitalize %></td>
+        <td><%= transaction.category&.title || "Uncategorized" %></td>
+        <td><%= transaction.creator.first_name %> <%= transaction.creator.last_name %></td>
+        <td>
+          <%= link_to "Show", [@account, transaction] %> |
+          <%= link_to "Edit", edit_account_transaction_path(@account, transaction) %> |
+          <%= link_to "Delete", [@account, transaction], method: :delete, data: { confirm: "Are you sure?" } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "Back to Account", @account.is_a?(MainAccount) ? main_account_path(@account) : main_account_sub_account_path(@account.main_account, @account) %>
