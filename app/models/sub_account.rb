@@ -14,9 +14,11 @@ class SubAccount < ApplicationRecord
 
   validates :title, presence: true
   validates :percentage, numericality: { greater_than: 0 }
-  validate :cannot_exceed_main_account_available_percentage
+  validate :cannot_exceed_main_account_available_percentage, if: :new_or_updated_sub_account?
 
   private
+
+  ### CALLBACKS ###
 
   def deduct_percentage_from_main_account
     main_account.update!(available_percentage: main_account.available_percentage - percentage)
@@ -33,9 +35,16 @@ class SubAccount < ApplicationRecord
     main_account.update!(available_percentage: main_account.available_percentage + percentage)
   end
 
+  ### VALIDATIONS ###
+
   def cannot_exceed_main_account_available_percentage
     if percentage > main_account.available_percentage
       errors.add(:percentage, "cannot exceed the available percentage in the Main Account.")
     end
+  end
+
+  # Only run this validation when creating or updating a SubAccount, not during transaction processing
+  def new_or_updated_sub_account?
+    will_save_change_to_percentage? || new_record?
   end
 end

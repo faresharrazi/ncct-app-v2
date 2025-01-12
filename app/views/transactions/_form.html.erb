@@ -1,9 +1,10 @@
-<%= form_with(model: [@account, transaction], local: true) do |form| %>
+<%= form_with(model: [@account, transaction], local: true, class: "needs-validation") do |form| %>
   <% if transaction.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(transaction.errors.count, "error") %> prohibited this Transaction from being saved:</h2>
-
-      <ul>
+    <div class="alert alert-danger">
+      <h5 class="alert-heading">
+        <%= pluralize(transaction.errors.count, "error") %> prohibited this Transaction from being saved:
+      </h5>
+      <ul class="list-unstyled">
         <% transaction.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
@@ -11,36 +12,58 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :title %><br>
-    <%= form.text_field :title %>
+  <!-- Title -->
+  <div class="mb-3">
+    <%= form.label :title, "Title", class: "form-label" %>
+    <%= form.text_field :title, class: "form-control", placeholder: "Enter transaction title", autofocus: true %>
   </div>
 
-  <div>
-    <%= form.label :description %><br>
-    <%= form.text_area :description %>
+  <!-- Description -->
+  <div class="mb-3">
+    <%= form.label :description, "Description", class: "form-label" %>
+    <%= form.text_area :description, class: "form-control", rows: 4, placeholder: "Enter optional description" %>
   </div>
 
-  <div>
-    <%= form.label :amount %><br>
-    <%= form.number_field :amount, step: 0.01 %>
+  <!-- Amount -->
+  <div class="mb-3">
+    <%= form.label :amount, "Amount (#{@main_account&.currency || '€'})", class: "form-label" %>
+    <%= form.number_field :amount, step: 0.01, class: "form-control", placeholder: "Enter amount" %>
   </div>
 
-  <div>
-    <%= form.label :transaction_kind %><br>
-    <%= form.select :transaction_kind, Transaction::TRANSACTION_KINDS.map { |k| [k.capitalize, k] }, prompt: "Select Type" %>
+  <!-- Transaction Kind -->
+  <div class="mb-3">
+    <%= form.label :transaction_kind, "Transaction Type", class: "form-label" %>
+    <%= form.select :transaction_kind,
+                    options_for_select(
+                      Transaction::TRANSACTION_KINDS.map { |k| [k.capitalize, k] },
+                      selected: transaction.transaction_kind || "expense"
+                    ),
+                    {},
+                    class: "form-select" %>
   </div>
 
-  <div>
-    <%= form.label :category_id, "Category" %><br>
-    <% if @account.is_a?(MainAccount) %>
-      <%= form.collection_select :category_id, Category.joins(:sub_account).where(sub_accounts: { main_account_id: @account.id }), :id, :title, include_blank: true %>
-    <% elsif @account.is_a?(SubAccount) %>
-      <%= form.collection_select :category_id, @account.categories, :id, :title, include_blank: true %>
-    <% end %>
-  </div>
+  <!-- Account Selection -->
+  <% if @main_account.present? %>
+    <div class="mb-3">
+      <%= form.label :sub_account_id, "Select Account", class: "form-label" %>
+      <%= form.select :sub_account_id,
+                      options_for_select(
+                        [["Main Account", nil]] + 
+                        @main_account.sub_accounts.map { |sa| [sa.title, sa.id] },
+                        selected: transaction.sub_account_id || (transaction.main_account_id.present? ? nil : @main_account.sub_accounts.first&.id)
+                      ),
+                      {},
+                      class: "form-select" %>
+    </div>
+  <% else %>
+    <div class="alert alert-warning">
+      <i class="fas fa-exclamation-triangle me-2"></i> You don't have any main account to associate this transaction with.
+    </div>
+  <% end %>
 
-  <div>
-    <%= form.submit %>
+  <!-- Submit and Cancel Buttons -->
+  <div class="d-flex justify-content-between">
+    <%= form.submit "Save Transaction", class: "btn btn-primary" %>
+    <%= link_to "Cancel", transactions_path, class: "btn btn-secondary" %>
   </div>
 <% end %>
