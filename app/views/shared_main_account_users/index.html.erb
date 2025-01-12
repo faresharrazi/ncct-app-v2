@@ -1,29 +1,38 @@
-<h1>Partners for <%= @main_account.title %></h1>
+<h1 class="mb-4">Partners for <%= @main_account.title %></h1>
+<% if @shared_users.empty? %>
+  <div class="alert alert-info mb-3">
+    No partners have been added yet.
+  </div>
+<% end %>
 
-<%= link_to "Add Partner", new_main_account_shared_main_account_user_path(@main_account), class: "button" %>
+<div class="mb-4">
+  <%= link_to "Add Partner", new_main_account_shared_main_account_user_path(@main_account), class: "btn btn-success" %>
+</div>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Joined At</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @shared_users.each do |shared_user| %>
+<% if @shared_users.any? %>
+  <table class="table table-striped">
+    <thead class="table-dark">
       <tr>
-        <td><%= shared_user.user.first_name %> <%= shared_user.user.last_name %></td>
-        <td><%= shared_user.user.email %></td>
-        <td><%= shared_user.created_at.strftime("%B %d, %Y") %></td>
-        <td>
-          <%= link_to "Remove", main_account_shared_main_account_user_path(@main_account, shared_user), method: :delete, data: { confirm: "Are you sure you want to remove this partner?" }, class: "button delete-button" %>
-        </td>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Joined At</th>
+        <th>Actions</th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<%= link_to "Back to Main Account", main_account_path(@main_account), class: "button" %>
+    </thead>
+    <tbody>
+      <% @shared_users.each do |shared_user| %>
+        <tr>
+          <td><%= "#{shared_user.user.first_name} #{shared_user.user.last_name}" %></td>
+          <td><%= shared_user.user.email %></td>
+          <td><%= shared_user.created_at.strftime("%B %d, %Y") %></td>
+          <td>
+            <%= link_to "Remove", main_account_shared_main_account_user_path(@main_account, shared_user), 
+                        method: :delete, 
+                        data: { confirm: "Are you sure you want to remove this partner?" }, 
+                        class: "btn btn-sm btn-danger" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

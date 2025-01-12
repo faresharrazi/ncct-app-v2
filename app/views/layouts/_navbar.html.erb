@@ -1,78 +1,52 @@
-<!-- app/views/layouts/_navbar.html.erb -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <div class="container-fluid">
+  <div class="container">
     <% if user_signed_in? %>
-      <%= link_to "NCCT", root_path, class: "navbar-brand fs-3 fw-bold" %>
+      <!-- When user is signed in, NCCT links to the dashboard -->
+      <%= link_to "NCCT", main_account_path(current_user.main_accounts.first), class: "navbar-brand fs-3 fw-bold" %>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
               aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-  
+
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          
-          <!-- Dashboard -->
+          <!-- Subaccounts -->
           <li class="nav-item">
-            <%= link_to "Dashboard", main_account_path(current_user.main_accounts.first), class: "nav-link #{'active' if current_page?(main_account_path(current_user.main_accounts.first))}" %>
+            <%= link_to "Accounts", main_account_sub_accounts_path(current_user.main_accounts.first), class: "nav-link #{'active' if current_page?(main_account_sub_accounts_path(current_user.main_accounts.first))}" %>
           </li>
-          
-          <!-- Accounts Dropdown -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle #{'active' if current_page?(main_account_sub_accounts_path(current_user.main_accounts.first)) || 
-                                                    current_page?(new_main_account_sub_account_path(current_user.main_accounts.first))}" 
-               href="#" id="accountsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Accounts (Available %)
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="accountsDropdown">
-              <li>
-                <%= link_to "List of Subaccounts", main_account_sub_accounts_path(current_user.main_accounts.first), class: "dropdown-item #{'active' if current_page?(main_account_sub_accounts_path(current_user.main_accounts.first))}" %>
-              </li>
-              <li>
-                <%= link_to "Create", new_main_account_sub_account_path(current_user.main_accounts.first), class: "dropdown-item #{'active' if current_page?(new_main_account_sub_account_path(current_user.main_accounts.first))}" %>
-              </li>
-            </ul>
-          </li>
-          
+
           <!-- Transactions -->
           <li class="nav-item">
             <%= link_to "Transactions", transactions_path, class: "nav-link #{'active' if current_page?(transactions_path)}" %>
           </li>
-          
-          <!-- Profile Dropdown -->
+        </ul>
+
+        <!-- Profile Dropdown -->
+        <ul class="navbar-nav mb-2 mb-lg-0">
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle #{'active' if current_page?(edit_user_registration_path(current_user))}" 
+            <a class="nav-link dropdown-toggle #{'active' if current_page?(edit_user_registration_path(current_user)) || current_page?(main_account_shared_main_account_users_path(current_user.main_accounts.first))}" 
                href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Profile
+              <i class="fas fa-user"></i> <%= current_user.full_name %>
             </a>
-            <ul class="dropdown-menu" aria-labelledby="profileDropdown">
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
               <li>
                 <%= link_to "Settings", edit_user_registration_path(current_user), class: "dropdown-item #{'active' if current_page?(edit_user_registration_path(current_user))}" %>
               </li>
+              <li>
+                <%= link_to "Partners", main_account_shared_main_account_users_path(current_user.main_accounts.first), class: "dropdown-item #{'active' if current_page?(main_account_shared_main_account_users_path(current_user.main_accounts.first))}" %>
+              </li>
+              <li>
+                <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "dropdown-item" %>
+              </li>
             </ul>
-          </li>
-          
-          <!-- Partners -->
-          <li class="nav-item">
-            <%= link_to "Partners", main_account_shared_main_account_users_path(current_user.main_accounts.first), class: "nav-link #{'active' if current_page?(main_account_shared_main_account_users_path(current_user.main_accounts.first))}" %>
-          </li>
-        </ul>
-
-        <!-- Sign Out -->
-        <ul class="navbar-nav mb-2 mb-lg-0">
-          <li class="nav-item">
-            <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "nav-link btn btn-link p-0 m-0 align-baseline" %>
           </li>
         </ul>
       </div>
     <% else %>
+      <!-- When user is not signed in, NCCT is plain text -->
       <div class="w-100 text-center">
-        <%= link_to "NCCT", root_path, class: "navbar-brand fs-3 fw-bold" %>
+        <span class="navbar-brand fs-3 fw-bold">NCCT</span>
       </div>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
-              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse justify-content-center" id="navbarSupportedContent"></div>
     <% end %>
   </div>
 </nav>

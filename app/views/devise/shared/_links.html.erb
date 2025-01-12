@@ -1,14 +1,15 @@
-<!-- app/views/devise/shared/links.html.erb -->
 <% if resource_name == :user && controller_name == 'registrations' && action_name == 'new' %>
-  <p>
-    Already have an account? <%= link_to "Log in", new_session_path(resource_name) %>.
+  <p class="text-center mt-3">
+    Already have an account? 
+    <%= link_to "Log in", new_session_path(resource_name), class: "text-primary fw-bold" %>.
   </p>
 <% elsif resource_name == :user && controller_name == 'sessions' && action_name == 'new' %>
-  <p>
-    Don't have an account? <%= link_to "Sign up", new_registration_path(resource_name) %>.
+  <p class="text-center mt-3">
+    Don't have an account? 
+    <%= link_to "Sign up", new_registration_path(resource_name), class: "text-primary fw-bold" %>.
   </p>
 <% else %>
-  <p>
-    <%= link_to "Forgot your password?", new_password_path(resource_name) %>
+  <p class="text-center mt-3">
+    <%= link_to "Forgot your password?", new_password_path(resource_name), class: "text-primary fw-bold" %>
   </p>
 <% end %>
