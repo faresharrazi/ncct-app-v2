@@ -22,23 +22,25 @@
         <th>Title</th>
         <th>Percentage</th>
         <th>Balance</th>
-        <th>Actions</th>
       </tr>
     </thead>
     <tbody>
       <% @sub_accounts.each do |sub_account| %>
         <tr>
+          <!-- Title -->
           <td>
             <%= link_to sub_account.title, main_account_sub_account_path(@main_account, sub_account), 
                         class: "fw-bold text-decoration-none" %>
           </td>
+          
+          <!-- Percentage -->
           <td><%= sub_account.percentage %>%</td>
-          <td><%= number_to_currency(sub_account.balance, unit: "€") %></td>
-          <td class="d-flex">
-            <% if @main_account.owner == current_user %>
-              <%= link_to "Edit", edit_main_account_sub_account_path(@main_account, sub_account), class: "btn btn-primary btn-sm me-2" %>
-            <% end %>
-            <%= link_to "Show Transactions", transactions_path(sub_account_id: sub_account.id), class: "btn btn-info btn-sm" %>
+          
+          <!-- Balance -->
+          <td>
+            <span class="badge bg-secondary">
+              <%= number_to_currency(sub_account.balance, unit: @main_account.currency || "€") %>
+            </span>
           </td>
         </tr>
       <% end %>

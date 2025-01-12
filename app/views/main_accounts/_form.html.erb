@@ -27,7 +27,7 @@
 
   <div class="mb-3">
     <%= form.label :currency, class: "form-label" %>
-    <%= form.select :currency, options_for_select(['EUR', 'USD', 'GBP', 'JPY', 'CHF', 'CAD', 'AUD'], selected: main_account.currency), prompt: "Select Currency", class: "form-select" %>
+    <%= form.select :currency, options_for_select(['€', 'EUR', 'USD', 'GBP', 'JPY', 'CHF', 'CAD', 'AUD'], selected: main_account.currency), prompt: "Select Currency", class: "form-select" %>
   </div>
 
   <div class="d-flex justify-content-between">

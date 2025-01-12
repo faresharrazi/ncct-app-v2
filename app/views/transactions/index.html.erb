@@ -7,10 +7,7 @@
         <th>Date</th>
         <th>Title</th>
         <th>Amount</th>
-        <th>Type</th>
-        <th>Category</th>
         <th>Account</th>
-        <th>Creator</th>
       </tr>
     </thead>
 
@@ -30,15 +27,9 @@
           <!-- Amount -->
           <td>
             <span class="badge <%= transaction.transaction_kind == 'expense' ? 'bg-danger' : 'bg-success' %>">
-              <%= number_to_currency(transaction.amount, unit: "€") %>
+              <%= number_to_currency(transaction.amount, unit: transaction.main_account&.currency || transaction.sub_account&.main_account&.currency || "€") %>
             </span>
           </td>
-
-          <!-- Type -->
-          <td><%= transaction.transaction_kind.capitalize %></td>
-
-          <!-- Category -->
-          <td><%= transaction.category&.title || "<span class='text-muted'>Uncategorized</span>".html_safe %></td>
 
           <!-- Account -->
           <td>
@@ -51,13 +42,6 @@
                           main_account_sub_account_path(transaction.sub_account.main_account, transaction.sub_account), 
                           class: "text-decoration-none fw-bold" %>
             <% end %>
-          </td>
-
-          <!-- Creator -->
-          <td>
-            <span class="text-muted">
-              <%= "#{transaction.creator.first_name} #{transaction.creator.last_name}" %>
-            </span>
           </td>
         </tr>
       <% end %>

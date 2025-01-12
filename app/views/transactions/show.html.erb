@@ -31,6 +31,18 @@
         <span class="text-muted"><%= @transaction.category&.title || "Uncategorized" %></span>
       </p>
 
+      <!-- Account -->
+      <p>
+        <strong>Account:</strong>
+        <% if @transaction.main_account.present? %>
+          <%= link_to @transaction.main_account.title, main_account_path(@transaction.main_account), class: "text-decoration-none fw-bold" %>
+        <% else %>
+          <%= link_to @transaction.sub_account.title, 
+                      main_account_sub_account_path(@transaction.sub_account.main_account, @transaction.sub_account), 
+                      class: "text-decoration-none fw-bold" %>
+        <% end %>
+      </p>
+
       <!-- Creator -->
       <p>
         <strong>Creator:</strong>
@@ -38,7 +50,13 @@
       </p>
     </div>
     <div class="card-footer d-flex justify-content-between">
-      <%= link_to "Edit", edit_transaction_path(@transaction), class: "btn btn-primary btn-sm" %>
+      <div>
+        <%= link_to "Edit", edit_transaction_path(@transaction), class: "btn btn-primary btn-sm me-2" %>
+        <%= link_to "Delete", transaction_path(@transaction), 
+                    method: :delete, 
+                    data: { confirm: "Are you sure you want to delete this transaction?" }, 
+                    class: "btn btn-danger btn-sm" %>
+      </div>
       <%= link_to "Back", transactions_path, class: "btn btn-secondary btn-sm" %>
     </div>
   </div>
