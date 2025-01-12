@@ -1,14 +1,42 @@
 <h1>Categories for <%= @sub_account.title %></h1>
 
-<%= link_to "New Category", new_main_account_sub_account_category_path(@main_account, @sub_account) if @main_account.owner == current_user %>
+<% if @categories.empty? %>
+  <div class="alert alert-info">
+    <i class="fas fa-info-circle me-2"></i>No Categories added yet.
+  </div>
+<% end %>
 
-<ul>
-  <% @categories.each do |category| %>
-    <li>
-      <%= link_to category.title, main_account_sub_account_category_path(@main_account, @sub_account, category) %>
-      - <%= category.description %>
-    </li>
-  <% end %>
-</ul>
+<% if @categories.any? %>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @categories.each do |category| %>
+        <tr>
+          <!-- Title -->
+          <td>
+            <%= link_to category.title, main_account_sub_account_category_path(@sub_account.main_account, @sub_account, category), 
+                        class: "fw-bold text-decoration-none" %>
+          </td>
+          
+          <!-- Description -->
+          <td>
+            <span class="text-muted"><%= category.description.presence || "No description provided." %></span>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
 
-<%= link_to "Back to SubAccounts", main_account_sub_accounts_path(@main_account) %>
+<!-- New Category Button -->
+<%= link_to "New Category", new_main_account_sub_account_category_path(@sub_account.main_account, @sub_account), 
+            class: "btn btn-success mt-3" %>
+
+<!-- Back to SubAccount -->
+<%= link_to "Back", main_account_sub_account_path(@sub_account.main_account, @sub_account), 
+            class: "btn btn-secondary mt-3" %>

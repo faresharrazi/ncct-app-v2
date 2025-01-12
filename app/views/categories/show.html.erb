@@ -1,9 +1,27 @@
-<h1><%= @category.title %></h1>
-
-<p>
-  <strong>Description:</strong>
-  <%= @category.description %>
-</p>
-
-<%= link_to "Edit", edit_main_account_sub_account_category_path(@main_account, @sub_account, @category) if @main_account.owner == current_user %> |
-<%= link_to "Back", main_account_sub_account_categories_path(@main_account, @sub_account) %>
+<div class="container mt-4">
+  <div class="card shadow-sm" style="max-width: 600px; margin: 0 auto;">
+    <div class="card-header bg-primary text-white">
+      <h1 class="h5 mb-0"><%= @category.title %></h1>
+    </div>
+    <div class="card-body">
+      <!-- Description -->
+      <p>
+        <strong>Description:</strong>
+        <span class="text-muted"><%= @category.description.presence || "No description provided." %></span>
+      </p>
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+      <!-- Edit Link -->
+      <% if @main_account.owner == current_user %>
+        <%= link_to "Edit", 
+                    edit_main_account_sub_account_category_path(@main_account, @sub_account, @category), 
+                    class: "btn btn-primary btn-sm" %>
+      <% end %>
+      
+      <!-- Back Link -->
+      <%= link_to "Back", 
+                  main_account_sub_account_categories_path(@main_account, @sub_account), 
+                  class: "btn btn-secondary btn-sm" %>
+    </div>
+  </div>
+</div>

@@ -55,11 +55,20 @@
                       {},
                       class: "form-select" %>
     </div>
-  <% else %>
-    <div class="alert alert-warning">
-      <i class="fas fa-exclamation-triangle me-2"></i> You don't have any main account to associate this transaction with.
-    </div>
   <% end %>
+
+  <!-- Category Selection -->
+  <div class="mb-3">
+    <%= form.label :category_id, "Category", class: "form-label" %>
+    <%= form.select :category_id,
+                    options_for_select(
+                      [["(Default Category)", nil]] + 
+                      @categories.map { |category| [category.title, category.id] },
+                      selected: transaction.category_id
+                    ),
+                    {},
+                    class: "form-select" %>
+  </div>
 
   <!-- Submit and Cancel Buttons -->
   <div class="d-flex justify-content-between">

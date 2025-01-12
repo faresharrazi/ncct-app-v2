@@ -15,20 +15,15 @@ class Transaction < ApplicationRecord
   validate :cannot_exceed_sub_account_balance, if: -> { expense_transaction? && sub_account.present? }
 
   # Callbacks
-  before_validation :assign_default_category, if: -> { category.nil? && sub_account.present? }
+  before_validation :assign_default_category
   after_create :process_after_create
   after_destroy :process_after_destroy
   before_update :process_before_update, if: :transaction_changed?
-
-  # Scopes
-  scope :expenses, -> { where(transaction_kind: 'expense') }
-  scope :incomes, -> { where(transaction_kind: 'income') }
 
   private
 
   ### VALIDATIONS ###
 
-  # Ensures transaction is tied to either a MainAccount or a SubAccount, but not both
   def exactly_one_account_must_be_present
     if sub_account_id.blank? && main_account_id.blank?
       errors.add(:base, "Transaction must belong to either a SubAccount or a MainAccount.")
@@ -37,35 +32,32 @@ class Transaction < ApplicationRecord
     end
   end
 
-  # Ensures expense transactions do not exceed the SubAccount balance
   def cannot_exceed_sub_account_balance
     if amount > sub_account.balance
       errors.add(:amount, "cannot exceed the SubAccount's current balance (#{sub_account.balance}).")
     end
   end
 
-  # Checks if the transaction is an expense
-  def expense_transaction?
-    transaction_kind == 'expense'
-  end
-
   ### CALLBACKS ###
 
   def assign_default_category
-    if sub_account&.default_category
+    if sub_account&.default_category && category.nil?
+      # Assign the default category for the SubAccount
       self.category = sub_account.default_category
-    elsif main_account
-      self.category = nil # Main account transactions don't use sub-account categories
+    elsif main_account && category.nil?
+      # Assign a global category (Income or Expense) for MainAccount transactions
+      self.category = Category.find_or_create_by!(
+        title: transaction_kind.capitalize,
+        sub_account_id: nil # Global category
+      )
     end
   end
 
   def process_after_create
     if sub_account.present?
-      # Deduct from SubAccount and MainAccount for expense
       adjust_account_balance(sub_account, -amount)
       adjust_account_balance(sub_account.main_account, -amount)
     elsif main_account.present? && income_transaction?
-      # Add to MainAccount and distribute to SubAccounts for income
       adjust_account_balance(main_account, amount)
       distribute_to_sub_accounts(amount)
     end
@@ -73,11 +65,9 @@ class Transaction < ApplicationRecord
 
   def process_after_destroy
     if sub_account.present?
-      # Reverse deduction from SubAccount and MainAccount
       adjust_account_balance(sub_account, amount)
       adjust_account_balance(sub_account.main_account, amount)
     elsif main_account.present? && income_transaction?
-      # Reverse distribution to SubAccounts and MainAccount for income
       adjust_account_balance(main_account, -amount)
       distribute_to_sub_accounts(-amount)
     end
@@ -106,15 +96,9 @@ class Transaction < ApplicationRecord
   def distribute_to_sub_accounts(amount_delta)
     return unless main_account
 
-    Rails.logger.debug "Distributing #{amount_delta} to subaccounts of main_account #{main_account.id}"
-
     main_account.sub_accounts.each do |sub|
       sub_delta = (sub.percentage / 100.0) * amount_delta
-      new_sub_balance = sub.balance + sub_delta
-
-      # Update balance directly
-      sub.update_column(:balance, new_sub_balance)
-      Rails.logger.debug "SubAccount #{sub.id} updated successfully. New balance: #{new_sub_balance}"
+      sub.update_column(:balance, sub.balance + sub_delta)
     end
   end
 
@@ -132,5 +116,13 @@ class Transaction < ApplicationRecord
 
   def transaction_changed?
     will_save_change_to_amount? || will_save_change_to_transaction_kind?
+  end
+
+  def income_transaction?
+    transaction_kind == 'income'
+  end
+
+  def expense_transaction?
+    transaction_kind == 'expense'
   end
 end

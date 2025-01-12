@@ -9,9 +9,7 @@ class MainAccountsController < ApplicationController
   end
 
   def show
-    unless @main_account.owner == current_user || @main_account.partners.include?(current_user)
-      redirect_to main_accounts_path, alert: "You do not have access to this Main Account."
-    end
+    redirect_to main_accounts_path, alert: "You do not have access to this Main Account." unless accessible_account?
   end
 
   def new
@@ -23,18 +21,17 @@ class MainAccountsController < ApplicationController
     if @main_account.save
       redirect_to @main_account, notice: "Main Account was successfully created."
     else
-      render :new
+      render :new, status: :unprocessable_entity
     end
   end
 
-  def edit
-  end
+  def edit; end
 
   def update
     if @main_account.update(main_account_params)
       redirect_to @main_account, notice: "Main Account was successfully updated."
     else
-      render :edit
+      render :edit, status: :unprocessable_entity
     end
   end
 
@@ -54,8 +51,10 @@ class MainAccountsController < ApplicationController
   end
 
   def authorize_owner!
-    unless @main_account.owner == current_user
-      redirect_to main_accounts_path, alert: "Only the owner can perform this action."
-    end
+    redirect_to main_accounts_path, alert: "Only the owner can perform this action." unless @main_account.owner == current_user
+  end
+
+  def accessible_account?
+    @main_account.owner == current_user || @main_account.partners.include?(current_user)
   end
 end

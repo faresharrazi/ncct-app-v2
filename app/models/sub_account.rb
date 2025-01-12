@@ -1,8 +1,11 @@
 class SubAccount < ApplicationRecord
+  # Callbacks
   after_create :deduct_percentage_from_main_account
+  after_create :create_default_category
   after_update :adjust_main_account_percentage
   after_destroy :restore_main_account_percentage
 
+  # Associations
   belongs_to :main_account
   belongs_to :default_category, 
              class_name: 'Category',
@@ -10,8 +13,9 @@ class SubAccount < ApplicationRecord
              optional: true
 
   has_many :categories, dependent: :destroy
-  has_many :transactions
+  has_many :transactions, dependent: :destroy
 
+  # Validations
   validates :title, presence: true
   validates :percentage, numericality: { greater_than: 0 }
   validate :cannot_exceed_main_account_available_percentage, if: :new_or_updated_sub_account?
@@ -35,6 +39,11 @@ class SubAccount < ApplicationRecord
     main_account.update!(available_percentage: main_account.available_percentage + percentage)
   end
 
+  def create_default_category
+    default_category = categories.create!(title: title)
+    update!(default_category: default_category)
+  end
+
   ### VALIDATIONS ###
 
   def cannot_exceed_main_account_available_percentage
@@ -43,7 +52,7 @@ class SubAccount < ApplicationRecord
     end
   end
 
-  # Only run this validation when creating or updating a SubAccount, not during transaction processing
+  # Only run this validation when creating or updating a SubAccount
   def new_or_updated_sub_account?
     will_save_change_to_percentage? || new_record?
   end

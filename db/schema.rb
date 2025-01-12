@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_12_085501) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_12_201638) do
   create_table "categories", force: :cascade do |t|
-    t.integer "sub_account_id", null: false
+    t.integer "sub_account_id"
     t.string "title"
     t.text "description"
     t.datetime "created_at", null: false

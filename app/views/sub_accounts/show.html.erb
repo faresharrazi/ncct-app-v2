@@ -1,28 +1,49 @@
-<h1 class="mb-4"><%= @sub_account.title %></h1>
+<h1 class="mb-4 d-flex align-items-center">
+  <%= @sub_account.title %>
+  <span class="badge bg-success ms-3" style="font-size: 1.2rem;">
+    <%= number_to_currency(@sub_account.balance, unit: @main_account.currency || "€") %>
+  </span>
+</h1>
 
 <div class="card mb-4 shadow-sm">
   <div class="card-body">
+    <!-- Description -->
     <p>
       <strong>Description:</strong>
       <span class="text-muted"><%= @sub_account.description.presence || "No description provided." %></span>
     </p>
+
+    <!-- Percentage -->
     <p>
       <strong>Percentage:</strong>
       <span class="badge bg-primary"><%= @sub_account.percentage %>%</span>
     </p>
+
+    <!-- Manage Categories -->
     <p>
-      <strong>Balance:</strong>
-      <span class="badge bg-success"><%= number_to_currency(@sub_account.balance, unit: "€") %></span>
+      <%= link_to "Manage Categories", main_account_sub_account_categories_path(@main_account, @sub_account), 
+                  class: "btn btn-link p-0 text-decoration-none" %>
     </p>
-    <p>
-      <strong>Default Category:</strong>
-      <span class="text-muted"><%= @sub_account.default_category&.title || "No default category assigned." %></span>
-    </p>
+
+    <!-- Categories -->
+    <% if @sub_account.categories.any? %>
+      <p>
+        <% @sub_account.categories.each do |category| %>
+          <%= link_to category.title, main_account_sub_account_category_path(@main_account, @sub_account, category), 
+                      class: "badge bg-secondary text-decoration-none me-2" %>
+        <% end %>
+      </p>
+    <% else %>
+      <p class="text-muted">No categories available for this SubAccount.</p>
+    <% end %>
   </div>
+
+  <!-- Footer -->
   <div class="card-footer d-flex justify-content-between align-items-center">
     <% if @main_account.owner == current_user %>
       <div>
-        <%= link_to edit_main_account_sub_account_path(@main_account, @sub_account), class: "btn btn-link p-0 text-decoration-none me-3" do %>
+        <%= link_to edit_main_account_sub_account_path(@main_account, @sub_account), 
+                    class: "btn btn-link p-0 text-decoration-none me-3" do %>
           <i class="fas fa-edit me-1"></i> Edit
         <% end %>
         <%= link_to main_account_sub_account_path(@main_account, @sub_account),
@@ -32,7 +53,8 @@
         <% end %>
       </div>
     <% end %>
-    <%= link_to main_account_sub_accounts_path(@main_account), class: "btn btn-secondary btn-sm" do %>
+    <%= link_to main_account_sub_accounts_path(@main_account), 
+                class: "btn btn-secondary btn-sm" do %>
       <i class="fas fa-arrow-left me-1"></i> Back to Accounts
     <% end %>
   </div>

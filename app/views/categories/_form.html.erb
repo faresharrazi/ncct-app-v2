@@ -1,9 +1,8 @@
-<%= form_with(model: [@main_account, @sub_account, category], local: true) do |form| %>
+<%= form_with(model: [@main_account, @sub_account, category], local: true, class: "needs-validation") do |form| %>
   <% if category.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(category.errors.count, "error") %> prohibited this Category from being saved:</h2>
-
-      <ul>
+    <div class="alert alert-danger">
+      <h5 class="alert-heading"><%= pluralize(category.errors.count, "error") %> prohibited this Category from being saved:</h5>
+      <ul class="mb-0">
         <% category.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
@@ -11,17 +10,21 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :title %><br>
-    <%= form.text_field :title %>
+  <!-- Title -->
+  <div class="mb-3">
+    <%= form.label :title, "Category Title", class: "form-label" %>
+    <%= form.text_field :title, class: "form-control", placeholder: "Enter category title", autofocus: true %>
   </div>
 
-  <div>
-    <%= form.label :description %><br>
-    <%= form.text_area :description %>
+  <!-- Description -->
+  <div class="mb-3">
+    <%= form.label :description, "Category Description", class: "form-label" %>
+    <%= form.text_area :description, class: "form-control", rows: 4, placeholder: "Enter category description (optional)" %>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <!-- Submit Button -->
+  <div class="d-flex justify-content-between mt-4">
+    <%= form.submit "Save Category", class: "btn btn-primary" %>
+    <%= link_to "Cancel", main_account_sub_account_categories_path(@main_account, @sub_account), class: "btn btn-secondary" %>
   </div>
 <% end %>
