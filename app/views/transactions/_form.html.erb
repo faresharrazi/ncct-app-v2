@@ -27,8 +27,8 @@
   </div>
 
   <div>
-    <%= form.label :transaction_type %><br>
-    <%= form.select :transaction_type, Transaction.transaction_types.keys.map { |k| [k.capitalize, k] }, prompt: "Select Type" %>
+    <%= form.label :transaction_kind %><br>
+    <%= form.select :transaction_kind, Transaction::TRANSACTION_KINDS.map { |k| [k.capitalize, k] }, prompt: "Select Type" %>
   </div>
 
   <div>

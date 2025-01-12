@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_11_191418) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_12_085501) do
   create_table "categories", force: :cascade do |t|
     t.integer "sub_account_id", null: false
     t.string "title"
@@ -61,7 +61,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_11_191418) do
     t.string "title"
     t.text "description"
     t.decimal "amount", precision: 15, scale: 2, default: "0.0", null: false
-    t.integer "transaction_type", default: 0
+    t.string "transaction_kind"
     t.integer "frequency", default: 0
     t.string "frequency_unit", default: "days"
     t.datetime "created_at", null: false
