@@ -1,6 +1,7 @@
 class SubAccount < ApplicationRecord
-
-  before_create :build_default_category_record
+  after_create :deduct_percentage_from_main_account
+  after_update :adjust_main_account_percentage
+  after_destroy :restore_main_account_percentage
 
   belongs_to :main_account
   belongs_to :default_category, 
@@ -17,21 +18,24 @@ class SubAccount < ApplicationRecord
 
   private
 
-  def build_default_category_record
-    cat = categories.build(
-      title: title,
-      description: "Default category for #{title}"
-    )
-    self.default_category = cat
+  def deduct_percentage_from_main_account
+    main_account.update!(available_percentage: main_account.available_percentage - percentage)
+  end
+
+  def adjust_main_account_percentage
+    return unless percentage_previously_changed?
+
+    difference = percentage - percentage_before_last_save
+    main_account.update!(available_percentage: main_account.available_percentage - difference)
+  end
+
+  def restore_main_account_percentage
+    main_account.update!(available_percentage: main_account.available_percentage + percentage)
   end
 
   def cannot_exceed_main_account_available_percentage
-    sum_of_other_subaccounts = main_account.sub_accounts.where.not(id: id).sum(:percentage)
-    total_percentage = sum_of_other_subaccounts + percentage
-
-    if total_percentage > 100
-      errors.add(:percentage, "exceeds the remaining available percentage in Main Account")
+    if percentage > main_account.available_percentage
+      errors.add(:percentage, "cannot exceed the available percentage in the Main Account.")
     end
   end
-  
 end

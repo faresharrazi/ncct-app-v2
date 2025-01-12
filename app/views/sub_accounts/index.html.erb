@@ -7,8 +7,7 @@
 <% end %>
 
 <p>
-  <strong>Available Percentage:</strong> <%= @main_account.available_percentage %>%
-</p>
+  <strong>Available Percentage:</strong> <%= @main_account.available_percentage %>%</p>
 
 <% if @main_account.owner == current_user && @main_account.available_percentage > 0 %>
   <%= link_to "New SubAccount", new_main_account_sub_account_path(@main_account), class: "btn btn-success mb-3" %>
@@ -30,17 +29,16 @@
       <% @sub_accounts.each do |sub_account| %>
         <tr>
           <td>
-            <%= link_to sub_account.title, main_account_sub_account_path(@main_account, sub_account) %>
+            <%= link_to sub_account.title, main_account_sub_account_path(@main_account, sub_account), 
+                        class: "fw-bold text-decoration-none" %>
           </td>
           <td><%= sub_account.percentage %>%</td>
           <td><%= number_to_currency(sub_account.balance, unit: "€") %></td>
-          <td>
+          <td class="d-flex">
             <% if @main_account.owner == current_user %>
-              <%= link_to "Edit", edit_main_account_sub_account_path(@main_account, sub_account), class: "btn btn-sm btn-primary me-2" %>
-              <%= link_to "Delete", main_account_sub_account_path(@main_account, sub_account), method: :delete, data: { confirm: "Are you sure you want to delete this SubAccount?" }, class: "btn btn-sm btn-danger" %>
-            <% else %>
-              <span>—</span>
+              <%= link_to "Edit", edit_main_account_sub_account_path(@main_account, sub_account), class: "btn btn-primary btn-sm me-2" %>
             <% end %>
+            <%= link_to "Show Transactions", transactions_path(sub_account_id: sub_account.id), class: "btn btn-info btn-sm" %>
           </td>
         </tr>
       <% end %>

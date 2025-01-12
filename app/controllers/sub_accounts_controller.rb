@@ -1,4 +1,3 @@
-# app/controllers/sub_accounts_controller.rb
 class SubAccountsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_main_account
@@ -11,7 +10,7 @@ class SubAccountsController < ApplicationController
 
   def show
     unless @main_account.owner == current_user || @main_account.partners.include?(current_user)
-      redirect_to main_accounts_path, alert: "You do not have access to this SubAccount."
+      redirect_to main_accounts_path, alert: "You do not have access to this Account."
     end
   end
 
@@ -21,10 +20,11 @@ class SubAccountsController < ApplicationController
 
   def create
     @sub_account = @main_account.sub_accounts.build(sub_account_params)
+    
     if @sub_account.save
-      redirect_to [@main_account, @sub_account], notice: "SubAccount was successfully created."
+      redirect_to main_account_sub_account_path(@main_account, @sub_account), notice: "SubAccount was successfully created."
     else
-      render :new
+      render :new, alert: "Account could not be created."
     end
   end
 
@@ -33,7 +33,7 @@ class SubAccountsController < ApplicationController
 
   def update
     if @sub_account.update(sub_account_params)
-      redirect_to [@main_account, @sub_account], notice: "SubAccount was successfully updated."
+      redirect_to main_account_sub_account_path(@main_account, @sub_account), notice: "Account was successfully updated."
     else
       render :edit
     end
@@ -41,7 +41,7 @@ class SubAccountsController < ApplicationController
 
   def destroy
     @sub_account.destroy
-    redirect_to main_account_sub_accounts_path(@main_account), notice: "SubAccount was successfully destroyed."
+    redirect_to main_account_sub_accounts_path(@main_account), notice: "Account was successfully destroyed."
   end
 
   private

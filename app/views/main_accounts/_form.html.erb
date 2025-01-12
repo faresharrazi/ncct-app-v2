@@ -1,9 +1,8 @@
-<%= form_with(model: main_account, local: true) do |form| %>
+<%= form_with(model: main_account, local: true, class: "needs-validation") do |form| %>
   <% if main_account.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(main_account.errors.count, "error") %> prohibited this MainAccount from being saved:</h2>
-
-      <ul>
+    <div class="alert alert-danger">
+      <h4 class="alert-heading"><%= pluralize(main_account.errors.count, "error") %> prohibited this Main Account from being saved:</h4>
+      <ul class="mb-0">
         <% main_account.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
@@ -11,22 +10,28 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :title %><br>
-    <%= form.text_field :title, autofocus: true %>
+  <div class="mb-3">
+    <%= form.label :title, class: "form-label" %>
+    <%= form.text_field :title, autofocus: true, class: "form-control" %>
   </div>
 
-  <div class="field">
-    <%= form.label :available_percentage %><br>
-    <%= form.number_field :available_percentage, step: 0.01 %>
+  <div class="mb-3">
+    <label class="form-label">Available Percentage</label>
+    <input type="text" class="form-control" value="<%= main_account.available_percentage %>%" readonly>
   </div>
 
-  <div class="field">
-    <%= form.label :currency %><br>
-    <%= form.select :currency, options_for_select(['EUR', 'USD', 'GBP', 'JPY', 'CHF', 'CAD', 'AUD'], selected: main_account.currency), prompt: "Select Currency" %>
+  <div class="mb-3">
+    <label class="form-label">Balance</label>
+    <input type="text" class="form-control" value="<%= number_to_currency(main_account.balance, unit: "") %>" readonly>
   </div>
 
-  <div class="actions">
-    <%= form.submit %>
+  <div class="mb-3">
+    <%= form.label :currency, class: "form-label" %>
+    <%= form.select :currency, options_for_select(['EUR', 'USD', 'GBP', 'JPY', 'CHF', 'CAD', 'AUD'], selected: main_account.currency), prompt: "Select Currency", class: "form-select" %>
+  </div>
+
+  <div class="d-flex justify-content-between">
+    <%= form.submit "Save Changes", class: "btn btn-primary" %>
+    <%= link_to "Cancel", main_account_path(main_account), class: "btn btn-secondary" %>
   </div>
 <% end %>
