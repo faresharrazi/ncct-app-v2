@@ -1,0 +1,43 @@
+  <div class="card shadow-sm" style="max-width: 600px; margin: 0 auto;">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <div class="d-flex align-items-center">
+        <h1 class="h5 mb-0 me-3"><%= @main_transaction.title %></h1>
+      </div>
+      <small><%= @main_transaction.created_at.strftime('%B %d, %Y - %H:%M') %></small>
+    </div>
+
+    <div class="card-body">
+      <!-- Description -->
+      <p class="mb-3">
+        <span class="text-muted"><%= @main_transaction.description.presence || "No description provided" %></span>
+      </p>
+
+      <!-- Amount and Account Badges -->
+      <div class="d-flex gap-2 mb-3">
+        <span class="badge <%= @main_transaction.transaction_kind == 'expense' ? 'bg-danger' : 'bg-success' %> align-middle">
+          <%= number_to_currency(@main_transaction.amount, unit: @main_transaction.main_account&.currency || "€") %>
+        </span>
+        <%= link_to @main_transaction.main_account.title, 
+                    main_account_path(@main_transaction.main_account), 
+                    class: "badge bg-secondary text-decoration-none align-middle" %>
+      </div>
+
+      <!-- Creator -->
+      <p class="mb-0">
+        <i class="fas fa-user me-2"></i>
+        <span class="text-muted"><%= @main_transaction.main_account.owner.full_name %></span>
+      </p>
+    </div>
+
+    <div class="card-footer d-flex justify-content-between">
+      <div>
+        <%= link_to "Edit", edit_main_account_main_transaction_path(@main_transaction.main_account, @main_transaction), 
+                    class: "btn btn-primary btn-sm me-2" %>
+        <%= link_to "Delete", main_account_main_transaction_path(@main_transaction.main_account, @main_transaction), 
+                    data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this Transaction?" },
+                    class: "btn btn-danger btn-sm" %>
+      </div>
+      <%= link_to "Back", main_account_main_transactions_path(@main_transaction.main_account), 
+                  class: "btn btn-secondary btn-sm" %>
+    </div>
+  </div>

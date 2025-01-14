@@ -1,0 +1,50 @@
+<%= form_with(model: @main_transaction, local: true, class: "needs-validation") do |form| %>
+  <% if @main_transaction.errors.any? %>
+    <div class="alert alert-danger">
+      <h5 class="alert-heading">
+        <%= pluralize(@main_transaction.errors.count, "error") %> prohibited this Transaction from being saved:
+      </h5>
+      <ul class="list-unstyled">
+        <% @main_transaction.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <!-- Title -->
+  <div class="mb-3">
+    <%= form.label :title, "Title", class: "form-label" %>
+    <%= form.text_field :title, class: "form-control", placeholder: "Enter transaction title", autofocus: true %>
+  </div>
+
+  <!-- Description -->
+  <div class="mb-3">
+    <%= form.label :description, "Description", class: "form-label" %>
+    <%= form.text_area :description, class: "form-control", rows: 4, placeholder: "Enter optional description" %>
+  </div>
+
+  <!-- Amount -->
+  <div class="mb-3">
+    <%= form.label :amount, "Amount (#{@main_account&.currency || '€'})", class: "form-label" %>
+    <%= form.number_field :amount, step: 0.01, class: "form-control", placeholder: "Enter amount" %>
+  </div>
+
+  <!-- Transaction Kind -->
+  <div class="mb-3">
+    <%= form.label :transaction_kind, "Transaction Type", class: "form-label" %>
+    <%= form.select :transaction_kind,
+                    options_for_select(
+                      MainTransaction::TRANSACTION_KINDS.map { |k| [k.capitalize, k] },
+                      selected: @main_transaction.transaction_kind || "expense"
+                    ),
+                    {},
+                    class: "form-select" %>
+  </div>
+
+  <!-- Submit and Cancel Buttons -->
+  <div class="d-flex justify-content-between">
+    <%= form.submit "Save Transaction", class: "btn btn-primary" %>
+    <%= link_to "Cancel", main_account_main_transactions_path(@main_account), class: "btn btn-secondary" %>
+  </div>
+<% end %>

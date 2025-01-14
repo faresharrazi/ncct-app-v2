@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_12_201638) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_14_154247) do
   create_table "categories", force: :cascade do |t|
     t.integer "sub_account_id"
     t.string "title"
@@ -31,6 +31,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_12_201638) do
     t.index ["owner_id"], name: "index_main_accounts_on_owner_id"
   end
 
+  create_table "main_transactions", force: :cascade do |t|
+    t.string "title", null: false
+    t.text "description"
+    t.decimal "amount", precision: 10, scale: 2, null: false
+    t.string "transaction_kind", null: false
+    t.integer "main_account_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["main_account_id"], name: "index_main_transactions_on_main_account_id"
+  end
+
   create_table "shared_main_account_users", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "main_account_id", null: false
@@ -39,6 +50,25 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_12_201638) do
     t.index ["main_account_id"], name: "index_shared_main_account_users_on_main_account_id"
     t.index ["user_id", "main_account_id"], name: "index_shared_main_account_users_on_user_id_and_main_account_id", unique: true
     t.index ["user_id"], name: "index_shared_main_account_users_on_user_id"
+  end
+
+  create_table "sub_account_transactions", force: :cascade do |t|
+    t.integer "sub_account_id"
+    t.integer "category_id"
+    t.integer "creator_id", null: false
+    t.string "title"
+    t.text "description"
+    t.decimal "amount", precision: 15, scale: 2, default: "0.0", null: false
+    t.string "transaction_kind"
+    t.integer "frequency", default: 0
+    t.string "frequency_unit", default: "days"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "main_account_id"
+    t.index ["category_id"], name: "index_sub_account_transactions_on_category_id"
+    t.index ["creator_id"], name: "index_sub_account_transactions_on_creator_id"
+    t.index ["main_account_id"], name: "index_sub_account_transactions_on_main_account_id"
+    t.index ["sub_account_id"], name: "index_sub_account_transactions_on_sub_account_id"
   end
 
   create_table "sub_accounts", force: :cascade do |t|
@@ -52,25 +82,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_12_201638) do
     t.integer "default_category_id"
     t.index ["default_category_id"], name: "index_sub_accounts_on_default_category_id"
     t.index ["main_account_id"], name: "index_sub_accounts_on_main_account_id"
-  end
-
-  create_table "transactions", force: :cascade do |t|
-    t.integer "sub_account_id"
-    t.integer "category_id"
-    t.integer "creator_id", null: false
-    t.string "title"
-    t.text "description"
-    t.decimal "amount", precision: 15, scale: 2, default: "0.0", null: false
-    t.string "transaction_kind"
-    t.integer "frequency", default: 0
-    t.string "frequency_unit", default: "days"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "main_account_id"
-    t.index ["category_id"], name: "index_transactions_on_category_id"
-    t.index ["creator_id"], name: "index_transactions_on_creator_id"
-    t.index ["main_account_id"], name: "index_transactions_on_main_account_id"
-    t.index ["sub_account_id"], name: "index_transactions_on_sub_account_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -89,12 +100,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_12_201638) do
 
   add_foreign_key "categories", "sub_accounts"
   add_foreign_key "main_accounts", "users", column: "owner_id"
+  add_foreign_key "main_transactions", "main_accounts"
   add_foreign_key "shared_main_account_users", "main_accounts"
   add_foreign_key "shared_main_account_users", "users"
+  add_foreign_key "sub_account_transactions", "categories"
+  add_foreign_key "sub_account_transactions", "main_accounts"
+  add_foreign_key "sub_account_transactions", "sub_accounts"
+  add_foreign_key "sub_account_transactions", "users", column: "creator_id"
   add_foreign_key "sub_accounts", "categories", column: "default_category_id"
   add_foreign_key "sub_accounts", "main_accounts"
-  add_foreign_key "transactions", "categories"
-  add_foreign_key "transactions", "main_accounts"
-  add_foreign_key "transactions", "sub_accounts"
-  add_foreign_key "transactions", "users", column: "creator_id"
 end

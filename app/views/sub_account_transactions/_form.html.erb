@@ -1,11 +1,11 @@
-<%= form_with(model: [@account, transaction], local: true, class: "needs-validation") do |form| %>
-  <% if transaction.errors.any? %>
+<%= form_with(model: [@main_account, @sub_account, @sub_account_transaction], local: true, class: "needs-validation") do |form| %>
+  <% if @sub_account_transaction.errors.any? %>
     <div class="alert alert-danger">
       <h5 class="alert-heading">
-        <%= pluralize(transaction.errors.count, "error") %> prohibited this Transaction from being saved:
+        <%= pluralize(@sub_account_transaction.errors.count, "error") %> prohibited this Transaction from being saved:
       </h5>
       <ul class="list-unstyled">
-        <% transaction.errors.full_messages.each do |message| %>
+        <% @sub_account_transaction.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
       </ul>
@@ -35,27 +35,12 @@
     <%= form.label :transaction_kind, "Transaction Type", class: "form-label" %>
     <%= form.select :transaction_kind,
                     options_for_select(
-                      Transaction::TRANSACTION_KINDS.map { |k| [k.capitalize, k] },
-                      selected: transaction.transaction_kind || "expense"
+                      SubAccountTransaction::TRANSACTION_KINDS.map { |k| [k.capitalize, k] },
+                      selected: @sub_account_transaction.transaction_kind || "expense"
                     ),
                     {},
                     class: "form-select" %>
   </div>
-
-  <!-- Account Selection -->
-  <% if @main_account.present? %>
-    <div class="mb-3">
-      <%= form.label :sub_account_id, "Select Account", class: "form-label" %>
-      <%= form.select :sub_account_id,
-                      options_for_select(
-                        [["Main Account", nil]] + 
-                        @main_account.sub_accounts.map { |sa| [sa.title, sa.id] },
-                        selected: transaction.sub_account_id || (transaction.main_account_id.present? ? nil : @main_account.sub_accounts.first&.id)
-                      ),
-                      {},
-                      class: "form-select" %>
-    </div>
-  <% end %>
 
   <!-- Category Selection -->
   <div class="mb-3">
@@ -64,7 +49,7 @@
                     options_for_select(
                       [["(Default Category)", nil]] + 
                       @categories.map { |category| [category.title, category.id] },
-                      selected: transaction.category_id
+                      selected: @sub_account_transaction.category_id
                     ),
                     {},
                     class: "form-select" %>
@@ -73,6 +58,6 @@
   <!-- Submit and Cancel Buttons -->
   <div class="d-flex justify-content-between">
     <%= form.submit "Save Transaction", class: "btn btn-primary" %>
-    <%= link_to "Cancel", transactions_path, class: "btn btn-secondary" %>
+    <%= link_to "Cancel", main_account_sub_account_sub_account_transactions_path(@main_account, @sub_account), class: "btn btn-secondary" %>
   </div>
 <% end %>

@@ -1,11 +1,13 @@
 class User < ApplicationRecord
+  # Callbacks
   after_create :create_main_account
 
+  # Devise Modules
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
 
   # Associations
   has_many :main_accounts, foreign_key: :owner_id, dependent: :destroy
-  has_many :transactions, foreign_key: :creator_id, class_name: 'Transaction'
+  has_many :main_transactions, through: :main_accounts, source: :main_transactions
   has_many :shared_main_account_users, dependent: :destroy
   has_many :shared_main_accounts, through: :shared_main_account_users, source: :main_account
 

@@ -1,13 +1,11 @@
 class MainAccount < ApplicationRecord
   # Callbacks
-  after_commit :recalculate_sub_account_balances
-  after_create :ensure_default_categories
+  after_save :adjust_sub_account_balances, if: :saved_change_to_balance?
 
   # Associations
   belongs_to :owner, class_name: 'User'
-
   has_many :sub_accounts, dependent: :destroy
-  has_many :transactions, dependent: :destroy
+  has_many :main_transactions, dependent: :destroy
   has_many :shared_main_account_users, dependent: :destroy
   has_many :partners, through: :shared_main_account_users, source: :user
 
@@ -19,17 +17,19 @@ class MainAccount < ApplicationRecord
   }
 
   private
-  
-  def ensure_default_categories
-    categories.find_or_create_by!(title: "Income")
-    categories.find_or_create_by!(title: "Expense")
-  end
 
-  # Recalculate balances for all sub-accounts based on their percentage
-  def recalculate_sub_account_balances
+  ### CALLBACKS ###
+
+  def adjust_sub_account_balances
+    return if sub_accounts.empty?
+
+    # Calculate the delta from the most recent transaction affecting the balance
+    delta = saved_change_to_balance[1] - saved_change_to_balance[0]
+
     sub_accounts.each do |sub_account|
-      sub_account_balance = (sub_account.percentage / 100.0) * balance
-      sub_account.update_column(:balance, sub_account_balance)
+      # Adjust each sub-account balance proportionally based on its percentage
+      sub_delta = (sub_account.percentage / 100.0) * delta
+      sub_account.update_column(:balance, sub_account.balance + sub_delta)
     end
   end
 end

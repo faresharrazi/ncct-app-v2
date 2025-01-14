@@ -1,20 +1,22 @@
-# app/controllers/application_controller.rb
 class ApplicationController < ActionController::Base
+  # Devise Authentication
   before_action :authenticate_user!
   before_action :configure_permitted_parameters, if: :devise_controller?
 
+  # Devise Redirects
   def after_sign_in_path_for(resource)
     resource.main_accounts.first ? main_account_path(resource.main_accounts.first) : main_accounts_path
   end
   
-  def after_sign_out_path_for(resource_or_scope)
+  def after_sign_out_path_for(_resource_or_scope)
     new_user_session_path
   end
 
   private
 
+  # Permit additional parameters for Devise actions
   def configure_permitted_parameters
-    devise_parameter_sanitizer.permit(:sign_up, keys: [:first_name, :last_name])
-    devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name])
+    devise_parameter_sanitizer.permit(:sign_up, keys: %i[first_name last_name])
+    devise_parameter_sanitizer.permit(:account_update, keys: %i[first_name last_name])
   end
 end

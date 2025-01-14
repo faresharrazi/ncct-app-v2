@@ -7,17 +7,13 @@ class SubAccount < ApplicationRecord
 
   # Associations
   belongs_to :main_account
-  belongs_to :default_category, 
-             class_name: 'Category',
-             foreign_key: :default_category_id,
-             optional: true
-
+  belongs_to :default_category, class_name: 'Category', foreign_key: :default_category_id, optional: true
   has_many :categories, dependent: :destroy
   has_many :transactions, dependent: :destroy
 
   # Validations
   validates :title, presence: true
-  validates :percentage, numericality: { greater_than: 0 }
+  validates :percentage, numericality: { greater_than_or_equal_to: 0 }
   validate :cannot_exceed_main_account_available_percentage, if: :new_or_updated_sub_account?
 
   private
@@ -33,6 +29,7 @@ class SubAccount < ApplicationRecord
 
     difference = percentage - percentage_before_last_save
     main_account.update!(available_percentage: main_account.available_percentage - difference)
+    adjust_balance_from_percentage_change(difference)
   end
 
   def restore_main_account_percentage
@@ -52,8 +49,15 @@ class SubAccount < ApplicationRecord
     end
   end
 
-  # Only run this validation when creating or updating a SubAccount
   def new_or_updated_sub_account?
     will_save_change_to_percentage? || new_record?
+  end
+
+  ### HELPERS ###
+
+  def adjust_balance_from_percentage_change(difference)
+    delta = (difference / 100.0) * main_account.balance
+    # Incrementally adjust the balance without overriding
+    update_column(:balance, balance + delta)
   end
 end

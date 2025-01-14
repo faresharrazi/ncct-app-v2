@@ -12,13 +12,24 @@
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <!-- Subaccounts -->
           <li class="nav-item">
-            <%= link_to "Accounts", main_account_sub_accounts_path(current_user.main_accounts.first), class: "nav-link #{'active' if current_page?(main_account_sub_accounts_path(current_user.main_accounts.first))}" %>
+            <%= link_to "Accounts", 
+                        main_account_sub_accounts_path(current_user.main_accounts.first), 
+                        class: "nav-link #{'active' if current_page?(main_account_sub_accounts_path(current_user.main_accounts.first))}" %>
           </li>
 
           <!-- Transactions -->
-          <li class="nav-item">
-            <%= link_to "Transactions", transactions_path, class: "nav-link #{'active' if current_page?(transactions_path)}" %>
-          </li>
+          <% if current_user.main_accounts.any? %>
+            <li class="nav-item">
+              <%= link_to "Main Transactions", 
+                          main_account_main_transactions_path(current_user.main_accounts.first), 
+                          class: "nav-link #{'active' if current_page?(main_account_main_transactions_path(current_user.main_accounts.first))}" %>
+            </li>
+            <li class="nav-item">
+              <%= link_to "SubAccount Transactions", 
+                          main_account_sub_accounts_path(current_user.main_accounts.first), 
+                          class: "nav-link #{'active' if current_page?(main_account_sub_accounts_path(current_user.main_accounts.first))}" %>
+            </li>
+          <% end %>
         </ul>
 
         <!-- Profile Dropdown -->
@@ -30,11 +41,17 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
               <li>
-                <%= link_to "Settings", edit_user_registration_path(current_user), class: "dropdown-item #{'active' if current_page?(edit_user_registration_path(current_user))}" %>
+                <%= link_to "Settings", 
+                            edit_user_registration_path(current_user), 
+                            class: "dropdown-item #{'active' if current_page?(edit_user_registration_path(current_user))}" %>
               </li>
-              <li>
-                <%= link_to "Partners", main_account_shared_main_account_users_path(current_user.main_accounts.first), class: "dropdown-item #{'active' if current_page?(main_account_shared_main_account_users_path(current_user.main_accounts.first))}" %>
-              </li>
+              <% if current_user.main_accounts.any? %>
+                <li>
+                  <%= link_to "Partners", 
+                              main_account_shared_main_account_users_path(current_user.main_accounts.first), 
+                              class: "dropdown-item #{'active' if current_page?(main_account_shared_main_account_users_path(current_user.main_accounts.first))}" %>
+                </li>
+              <% end %>
               <li>
                 <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "dropdown-item" %>
               </li>
