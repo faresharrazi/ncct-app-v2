@@ -41,13 +41,9 @@ class SubAccountsController < ApplicationController
   end
 
   def destroy
-    if @sub_account.transactions.exists?
-      redirect_to main_account_sub_accounts_path(@main_account),
-                  alert: "Cannot delete a SubAccount with associated Transactions."
-    else
-      @sub_account.destroy
-      redirect_to main_account_sub_accounts_path(@main_account), notice: "Account was successfully destroyed."
-    end
+    @sub_account.destroy
+    redirect_to main_account_sub_accounts_path(@main_account),
+                notice: "SubAccount and all associated categories were successfully deleted."
   end
 
   private

@@ -1,5 +1,3 @@
-<h1>MainAccount Transactions</h1>
-
 <% if @main_transactions.any? %>
   <table class="table table-striped">
     <thead>
@@ -7,7 +5,7 @@
         <th>Date</th>
         <th>Title</th>
         <th>Amount</th>
-        <th>MainAccount</th>
+        <th>Action</th>
       </tr>
     </thead>
 
@@ -31,11 +29,19 @@
             </span>
           </td>
 
-          <!-- MainAccount -->
+          <!-- Repeat Transaction -->
           <td>
-            <%= link_to transaction.main_account.title, 
-                        main_account_path(transaction.main_account), 
-                        class: "text-decoration-none fw-bold" %>
+            <%= link_to new_main_account_main_transaction_path(
+                          transaction.main_account, 
+                          main_transaction: { 
+                            title: transaction.title, 
+                            amount: transaction.amount, 
+                            transaction_kind: transaction.transaction_kind 
+                          }
+                        ), 
+                        class: "text-decoration-none" do %>
+              <i class="fas fa-redo-alt text-primary" title="Repeat Transaction"></i>
+            <% end %>
           </td>
         </tr>
       <% end %>

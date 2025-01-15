@@ -1,7 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container">
     <% if user_signed_in? %>
-      <!-- When user is signed in, NCCT links to the dashboard -->
       <%= link_to "NCCT", main_account_path(current_user.main_accounts.first), class: "navbar-brand fs-3 fw-bold" %>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
               aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -18,16 +17,9 @@
           </li>
 
           <!-- Transactions -->
-          <% if current_user.main_accounts.any? %>
+          <% if current_user.main_accounts.any? && current_user.main_accounts.first.sub_accounts.any? %>
             <li class="nav-item">
-              <%= link_to "Main Transactions", 
-                          main_account_main_transactions_path(current_user.main_accounts.first), 
-                          class: "nav-link #{'active' if current_page?(main_account_main_transactions_path(current_user.main_accounts.first))}" %>
-            </li>
-            <li class="nav-item">
-              <%= link_to "SubAccount Transactions", 
-                          main_account_sub_accounts_path(current_user.main_accounts.first), 
-                          class: "nav-link #{'active' if current_page?(main_account_sub_accounts_path(current_user.main_accounts.first))}" %>
+                <%= link_to "Transactions", all_sub_account_transactions_path, class: "nav-link #{'active' if current_page?(all_sub_account_transactions_path)}" %>
             </li>
           <% end %>
         </ul>
@@ -60,7 +52,6 @@
         </ul>
       </div>
     <% else %>
-      <!-- When user is not signed in, NCCT is plain text -->
       <div class="w-100 text-center">
         <span class="navbar-brand fs-3 fw-bold">NCCT</span>
       </div>

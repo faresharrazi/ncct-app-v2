@@ -1,8 +1,4 @@
 Rails.application.routes.draw do
-  get "main_transactions/index"
-  get "main_transactions/show"
-  get "main_transactions/new"
-  get "main_transactions/edit"
   root "pages#home"
   
   get "pages/about"
@@ -16,4 +12,10 @@ Rails.application.routes.draw do
     end
     resources :shared_main_account_users
   end
+
+  # Custom route to show all subaccount transactions
+  get 'sub_account_transactions', to: 'sub_account_transactions#all', as: :all_sub_account_transactions
+  
+  # Custom route to create a new subaccount transaction without specifying the subaccount
+  get 'sub_account_transactions/new', to: 'sub_account_transactions#new_without_subaccount', as: :new_sub_account_transaction_without_subaccount
 end

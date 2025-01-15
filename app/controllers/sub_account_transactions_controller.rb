@@ -1,28 +1,36 @@
 class SubAccountTransactionsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_sub_account_transaction, only: %i[show edit update destroy]
-  before_action :set_main_account
-  before_action :set_sub_account
-  before_action :set_categories, only: %i[new edit]
+  before_action :set_main_account_and_sub_account, only: [:index, :new, :create]
+  before_action :set_transaction, only: %i[show edit update destroy]
 
   def index
-    @transactions = @sub_account.transactions.includes(:category, :creator).order(created_at: :desc)
+    @transactions = SubAccountTransaction.all # Ensure you load the data properly
+    render 'sub_account_transactions/index' # Explicitly render the updated view path
   end
+
+  def all
+    @transactions = SubAccountTransaction.joins(:sub_account).includes(:sub_account)
+  end
+
+  def show; end
 
   def new
     @transaction = @sub_account.transactions.build
   end
 
+  def new_without_subaccount
+    @transaction = SubAccountTransaction.new
+    @sub_accounts = SubAccount.all
+  end
+
   def create
-    @transaction = @sub_account.transactions.build(transaction_params.merge(creator: current_user))
+    @transaction = @sub_account.transactions.build(transaction_params)
 
     if @transaction.save
-      # Reflect changes in the SubAccount and MainAccount balances
-      adjust_balances(@transaction)
-      redirect_to main_account_sub_account_transactions_path(@main_account, @sub_account),
+      update_balances(@transaction)
+      redirect_to main_account_sub_account_transactions_path(@main_account),
                   notice: "Transaction was successfully created."
     else
-      set_categories
       render :new, status: :unprocessable_entity
     end
   end
@@ -30,76 +38,54 @@ class SubAccountTransactionsController < ApplicationController
   def edit; end
 
   def update
-    old_amount = @transaction.amount
-    old_kind = @transaction.transaction_kind
+    previous_amount = @transaction.amount
+    previous_kind = @transaction.transaction_kind
 
     if @transaction.update(transaction_params)
-      adjust_balances(@transaction, old_amount, old_kind)
-      redirect_to main_account_sub_account_transactions_path(@main_account, @sub_account),
+      update_balances(@transaction, previous_amount, previous_kind)
+      redirect_to main_account_sub_account_transactions_path(@main_account),
                   notice: "Transaction was successfully updated."
     else
-      set_categories
       render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
-    adjust_balances(@transaction, revert: true)
+    revert_balances(@transaction)
     @transaction.destroy
-    redirect_to main_account_sub_account_transactions_path(@main_account, @sub_account),
+    redirect_to main_account_sub_account_transactions_path(@main_account),
                 notice: "Transaction was successfully deleted."
   end
 
   private
 
-  ### SETTERS ###
-
-  def set_sub_account_transaction
-    @transaction = SubAccountTransaction.find_by(id: params[:id])
-    unless @transaction
-      redirect_to main_account_sub_account_transactions_path(@main_account, @sub_account),
-                  alert: "Transaction not found."
-    end
-  end
-
   def set_main_account
     @main_account = MainAccount.find(params[:main_account_id])
-    unless @main_account.owner == current_user || @main_account.partners.include?(current_user)
-      redirect_to main_accounts_path, alert: "You do not have access to this Main Account."
-    end
   end
 
-  def set_sub_account
-    @sub_account = @main_account.sub_accounts.find_by(id: params[:sub_account_id])
-    unless @sub_account
-      redirect_to main_account_path(@main_account), alert: "SubAccount not found."
-    end
+  def set_transaction
+    @transaction = SubAccountTransaction.find(params[:id])
   end
-
-  def set_categories
-    @categories = @sub_account.categories
-  end
-
-  ### STRONG PARAMETERS ###
 
   def transaction_params
-    params.require(:sub_account_transaction).permit(:title, :description, :amount, :transaction_kind, :category_id)
+    params.require(:transaction).permit(:title, :amount, :transaction_kind)
   end
 
-  ### HELPERS ###
-
-  def adjust_balances(transaction, old_amount = nil, old_kind = nil, revert: false)
+  def update_balances(transaction, previous_amount = nil, previous_kind = nil)
     delta = transaction.transaction_kind == "income" ? transaction.amount : -transaction.amount
 
-    # Handle balance adjustments on update or delete
-    if revert
-      delta = transaction.transaction_kind == "income" ? -transaction.amount : transaction.amount
-    elsif old_amount && old_kind
-      old_delta = old_kind == "income" ? old_amount : -old_amount
-      delta -= old_delta
+    if previous_amount && previous_kind
+      previous_delta = previous_kind == "income" ? previous_amount : -previous_amount
+      delta -= previous_delta
     end
 
-    @sub_account.update!(balance: @sub_account.balance + delta)
+    transaction.sub_account.update!(balance: transaction.sub_account.balance + delta)
+    @main_account.update!(balance: @main_account.balance + delta)
+  end
+
+  def revert_balances(transaction)
+    delta = transaction.transaction_kind == "income" ? -transaction.amount : transaction.amount
+    transaction.sub_account.update!(balance: transaction.sub_account.balance + delta)
     @main_account.update!(balance: @main_account.balance + delta)
   end
 end

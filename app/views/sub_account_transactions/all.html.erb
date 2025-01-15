@@ -1,0 +1,90 @@
+<% if @transactions.any? %>
+  <h1 class="mb-4">All SubAccount Transactions</h1>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>SubAccount</th>
+        <th>Date</th>
+        <th>Title</th>
+        <th>Amount</th>
+        <th>Type</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @transactions.each do |transaction| %>
+        <tr>
+          <!-- SubAccount -->
+          <td>
+            <span class="fw-bold"><%= transaction.sub_account.title %></span>
+          </td>
+
+          <!-- Date -->
+          <td>
+            <span class="text-muted"><%= l(transaction.created_at, format: :short) %></span>
+          </td>
+
+          <!-- Title -->
+          <td>
+            <%= link_to transaction.title, 
+                        main_account_sub_account_sub_account_transaction_path(transaction.sub_account.main_account, transaction.sub_account, transaction), 
+                        class: "fw-bold text-decoration-none" %>
+          </td>
+
+          <!-- Amount -->
+          <td>
+            <span class="badge <%= transaction.transaction_kind == 'expense' ? 'bg-danger' : 'bg-success' %>">
+              <%= number_to_currency(transaction.amount, unit: transaction.sub_account.main_account.currency || "€") %>
+            </span>
+          </td>
+
+          <!-- Type -->
+          <td>
+            <span class="badge bg-secondary"><%= transaction.transaction_kind.capitalize %></span>
+          </td>
+
+          <!-- Action -->
+          <td>
+            <!-- Repeat Transaction -->
+            <%= link_to new_main_account_sub_account_sub_account_transaction_path(
+                          transaction.sub_account.main_account, transaction.sub_account, 
+                          sub_account_transaction: { 
+                            title: transaction.title, 
+                            amount: transaction.amount, 
+                            transaction_kind: transaction.transaction_kind 
+                          }
+                        ), 
+                        class: "text-decoration-none me-3" do %>
+              <i class="fas fa-redo-alt text-primary" title="Repeat Transaction"></i>
+            <% end %>
+
+            <!-- Edit Transaction -->
+            <%= link_to edit_main_account_sub_account_sub_account_transaction_path(transaction.sub_account.main_account, transaction.sub_account, transaction), 
+                        class: "text-decoration-none me-3" do %>
+              <i class="fas fa-edit text-warning" title="Edit Transaction"></i>
+            <% end %>
+
+            <!-- Delete Transaction -->
+            <%= link_to main_account_sub_account_sub_account_transaction_path(transaction.sub_account.main_account, transaction.sub_account, transaction), 
+                        method: :delete, 
+                        data: { confirm: "Are you sure?" }, 
+                        class: "text-decoration-none" do %>
+              <i class="fas fa-trash-alt text-danger" title="Delete Transaction"></i>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <p class="alert alert-info">
+    <i class="fas fa-info-circle me-2"></i>No transactions added yet.
+  </p>
+<% end %>
+
+<!-- Button to create a new transaction -->
+<div class="mt-3">
+  <%= link_to "New Transaction", new_sub_account_transaction_without_subaccount_path, class: "btn btn-success" %>
+</div>

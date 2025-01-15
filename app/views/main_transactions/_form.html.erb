@@ -1,4 +1,4 @@
-<%= form_with(model: @main_transaction, local: true, class: "needs-validation") do |form| %>
+<%= form_with(model: [@main_account, @main_transaction], local: true, class: "needs-validation") do |form| %>
   <% if @main_transaction.errors.any? %>
     <div class="alert alert-danger">
       <h5 class="alert-heading">
@@ -36,7 +36,7 @@
     <%= form.select :transaction_kind,
                     options_for_select(
                       MainTransaction::TRANSACTION_KINDS.map { |k| [k.capitalize, k] },
-                      selected: @main_transaction.transaction_kind || "expense"
+                      selected: @main_transaction.transaction_kind || "income"
                     ),
                     {},
                     class: "form-select" %>

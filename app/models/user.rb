@@ -16,18 +16,22 @@ class User < ApplicationRecord
   validates :last_name, presence: true
 
   # Instance Methods
+
+  # Returns the user's full name
   def full_name
     "#{first_name} #{last_name}"
   end
 
   private
 
-  # Automatically create a main account after user creation
+  # Automatically create a default main account for the user after they are created
   def create_main_account
     main_accounts.create!(
       title: "Main Account",
       available_percentage: 100.0,
-      currency: "€"
+      currency: "€",
+      balance: 0.0, # Initialize with a default balance
+      shareable_balance: 0.0 # Initialize with a default shareable balance
     )
   end
 end

@@ -11,6 +11,12 @@ class MainAccountsController < ApplicationController
     unless accessible_account?
       redirect_to main_accounts_path, alert: "You do not have access to this Main Account."
     end
+
+    @main_transactions = @main_account.main_transactions.order(created_at: :desc)
+    @sub_accounts = @main_account.sub_accounts.order(:created_at)
+
+    # Update balances to reflect the latest changes
+    @main_account.update_balances!
   end
 
   def new
@@ -30,6 +36,7 @@ class MainAccountsController < ApplicationController
 
   def update
     if @main_account.update(main_account_params)
+      @main_account.update_balances!
       redirect_to @main_account, notice: "Main Account was successfully updated."
     else
       render :edit, status: :unprocessable_entity
@@ -37,7 +44,7 @@ class MainAccountsController < ApplicationController
   end
 
   def destroy
-    if @main_account.sub_accounts.exists? || @main_account.transactions.exists?
+    if @main_account.sub_accounts.exists? || @main_account.main_transactions.exists?
       redirect_to main_account_path(@main_account),
                   alert: "Cannot delete a Main Account with associated SubAccounts or Transactions."
     else

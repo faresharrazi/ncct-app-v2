@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_14_154247) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_15_125846) do
   create_table "categories", force: :cascade do |t|
     t.integer "sub_account_id"
     t.string "title"
@@ -28,6 +28,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_14_154247) do
     t.string "currency", default: "EUR"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "shareable_balance", precision: 15, scale: 2, default: "0.0"
     t.index ["owner_id"], name: "index_main_accounts_on_owner_id"
   end
 
