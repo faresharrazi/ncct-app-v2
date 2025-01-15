@@ -1,4 +1,3 @@
 <h1><%= action_name.capitalize %> Transaction</h1>
 
-<%= render 'form', sub_account_transaction: @sub_account_transaction, main_account: @main_account, sub_account: @sub_account %>
-
+<%= render 'form', sub_account_transaction: @sub_account_transaction, main_account: @main_account, sub_account: @sub_account, url: main_account_sub_account_sub_account_transaction_path(@main_account, @sub_account, @sub_account_transaction) %>

@@ -25,7 +25,8 @@ class MainTransactionsController < ApplicationController
     @main_transaction = @main_account.main_transactions.build(main_transaction_params)
 
     if @main_transaction.save
-      redirect_to main_account_path(@main_account), notice: "Transaction was successfully created."
+      redirect_to main_account_path(current_user.main_accounts.first),
+                  notice: "Transaction was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -35,7 +36,8 @@ class MainTransactionsController < ApplicationController
 
   def update
     if @main_transaction.update(main_transaction_params)
-      redirect_to main_account_path(@main_account), notice: "Transaction was successfully updated."
+      redirect_to main_account_path(current_user.main_accounts.first),
+                  notice: "Transaction was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -43,14 +45,14 @@ class MainTransactionsController < ApplicationController
 
   def destroy
     @main_transaction.destroy
-    redirect_to main_account_path(@main_account), notice: "Transaction was successfully deleted."
+    redirect_to main_account_path(current_user.main_accounts.first),
+                notice: "Transaction was successfully destroyed."
   end
 
   private
 
   def set_main_account
     @main_account = MainAccount.find(params[:main_account_id])
-    redirect_to main_accounts_path, alert: "You do not have access to this account." unless @main_account.owner == current_user
   end
 
   def set_main_transaction
@@ -58,6 +60,6 @@ class MainTransactionsController < ApplicationController
   end
 
   def main_transaction_params
-    params.require(:main_transaction).permit(:title, :amount, :transaction_kind)
+    params.require(:main_transaction).permit(:title, :amount, :transaction_kind, :description, :date)
   end
 end

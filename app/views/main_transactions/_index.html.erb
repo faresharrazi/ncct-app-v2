@@ -29,8 +29,9 @@
             </span>
           </td>
 
-          <!-- Repeat Transaction -->
+          <!-- Actions -->
           <td>
+            <!-- Repeat Transaction -->
             <%= link_to new_main_account_main_transaction_path(
                           transaction.main_account, 
                           main_transaction: { 
@@ -41,6 +42,18 @@
                         ), 
                         class: "text-decoration-none" do %>
               <i class="fas fa-redo-alt text-primary" title="Repeat Transaction"></i>
+            <% end %>
+
+            <!-- Edit Transaction -->
+            <%= link_to edit_main_account_main_transaction_path(transaction.main_account, transaction), class: "text-decoration-none" do %>
+              <i class="fas fa-edit text-warning" title="Edit Transaction"></i>
+            <% end %>
+
+            <!-- Delete Transaction -->
+            <%= link_to main_account_main_transaction_path(transaction.main_account, transaction), 
+                        data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this transaction?" }, 
+                        class: "text-decoration-none" do %>
+              <i class="fas fa-trash-alt text-danger" title="Delete Transaction"></i>
             <% end %>
           </td>
         </tr>

@@ -3,7 +3,7 @@ class PagesController < ApplicationController
 
   def home
     if user_signed_in?
-      redirect_to main_accounts_path
+            redirect_to main_account_path(current_user.main_accounts.first)
     else
       redirect_to new_user_session_path
     end

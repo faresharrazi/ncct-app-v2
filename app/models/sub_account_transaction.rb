@@ -3,6 +3,7 @@ class SubAccountTransaction < ApplicationRecord
 
   # Associations
   belongs_to :sub_account
+  belongs_to :category
   belongs_to :creator, class_name: 'User'
 
   # Validations
@@ -26,7 +27,7 @@ class SubAccountTransaction < ApplicationRecord
   end
 
   def adjust_balances_before_update
-    previous_delta = income_transaction? ? -amount_before_last_save : amount_before_last_save
+    previous_delta = transaction_kind_was == 'income' ? -amount_was : amount_was
     new_delta = income_transaction? ? amount : -amount
     adjust_account_balances(previous_delta + new_delta)
   end
@@ -47,7 +48,7 @@ class SubAccountTransaction < ApplicationRecord
   ### VALIDATIONS ###
 
   def cannot_exceed_sub_account_balance
-    if amount > sub_account.balance
+    if sub_account && amount > sub_account.balance
       errors.add(:amount, "cannot exceed the SubAccount's current balance (#{sub_account.balance}).")
     end
   end

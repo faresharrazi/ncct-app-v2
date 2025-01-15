@@ -16,6 +16,7 @@ class SubAccountsController < ApplicationController
 
   def new
     @sub_account = @main_account.sub_accounts.build
+    @sub_account_transaction = SubAccountTransaction.new
   end
 
   def create
@@ -34,7 +35,7 @@ class SubAccountsController < ApplicationController
   def update
     if @sub_account.update(sub_account_params)
       redirect_to main_account_sub_account_path(@main_account, @sub_account),
-                  notice: "Account was successfully updated."
+                  notice: "SubAccount was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end

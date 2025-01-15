@@ -1,111 +1,62 @@
 class CategoriesController < ApplicationController
-  before_action :authenticate_user!
-  before_action :set_main_account
+  before_action :set_main_account, except: [:index]
   before_action :set_sub_account
   before_action :set_category, only: %i[show edit update destroy]
-  before_action :authorize_owner!, except: %i[index show]
 
-  # List categories for a subaccount
   def index
     @categories = @sub_account.categories
-  end
 
-  # Show a single category
-  def show
-    unless can_access_main_account?
-      redirect_to main_accounts_path, alert: "You do not have access to this Category."
+    respond_to do |format|
+      format.html
+      format.json { render json: @categories }
     end
   end
 
-  # Render the new category form
+  def show; end
+
   def new
     @category = @sub_account.categories.build
   end
 
-  # Create a new category
   def create
     @category = @sub_account.categories.build(category_params)
     if @category.save
-      redirect_to main_account_sub_account_categories_path(@main_account, @sub_account),
-                  notice: "Category was successfully created."
+      redirect_to main_account_sub_account_categories_path(@main_account, @sub_account), notice: 'Category was successfully created.'
     else
-      render :new, status: :unprocessable_entity
+      render :new
     end
   end
 
-  # Render the edit category form
   def edit; end
 
-  # Update a category
   def update
     if @category.update(category_params)
-      redirect_to main_account_sub_account_categories_path(@main_account, @sub_account),
-                  notice: "Category was successfully updated."
+      redirect_to main_account_sub_account_categories_path(@main_account, @sub_account), notice: 'Category was successfully updated.'
     else
-      render :edit, status: :unprocessable_entity
+      render :edit
     end
   end
 
-  # Destroy a category
   def destroy
-    if @category == @sub_account.default_category
-      redirect_to main_account_sub_account_categories_path(@main_account, @sub_account),
-                  alert: "Default category cannot be deleted."
-    else
-      @category.destroy
-      redirect_to main_account_sub_account_categories_path(@main_account, @sub_account),
-                  notice: "Category was successfully destroyed."
-    end
+    @category.destroy
+    redirect_to main_account_sub_account_categories_path(@main_account, @sub_account), notice: 'Category was successfully deleted.'
   end
 
   private
 
-  ### SETTERS ###
-
-  # Set the main account
   def set_main_account
-    @main_account = MainAccount.find_by(id: params[:main_account_id])
-    unless can_access_main_account?
-      redirect_to main_accounts_path, alert: "You do not have access to this Main Account."
-    end
+    @main_account = MainAccount.find(params[:main_account_id]) if params[:main_account_id]
   end
 
-  # Set the subaccount
   def set_sub_account
-    @sub_account = @main_account&.sub_accounts&.find_by(id: params[:sub_account_id])
-    unless @sub_account
-      redirect_to main_account_path(@main_account), alert: "SubAccount not found."
-    end
+    @sub_account = SubAccount.find(params[:sub_account_id])
   end
 
-  # Set the category
   def set_category
-    @category = @sub_account&.categories&.find_by(id: params[:id])
-    unless @category
-      redirect_to main_account_sub_account_categories_path(@main_account, @sub_account),
-                  alert: "Category not found."
-    end
+    @category = @sub_account.categories.find(params[:id])
   end
 
-  ### PARAMS ###
-
-  # Permit category params
   def category_params
     params.require(:category).permit(:title, :description)
-  end
-
-  ### AUTHORIZATION ###
-
-  # Check if the current user can access the main account
-  def can_access_main_account?
-    @main_account&.owner == current_user || @main_account&.partners&.include?(current_user)
-  end
-
-  # Restrict actions to the owner of the main account
-  def authorize_owner!
-    unless @main_account&.owner == current_user
-      redirect_to main_account_sub_account_categories_path(@main_account, @sub_account),
-                  alert: "Only the owner can perform this action."
-    end
   end
 end

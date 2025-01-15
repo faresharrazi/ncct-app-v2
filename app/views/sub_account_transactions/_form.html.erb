@@ -1,22 +1,14 @@
-<%= form_with(model: @sub_account_transaction, url: @sub_account_transaction.new_record? ? new_sub_account_transaction_without_subaccount_path : sub_account_transaction_path(@sub_account_transaction), local: true, class: "needs-validation") do |form| %>
-  <% if @sub_account_transaction.errors.any? %>
+<%= form_with(model: sub_account_transaction, url: url, local: true, class: "needs-validation") do |form| %>
+  <% if sub_account_transaction.errors.any? %>
     <div class="alert alert-danger">
       <h5 class="alert-heading">
-        <%= pluralize(@sub_account_transaction.errors.count, "error") %> prohibited this Transaction from being saved:
+        <%= pluralize(sub_account_transaction.errors.count, "error") %> prohibited this Transaction from being saved:
       </h5>
       <ul class="list-unstyled">
-        <% @sub_account_transaction.errors.full_messages.each do |message| %>
+        <% sub_account_transaction.errors.full_messages.each do |message| %>
           <li><%= message %></li>
         <% end %>
       </ul>
-    </div>
-  <% end %>
-
-  <% unless @sub_account %>
-    <!-- SubAccount Selection -->
-    <div class="mb-3">
-      <%= form.label :sub_account_id, "Select SubAccount", class: "form-label" %>
-      <%= form.collection_select :sub_account_id, @sub_accounts, :id, :title, { prompt: "Choose a SubAccount" }, class: "form-select" %>
     </div>
   <% end %>
 
@@ -26,46 +18,59 @@
     <%= form.text_field :title, class: "form-control", placeholder: "Enter transaction title", autofocus: true %>
   </div>
 
-  <!-- Description -->
+  <!-- Type -->
   <div class="mb-3">
-    <%= form.label :description, "Description", class: "form-label" %>
-    <%= form.text_area :description, class: "form-control", rows: 4, placeholder: "Enter optional description" %>
+    <%= form.label :transaction_kind, "Type", class: "form-label" %>
+    <%= form.select :transaction_kind, options_for_select(SubAccountTransaction::TRANSACTION_KINDS.map { |kind| [kind.capitalize, kind] }, sub_account_transaction.transaction_kind), {}, class: "form-select" %>
   </div>
 
-  <!-- Amount -->
+  <!-- SubAccount Selection -->
   <div class="mb-3">
-    <%= form.label :amount, "Amount (#{@main_account&.currency || '€'})", class: "form-label" %>
-    <%= form.number_field :amount, step: 0.01, class: "form-control", placeholder: "Enter amount" %>
-  </div>
-
-  <!-- Transaction Kind -->
-  <div class="mb-3">
-    <%= form.label :transaction_kind, "Transaction Type", class: "form-label" %>
-    <%= form.select :transaction_kind,
-                    options_for_select(
-                      SubAccountTransaction::TRANSACTION_KINDS.map { |k| [k.capitalize, k] },
-                      selected: @sub_account_transaction.transaction_kind || "expense"
-                    ),
-                    {},
-                    class: "form-select" %>
+    <%= form.label :sub_account_id, "Select Account", class: "form-label" %>
+    <%= form.collection_select :sub_account_id, @sub_accounts, :id, :title, { prompt: "Choose an Account" }, class: "form-select" %>
   </div>
 
   <!-- Category Selection -->
   <div class="mb-3">
     <%= form.label :category_id, "Category", class: "form-label" %>
-    <%= form.select :category_id,
-                    options_for_select(
-                      [["(Default Category)", nil]] + 
-                      @categories.map { |category| [category.title, category.id] },
-                      selected: @sub_account_transaction.category_id
-                    ),
-                    {},
-                    class: "form-select" %>
+    <%= form.collection_select :category_id, @categories, :id, :title, { prompt: "Choose a Category" }, class: "form-select" %>
   </div>
 
-  <!-- Submit and Cancel Buttons -->
-  <div class="d-flex justify-content-between">
-    <%= form.submit "Save Transaction", class: "btn btn-primary" %>
-    <%= link_to "Cancel", all_sub_account_transactions_path, class: "btn btn-secondary" %>
+  <!-- Amount -->
+  <div class="mb-3">
+    <%= form.label :amount, "Amount", class: "form-label" %>
+    <%= form.number_field :amount, class: "form-control", placeholder: "Enter transaction amount" %>
+  </div>
+
+  <!-- Description -->
+  <div class="mb-3">
+    <%= form.label :description, "Description", class: "form-label" %>
+    <%= form.text_area :description, class: "form-control", placeholder: "Enter transaction description" %>
+  </div>
+
+  <div class="d-grid">
+    <%= form.submit class: "btn btn-primary" %>
   </div>
 <% end %>
+
+<script>
+  document.addEventListener("turbo:load", function() {
+    const subAccountSelect = document.querySelector("[name='sub_account_transaction[sub_account_id]']");
+    const categorySelect = document.querySelector("[name='sub_account_transaction[category_id]']");
+
+    subAccountSelect.addEventListener("change", function() {
+      const subAccountId = this.value;
+      fetch(`/sub_accounts/${subAccountId}/categories.json`)
+        .then(response => response.json())
+        .then(data => {
+          categorySelect.innerHTML = '<option value="">Choose a Category</option>';
+          data.forEach(category => {
+            const option = document.createElement("option");
+            option.value = category.id;
+            option.textContent = category.title;
+            categorySelect.appendChild(option);
+          });
+        });
+    });
+  });
+</script>

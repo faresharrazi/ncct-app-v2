@@ -22,21 +22,32 @@ class MainTransaction < ApplicationRecord
   def adjust_main_account_balance_on_create
     delta = transaction_kind == "income" ? amount : -amount
     main_account.update!(balance: main_account.balance + delta)
+    distribute_amount_among_subaccounts(delta)
   end
 
   def adjust_main_account_balance_on_update
     # Reverse the effect of the old transaction
     old_delta = transaction_kind_was == "income" ? amount_was : -amount_was
     main_account.update!(balance: main_account.balance - old_delta)
+    distribute_amount_among_subaccounts(-old_delta)
 
     # Apply the effect of the updated transaction
     new_delta = transaction_kind == "income" ? amount : -amount
     main_account.update!(balance: main_account.balance + new_delta)
+    distribute_amount_among_subaccounts(new_delta)
   end
 
   def adjust_main_account_balance_on_destroy
     delta = transaction_kind == "income" ? amount : -amount
     main_account.update!(balance: main_account.balance - delta)
+    distribute_amount_among_subaccounts(-delta)
+  end
+
+  def distribute_amount_among_subaccounts(delta)
+    main_account.sub_accounts.each do |sub_account|
+      sub_delta = (sub_account.percentage / 100.0) * delta
+      sub_account.update_column(:balance, sub_account.balance + sub_delta)
+    end
   end
 
   ### VALIDATIONS ###

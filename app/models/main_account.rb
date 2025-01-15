@@ -22,8 +22,8 @@ class MainAccount < ApplicationRecord
   def calculate_balance
     main_incomes = main_transactions.where(transaction_kind: "income").sum(:amount)
     main_expenses = main_transactions.where(transaction_kind: "expense").sum(:amount)
-    subaccount_incomes = sub_accounts.joins(:transactions).where(transactions: { transaction_kind: "income" }).sum(:amount)
-    subaccount_expenses = sub_accounts.joins(:transactions).where(transactions: { transaction_kind: "expense" }).sum(:amount)
+    subaccount_incomes = sub_accounts.joins(:sub_account_transactions).where(sub_account_transactions: { transaction_kind: "income" }).sum(:amount)
+    subaccount_expenses = sub_accounts.joins(:sub_account_transactions).where(sub_account_transactions: { transaction_kind: "expense" }).sum(:amount)
 
     main_incomes + subaccount_incomes - (main_expenses + subaccount_expenses)
   end
@@ -32,7 +32,7 @@ class MainAccount < ApplicationRecord
   def calculate_shareable_balance
     main_incomes = main_transactions.where(transaction_kind: "income").sum(:amount)
     main_expenses = main_transactions.where(transaction_kind: "expense").sum(:amount)
-    subaccount_expenses = sub_accounts.joins(:transactions).where(transactions: { transaction_kind: "expense" }).sum(:amount)
+    subaccount_expenses = sub_accounts.joins(:sub_account_transactions).where(sub_account_transactions: { transaction_kind: "expense" }).sum(:amount)
 
     main_incomes - (main_expenses + subaccount_expenses)
   end
