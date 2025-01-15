@@ -1,4 +1,4 @@
-<%= form_with(model: [@main_account, @sub_account, @sub_account_transaction], local: true, class: "needs-validation") do |form| %>
+<%= form_with(model: @sub_account_transaction, url: @sub_account_transaction.new_record? ? new_sub_account_transaction_without_subaccount_path : sub_account_transaction_path(@sub_account_transaction), local: true, class: "needs-validation") do |form| %>
   <% if @sub_account_transaction.errors.any? %>
     <div class="alert alert-danger">
       <h5 class="alert-heading">
@@ -9,6 +9,14 @@
           <li><%= message %></li>
         <% end %>
       </ul>
+    </div>
+  <% end %>
+
+  <% unless @sub_account %>
+    <!-- SubAccount Selection -->
+    <div class="mb-3">
+      <%= form.label :sub_account_id, "Select SubAccount", class: "form-label" %>
+      <%= form.collection_select :sub_account_id, @sub_accounts, :id, :title, { prompt: "Choose a SubAccount" }, class: "form-select" %>
     </div>
   <% end %>
 
@@ -58,6 +66,6 @@
   <!-- Submit and Cancel Buttons -->
   <div class="d-flex justify-content-between">
     <%= form.submit "Save Transaction", class: "btn btn-primary" %>
-    <%= link_to "Cancel", main_account_sub_account_sub_account_transactions_path(@main_account, @sub_account), class: "btn btn-secondary" %>
+    <%= link_to "Cancel", all_sub_account_transactions_path, class: "btn btn-secondary" %>
   </div>
 <% end %>

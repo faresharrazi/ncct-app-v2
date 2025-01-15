@@ -19,8 +19,9 @@ class SubAccountTransactionsController < ApplicationController
   end
 
   def new_without_subaccount
-    @transaction = SubAccountTransaction.new
+    @sub_account_transaction = SubAccountTransaction.new
     @sub_accounts = SubAccount.all
+    @categories = Category.all # Assuming you have categories to select from
   end
 
   def create
