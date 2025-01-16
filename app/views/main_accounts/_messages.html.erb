@@ -1,7 +1,6 @@
 <% if @main_account.balance == 0 %>
   <div class="alert alert-warning">
     <i class="fas fa-info-circle me-2"></i>Your balance is 0<%= @main_account.currency %>. Please add a new income to increase the balance.
-    <%= link_to "Add Income", new_main_account_main_transaction_path(@main_account, main_transaction: { transaction_kind: 'income' }), class: "btn btn-success btn-sm ms-2" %>
   </div>
 <% elsif @main_account.available_percentage > 0 %>
   <div class="alert alert-info">

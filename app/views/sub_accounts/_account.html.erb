@@ -1,0 +1,24 @@
+<div class="card mb-4 shadow-sm" style="cursor: pointer; height: 250px; max-width: 400px;" onclick="window.location='<%= main_account_sub_account_path(main_account, sub_account) %>';">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-center">
+      <h4 class="card-title mb-0">
+        <%= sub_account.title %>
+      </h4>
+    </div>
+    <hr>
+    <p class="card-text fs-4 fw-bold">
+      <i class="fas fa-wallet"></i> <%= number_to_currency(sub_account.balance, unit: main_account.currency) %>
+    </p>
+    <p class="card-text">
+      <i class="fas fa-receipt"></i> <%= sub_account.sub_account_transactions.count %> Transactions
+    </p>
+    <p class="card-text">
+      <i class="fas fa-percentage"></i> <%= sub_account.percentage %>%
+    </p>
+    <% if sub_account.description.present? %>
+      <p class="card-text text-muted small">
+        <%= sub_account.description %>
+      </p>
+    <% end %>
+  </div>
+</div>

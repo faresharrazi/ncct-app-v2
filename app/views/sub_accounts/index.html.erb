@@ -1,56 +1,21 @@
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <h1 class="mb-0 d-flex align-items-center">
-    Accounts
-  </h1>
-</div>
-
-<div class="d-flex align-items-center mb-4">
-  <p class="mb-0 me-3">
-    <span class="badge bg-success fs-5" title="Total Balance">
-      <%= number_to_currency(@main_account.balance, unit: @main_account.currency) %>
-    </span>
-  </p>
-  <p class="mb-0">
-    <span class="badge bg-info fs-5" title="Available Percentage">
-      <%= @main_account.available_percentage %>%
-    </span>
-  </p>
-</div>
+<% if @sub_accounts.any? %>
+  <div class="row">
+    <% @sub_accounts.each do |sub_account| %>
+      <div class="col-12 col-md-6 col-lg-4 mb-3">
+        <%= render partial: "sub_accounts/account", locals: { sub_account: sub_account, main_account: @main_account } %>
+      </div>
+    <% end %>
+<% end %>
 
 <% if @main_account.owner == current_user && @main_account.available_percentage > 0 %>
-  <div class="alert alert-info">
-    <i class="fas fa-info-circle me-2"></i>You have available percentage. Please create new accounts to allocate your funds.
-    <%= link_to "Create Account", new_main_account_sub_account_path(@main_account), class: "btn btn-primary btn-sm ms-2" %>
+    <div class="col-12 col-md-6 col-lg-4">
+      <%= render partial: "sub_accounts/new_account_card", locals: { main_account: @main_account } %>
+    </div>
   </div>
 <% end %>
 
-<% if @sub_accounts.any? %>
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Title</th>
-        <th>Percentage</th>
-        <th>Balance</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @sub_accounts.each do |sub_account| %>
-        <tr>
-          <td>
-            <%= link_to sub_account.title, main_account_sub_account_path(@main_account, sub_account), class: "fw-bold text-decoration-none" %>
-          </td>
-          <td>
-            <span class="badge bg-info fs-5">
-              <%= sub_account.percentage %>%
-            </span>
-          </td>
-          <td>
-            <span class="badge bg-success fs-5">
-              <%= number_to_currency(sub_account.balance, unit: @main_account.currency) %>
-            </span>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% end %>
+<!-- Render Sub-account Transactions -->
+<div class="mt-4">
+  <% all_transactions = @sub_accounts.map(&:sub_account_transactions).flatten %>
+  <%= render partial: 'sub_account_transactions/transactions', locals: { transactions: all_transactions, main_account: @main_account, title: "All Transactions" } %>
+</div>

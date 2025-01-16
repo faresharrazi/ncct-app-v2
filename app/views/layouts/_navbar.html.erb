@@ -1,7 +1,13 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container">
     <% if user_signed_in? %>
-      <%= link_to "NCCT", main_account_path(current_user.main_accounts.first), class: "navbar-brand fs-3 fw-bold" %>
+      <div class="d-flex align-items-center">
+        <%= link_to main_account_path(current_user.main_accounts.first), class: "navbar-brand fs-3 fw-bold" do %>
+          <span class="badge bg-success fs-5" title="Total Balance">
+            <%= number_to_currency(current_user.main_accounts.first.balance, unit: current_user.main_accounts.first.currency) %>
+          </span>
+        <% end %>
+      </div>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
               aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>

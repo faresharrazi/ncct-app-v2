@@ -1,6 +1,6 @@
 class MainTransactionsController < ApplicationController
   before_action :set_main_account
-  before_action :set_main_transaction, only: %i[edit update destroy]
+  before_action :set_main_transaction, only: %i[edit update destroy repeat_without_edit]
 
   def new
     @main_transaction = @main_account.main_transactions.new(main_transaction_params)  
@@ -14,6 +14,22 @@ class MainTransactionsController < ApplicationController
       redirect_to main_account_path(@main_account), notice: "Transaction was successfully created."
     else
       render :new, status: :unprocessable_entity
+    end
+  end
+
+  def repeat_without_edit
+    @new_transaction = @main_account.main_transactions.build(
+      title: @main_transaction.title,
+      amount: @main_transaction.amount,
+      transaction_kind: @main_transaction.transaction_kind,
+      description: @main_transaction.description,
+      creator: current_user
+    )
+
+    if @new_transaction.save
+      redirect_to main_account_path(@main_account), notice: 'Transaction was successfully duplicated.'
+    else
+      redirect_to main_account_path(@main_account), alert: 'Failed to duplicate the transaction.'
     end
   end
 

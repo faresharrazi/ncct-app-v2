@@ -28,10 +28,10 @@
               <%= number_to_currency(transaction.amount, unit: transaction.main_account&.currency || "€") %>
             </span>
           </td>
-
+          
           <!-- Actions -->
           <td>
-            <!-- Repeat Transaction -->
+            <!-- Repeat Transaction with Edit -->
             <%= link_to new_main_account_main_transaction_path(
                           transaction.main_account, 
                           main_transaction: { 
@@ -41,7 +41,14 @@
                           }
                         ), 
                         class: "text-decoration-none" do %>
-              <i class="fas fa-redo-alt text-primary" title="Repeat Transaction"></i>
+              <i class="fas fa-redo-alt text-primary" title="Repeat Transaction with Edit"></i>
+            <% end %>
+
+            <!-- Repeat Transaction without Edit -->
+            <%= link_to repeat_without_edit_main_account_main_transaction_path(transaction.main_account, transaction), 
+                        data: { turbo_method: :post }, 
+                        class: "text-decoration-none" do %>
+              <i class="fas fa-clone text-success" title="Repeat Transaction without Edit"></i>
             <% end %>
 
             <!-- Edit Transaction -->
@@ -66,5 +73,5 @@
   </p>
 <% end %>
 <% if @main_account.balance != 0 %>
-  <%= link_to "New Transaction", new_main_account_main_transaction_path(@main_account), class: "btn btn-success" %>
+  <%= link_to "New Income/Expense", new_main_account_main_transaction_path(@main_account), class: "btn btn-success" %>
 <% end %>

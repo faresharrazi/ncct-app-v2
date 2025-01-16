@@ -1,7 +1,7 @@
 class SubAccountTransactionsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_main_account_and_sub_account, only: [:index, :new, :create, :edit, :update]
-  before_action :set_transaction, only: %i[show edit update destroy]
+  before_action :set_main_account_and_sub_account, only: [:index, :new, :create, :edit, :update, :repeat_without_edit, :show, :destroy]
+  before_action :set_transaction, only: %i[show edit update destroy repeat_without_edit]
 
   def index
     @transactions = @sub_account.sub_account_transactions
@@ -31,6 +31,23 @@ class SubAccountTransactionsController < ApplicationController
       @categories = Category.where(sub_account_id: params[:sub_account_transaction][:sub_account_id])
     else
       @categories = Category.none
+    end
+  end
+
+  def repeat_without_edit
+    @new_transaction = @sub_account.sub_account_transactions.build(
+      title: @sub_account_transaction.title,
+      amount: @sub_account_transaction.amount,
+      transaction_kind: @sub_account_transaction.transaction_kind,
+      description: @sub_account_transaction.description,
+      category_id: @sub_account_transaction.category_id,
+      creator: current_user
+    )
+
+    if @new_transaction.save
+      redirect_back fallback_location: main_account_sub_account_sub_account_transactions_path(@main_account, @sub_account), notice: 'Transaction was successfully duplicated.'
+    else
+      redirect_back fallback_location: main_account_sub_account_sub_account_transactions_path(@main_account, @sub_account), alert: 'Failed to duplicate the transaction.'
     end
   end
 
@@ -86,7 +103,7 @@ class SubAccountTransactionsController < ApplicationController
   end
 
   def set_transaction
-    @sub_account_transaction = SubAccountTransaction.find(params[:id])
+    @sub_account_transaction = @sub_account.sub_account_transactions.find(params[:id])
   end
 
   def sub_account_transaction_params

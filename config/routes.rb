@@ -4,9 +4,17 @@ Rails.application.routes.draw do
   devise_for :users
 
   resources :main_accounts do
-    resources :main_transactions
+    resources :main_transactions do
+      member do
+        post 'repeat_without_edit'
+      end
+    end
     resources :sub_accounts do
-      resources :sub_account_transactions
+      resources :sub_account_transactions do
+        member do
+          post 'repeat_without_edit'
+        end
+      end
       resources :categories, only: [:index, :show, :new, :create, :edit, :update, :destroy]
     end
     resources :shared_main_account_users
