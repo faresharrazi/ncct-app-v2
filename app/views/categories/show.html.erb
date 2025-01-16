@@ -4,7 +4,7 @@
   </div>
   <div class="card-body">
     <!-- Description -->
-    <p class="mb-0"><%= @category.description %></p>
+    <p class="mb-0"><%= @category.description.presence || "No description" %></p>
   </div>
   <div class="card-footer d-flex justify-content-between">
     <!-- Edit Link -->
@@ -13,5 +13,18 @@
                   edit_main_account_sub_account_category_path(@main_account, @sub_account, @category), 
                   class: "btn btn-primary btn-sm" %>
     <% end %>
+    <!-- Delete Link -->
+    <% if @main_account.owner == current_user %>
+      <%= link_to "Delete", 
+                  main_account_sub_account_category_path(@main_account, @sub_account, @category), 
+                  method: :delete, 
+                  data: { confirm: "Are you sure you want to delete this category?" }, 
+                  class: "btn btn-danger btn-sm" %>
+    <% end %>
   </div>
+</div>
+
+<!-- Transactions -->
+<div class="mt-4">
+  <%= render partial: 'sub_account_transactions/transactions', locals: { transactions: @category.sub_account_transactions, main_account: @main_account, title: "Transactions for '#{@category.title}'", category: @category } %>
 </div>

@@ -1,11 +1,7 @@
-<h1 class="mb-4 d-flex align-items-center">
-  <%= @sub_account.title %>
-  <span class="badge bg-success ms-3" style="font-size: 1.2rem;">
-    <%= number_to_currency(@sub_account.balance, unit: @main_account.currency || "€") %>
-  </span>
-</h1>
-
-<div class="card mb-4 shadow-sm">
+<div class="card shadow-sm" style="max-width: 600px; margin: 0 auto;">
+  <div class="card-header bg-primary text-white">
+    <h1 class="h5 mb-0"><%= @sub_account.title %></h1>
+  </div>
   <div class="card-body">
     <!-- Description -->
     <p>
@@ -25,7 +21,15 @@
                   class: "btn btn-link p-0 text-decoration-none" %>
     </p>
 
-
+    <!-- Categories -->
+    <p>
+      <strong>Categories:</strong>
+      <span>
+        <% @sub_account.categories.each do |category| %>
+          <%= link_to category.title, main_account_sub_account_category_path(@main_account, @sub_account, category), class: "badge bg-secondary text-decoration-none me-1" %>
+        <% end %>
+      </span>
+    </p>
   </div>
 
   <!-- Footer -->
@@ -48,4 +52,9 @@
       <i class="fas fa-arrow-left me-1"></i> Back to Accounts
     <% end %>
   </div>
+</div>
+
+<!-- Transactions -->
+<div class="mt-4">
+  <%= render partial: 'sub_account_transactions/transactions', locals: { transactions: @sub_account.sub_account_transactions, main_account: @main_account, title: "Transactions for '#{@sub_account.title}'", sub_account: @sub_account } %>
 </div>

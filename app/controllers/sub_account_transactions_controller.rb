@@ -1,6 +1,6 @@
 class SubAccountTransactionsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_main_account_and_sub_account, only: [:index, :new, :create, :edit, :update, :destroy]
+  before_action :set_main_account_and_sub_account, only: [:index, :new, :create, :edit, :update]
   before_action :set_transaction, only: %i[show edit update destroy]
 
   def index
@@ -23,9 +23,9 @@ class SubAccountTransactionsController < ApplicationController
   end
 
   def new_without_subaccount
-    @sub_account_transaction = SubAccountTransaction.new
+    @sub_account_transaction = SubAccountTransaction.new(sub_account_transaction_params)
     @sub_accounts = SubAccount.all
-    @categories = Category.all # Assuming you have categories to select from
+    @categories = Category.all
   end
 
   def create
