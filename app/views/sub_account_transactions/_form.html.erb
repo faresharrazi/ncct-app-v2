@@ -1,3 +1,5 @@
+<% action = action_name == "new_without_subaccount" ? "New" : action_name.capitalize %>
+
 <%= form_with(model: sub_account_transaction, url: url, local: true, class: "needs-validation") do |form| %>
   <% if sub_account_transaction.errors.any? %>
     <div class="alert alert-danger">
@@ -49,7 +51,7 @@
   </div>
 
   <div class="d-grid">
-    <%= form.submit class: "btn btn-primary" %>
+    <%= form.submit "#{action} Transaction", class: "btn btn-primary" %>
   </div>
 <% end %>
 

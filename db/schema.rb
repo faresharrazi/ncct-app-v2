@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_15_125846) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_16_140200) do
   create_table "categories", force: :cascade do |t|
     t.integer "sub_account_id"
     t.string "title"
@@ -40,6 +40,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_15_125846) do
     t.integer "main_account_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "creator_id", null: false
+    t.index ["creator_id"], name: "index_main_transactions_on_creator_id"
     t.index ["main_account_id"], name: "index_main_transactions_on_main_account_id"
   end
 
@@ -102,6 +104,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_15_125846) do
   add_foreign_key "categories", "sub_accounts"
   add_foreign_key "main_accounts", "users", column: "owner_id"
   add_foreign_key "main_transactions", "main_accounts"
+  add_foreign_key "main_transactions", "users", column: "creator_id"
   add_foreign_key "shared_main_account_users", "main_accounts"
   add_foreign_key "shared_main_account_users", "users"
   add_foreign_key "sub_account_transactions", "categories"

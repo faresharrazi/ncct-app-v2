@@ -23,8 +23,8 @@ class SubAccountsController < ApplicationController
     @sub_account = @main_account.sub_accounts.build(sub_account_params)
 
     if @sub_account.save
-      redirect_to main_account_sub_account_path(@main_account, @sub_account),
-                  notice: "SubAccount was successfully created."
+      redirect_to main_account_sub_accounts_path(@main_account),
+                  notice: "Account was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -35,7 +35,7 @@ class SubAccountsController < ApplicationController
   def update
     if @sub_account.update(sub_account_params)
       redirect_to main_account_sub_account_path(@main_account, @sub_account),
-                  notice: "SubAccount was successfully updated."
+                  notice: "Account was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -44,7 +44,7 @@ class SubAccountsController < ApplicationController
   def destroy
     @sub_account.destroy
     redirect_to main_account_sub_accounts_path(@main_account),
-                notice: "SubAccount and all associated categories were successfully deleted."
+                notice: "Account and all associated categories were successfully deleted."
   end
 
   private
@@ -61,7 +61,7 @@ class SubAccountsController < ApplicationController
   def set_sub_account
     @sub_account = @main_account&.sub_accounts&.find_by(id: params[:id])
     unless @sub_account
-      redirect_to main_account_sub_accounts_path(@main_account), alert: "SubAccount not found."
+      redirect_to main_account_sub_accounts_path(@main_account), alert: "Account not found."
     end
   end
 

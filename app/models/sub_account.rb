@@ -20,9 +20,12 @@ class SubAccount < ApplicationRecord
   end
 
   def initialize_balance_from_shareable_balance
-    calculated_balance = (percentage / 100.0) * main_account.shareable_balance
-    update_column(:balance, calculated_balance)
-    deduct_percentage_from_main_account
+    shareable_balance = main_account.shareable_balance
+    allocated_balance = (percentage / 100.0) * shareable_balance
+
+    update!(balance: allocated_balance)
+    main_account.update_shareable_balance(-allocated_balance)
+    main_account.update!(available_percentage: main_account.available_percentage - percentage)
   end
 
   def adjust_main_account_percentage
@@ -38,13 +41,6 @@ class SubAccount < ApplicationRecord
     main_account.update!(
       available_percentage: main_account.available_percentage + percentage,
       shareable_balance: main_account.shareable_balance + balance
-    )
-  end
-
-  def deduct_percentage_from_main_account
-    main_account.update!(
-      available_percentage: main_account.available_percentage - percentage,
-      shareable_balance: main_account.shareable_balance - balance
     )
   end
 end

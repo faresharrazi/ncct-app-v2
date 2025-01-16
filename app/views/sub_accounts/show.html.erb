@@ -9,11 +9,8 @@
       <span class="text-muted"><%= @sub_account.description.presence || "No description provided." %></span>
     </p>
 
-    <!-- Percentage -->
-    <p>
-      <strong>Percentage:</strong>
-      <span class="badge bg-primary"><%= @sub_account.percentage %>%</span>
-    </p>
+    <!-- Percentage and Balance Badges -->
+    <%= render 'main_accounts/badges', balance: @sub_account.balance, percentage: @sub_account.percentage, currency: @main_account.currency %>
 
     <!-- Manage Categories -->
     <p>

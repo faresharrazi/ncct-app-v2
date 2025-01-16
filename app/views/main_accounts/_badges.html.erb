@@ -1,0 +1,12 @@
+<div class="d-flex align-items-center mb-4">
+  <p class="mb-0 me-3">
+    <span class="badge fs-5 <%= balance_badge_class(balance) %>" title="Total Balance">
+      <%= number_to_currency(balance, unit: currency) %>
+    </span>
+  </p>
+  <p class="mb-0">
+    <span class="badge fs-5 <%= available_percentage_badge_class(percentage) %>" title="Available Percentage">
+      <%= percentage %>%
+    </span>
+  </p>
+</div>

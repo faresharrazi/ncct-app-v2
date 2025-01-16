@@ -18,14 +18,20 @@ class SubAccountTransactionsController < ApplicationController
 
   def new
     @sub_account_transaction = SubAccountTransaction.new(sub_account_transaction_params)
+    @sub_account_transaction.transaction_kind ||= 'expense'
     @sub_accounts = SubAccount.all
     @categories = Category.all
   end
 
   def new_without_subaccount
     @sub_account_transaction = SubAccountTransaction.new(sub_account_transaction_params)
+    @sub_account_transaction.transaction_kind ||= 'expense'
     @sub_accounts = SubAccount.all
-    @categories = Category.all
+    if params[:sub_account_transaction].present?
+      @categories = Category.where(sub_account_id: params[:sub_account_transaction][:sub_account_id])
+    else
+      @categories = Category.none
+    end
   end
 
   def create
@@ -39,11 +45,10 @@ class SubAccountTransactionsController < ApplicationController
     @sub_account_transaction.creator = current_user
 
     if @sub_account_transaction.save
-      update_balances(@sub_account_transaction)
       redirect_to all_sub_account_transactions_path, notice: "Transaction was successfully created."
     else
       @sub_accounts = SubAccount.all
-      @categories = Category.all
+      @categories = Category.where(sub_account_id: params[:sub_account_transaction][:sub_account_id])
       if params[:sub_account_transaction][:sub_account_id].present?
         render :new, status: :unprocessable_entity
       else
@@ -55,13 +60,12 @@ class SubAccountTransactionsController < ApplicationController
   def edit
     @sub_account_transaction = SubAccountTransaction.find(params[:id])
     @sub_accounts = SubAccount.all
-    @categories = Category.all
+    @categories = Category.where(sub_account_id: @sub_account_transaction.sub_account_id)
   end
 
   def update
     @sub_account_transaction = SubAccountTransaction.find(params[:id])
     if @sub_account_transaction.update(transaction_params)
-      update_balances(@sub_account_transaction)
       redirect_to main_account_sub_account_sub_account_transaction_path(@main_account, @sub_account, @sub_account_transaction),
                   notice: "Transaction was successfully updated."
     else
@@ -71,7 +75,6 @@ class SubAccountTransactionsController < ApplicationController
 
   def destroy
     @sub_account_transaction.destroy
-    update_balances(@sub_account_transaction, destroy: true)
     redirect_to all_sub_account_transactions_path, notice: "Transaction was successfully deleted."
   end
 
@@ -92,13 +95,5 @@ class SubAccountTransactionsController < ApplicationController
 
   def transaction_params
     params.require(:sub_account_transaction).permit(:title, :amount, :transaction_kind, :description, :date, :sub_account_id, :category_id)
-  end
-
-  def update_balances(transaction, destroy: false)
-    delta = transaction.transaction_kind == "income" ? transaction.amount : -transaction.amount
-    delta = -delta if destroy
-
-    transaction.sub_account.update!(balance: transaction.sub_account.balance + delta)
-    transaction.sub_account.main_account.update!(balance: transaction.sub_account.main_account.balance + delta)
   end
 end

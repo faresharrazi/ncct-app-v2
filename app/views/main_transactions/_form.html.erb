@@ -45,6 +45,5 @@
   <!-- Submit and Cancel Buttons -->
   <div class="d-flex justify-content-between">
     <%= form.submit "Save Transaction", class: "btn btn-primary" %>
-    <%= link_to "Cancel", main_account_main_transactions_path(@main_account), class: "btn btn-secondary" %>
-  </div>
+    <%= link_to "Cancel", main_account_path(@main_account), class: "btn btn-secondary" %>  </div>
 <% end %>

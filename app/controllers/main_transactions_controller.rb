@@ -1,32 +1,17 @@
 class MainTransactionsController < ApplicationController
-  before_action :authenticate_user!
   before_action :set_main_account
-  before_action :set_main_transaction, only: %i[show edit update destroy]
+  before_action :set_main_transaction, only: %i[edit update destroy]
 
-  def index
-    @main_transactions = @main_account.main_transactions.order(created_at: :desc)
-  end
-
-  def show; end
-  
   def new
-    if params[:main_transaction]
-      @main_transaction = @main_account.main_transactions.build(
-        title: params[:main_transaction][:title],
-        amount: params[:main_transaction][:amount],
-        transaction_kind: params[:main_transaction][:transaction_kind]
-      )
-    else
-      @main_transaction = @main_account.main_transactions.build
-    end
+    @main_transaction = @main_account.main_transactions.new(main_transaction_params)  
   end
 
   def create
-    @main_transaction = @main_account.main_transactions.build(main_transaction_params)
+    @main_transaction = @main_account.main_transactions.new(main_transaction_params)
+    @main_transaction.creator = current_user
 
     if @main_transaction.save
-      redirect_to main_account_path(current_user.main_accounts.first),
-                  notice: "Transaction was successfully created."
+      redirect_to main_account_path(@main_account), notice: "Transaction was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -36,8 +21,7 @@ class MainTransactionsController < ApplicationController
 
   def update
     if @main_transaction.update(main_transaction_params)
-      redirect_to main_account_path(current_user.main_accounts.first),
-                  notice: "Transaction was successfully updated."
+      redirect_to main_account_path(@main_account), notice: "Transaction was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -60,6 +44,6 @@ class MainTransactionsController < ApplicationController
   end
 
   def main_transaction_params
-    params.require(:main_transaction).permit(:title, :amount, :transaction_kind, :description, :date)
+    params.fetch(:main_transaction, {}).permit(:title, :amount, :transaction_kind, :description, :date)  
   end
 end

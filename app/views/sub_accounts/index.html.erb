@@ -17,14 +17,11 @@
   </p>
 </div>
 
-<% if @sub_accounts.empty? %>
-  <div class="alert alert-info">
-    <i class="fas fa-info-circle me-2"></i>No SubAccounts added yet.
-  </div>
-<% end %>
-
 <% if @main_account.owner == current_user && @main_account.available_percentage > 0 %>
-  <%= link_to "New SubAccount", new_main_account_sub_account_path(@main_account), class: "btn btn-success mb-3" %>
+  <div class="alert alert-info">
+    <i class="fas fa-info-circle me-2"></i>You have available percentage. Please create new accounts to allocate your funds.
+    <%= link_to "Create Account", new_main_account_sub_account_path(@main_account), class: "btn btn-primary btn-sm ms-2" %>
+  </div>
 <% end %>
 
 <% if @sub_accounts.any? %>

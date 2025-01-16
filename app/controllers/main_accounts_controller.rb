@@ -15,8 +15,6 @@ class MainAccountsController < ApplicationController
     @main_transactions = @main_account.main_transactions.order(created_at: :desc)
     @sub_accounts = @main_account.sub_accounts.order(:created_at)
 
-    # Update balances to reflect the latest changes
-    @main_account.update_balances!
   end
 
   def new

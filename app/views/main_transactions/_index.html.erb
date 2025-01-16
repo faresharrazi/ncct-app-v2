@@ -60,10 +60,11 @@
       <% end %>
     </tbody>
   </table>
-<% else %>
+<% elsif current_user.main_accounts.any? && current_user.main_accounts.first.sub_accounts.any? %>
   <p class="alert alert-info">
     <i class="fas fa-info-circle me-2"></i>No transactions added yet.
   </p>
 <% end %>
-
-<%= link_to "New Transaction", new_main_account_main_transaction_path(@main_account), class: "btn btn-success" %>
+<% if @main_account.balance != 0 %>
+  <%= link_to "New Transaction", new_main_account_main_transaction_path(@main_account), class: "btn btn-success" %>
+<% end %>
