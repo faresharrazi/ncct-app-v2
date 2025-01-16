@@ -28,7 +28,7 @@
         type="range"
         class="form-range me-3"
         min="0"
-        max="<%= @main_account.available_percentage %>"
+        max="<%= @max_percentage %>"
         step="1"
         value="<%= sub_account.percentage || 0 %>"
         oninput="document.getElementById('percentage-value').value = this.value"
@@ -40,14 +40,14 @@
         class="form-control"
         style="width: 100px;"
         min="0"
-        max="<%= @main_account.available_percentage %>"
+        max="<%= @max_percentage %>"
         step="1"
         value="<%= sub_account.percentage || 0 %>"
         oninput="document.getElementById('percentage-slider').value = this.value"
       >
       <span class="ms-2">%</span>
     </div>
-    <small class="text-muted">Select a percentage between 0% and <%= @main_account.available_percentage %>%.</small>
+    <small class="text-muted">Select a percentage between 0% and <%= @max_percentage %>%.</small>
   </div>
 
   <div class="d-flex justify-content-between">

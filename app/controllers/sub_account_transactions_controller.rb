@@ -17,10 +17,10 @@ class SubAccountTransactionsController < ApplicationController
   end
 
   def new
-    @sub_account_transaction = SubAccountTransaction.new(sub_account_transaction_params)
+    @sub_account_transaction = SubAccountTransaction.new
     @sub_account_transaction.transaction_kind ||= 'expense'
-    @sub_accounts = SubAccount.all
-    @categories = Category.all
+    @sub_accounts = current_user.main_accounts.includes(:sub_accounts).map(&:sub_accounts).flatten
+    @categories = Category.where(sub_account_id: @sub_accounts.pluck(:id))
   end
 
   def new_without_subaccount

@@ -17,6 +17,8 @@ class SubAccountsController < ApplicationController
   def new
     @sub_account = @main_account.sub_accounts.build
     @sub_account_transaction = SubAccountTransaction.new
+    @max_percentage = @main_account.available_percentage
+
   end
 
   def create
@@ -30,7 +32,9 @@ class SubAccountsController < ApplicationController
     end
   end
 
-  def edit; end
+  def edit
+    @max_percentage = @sub_account.percentage + @main_account.available_percentage
+  end
 
   def update
     if @sub_account.update(sub_account_params)

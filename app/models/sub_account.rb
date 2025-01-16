@@ -32,8 +32,12 @@ class SubAccount < ApplicationRecord
     return unless percentage_previously_changed?
 
     difference = percentage - percentage_before_last_save
+    new_balance = (percentage / 100.0) * main_account.shareable_balance
+
+    update!(balance: new_balance)
     main_account.update!(
-      available_percentage: main_account.available_percentage - difference
+      available_percentage: main_account.available_percentage - difference,
+      shareable_balance: main_account.shareable_balance - new_balance
     )
   end
 
