@@ -27,6 +27,9 @@ Rails.application.routes.draw do
   get 'sub_account_transactions/new', to: 'sub_account_transactions#new_without_subaccount', as: :new_sub_account_transaction_without_subaccount
   post 'sub_account_transactions', to: 'sub_account_transactions#create', as: :create_sub_account_transaction_without_subaccount
 
+  # Custom route to fetch the balance of a specific subaccount
+  get 'sub_accounts/:id/balance', to: 'sub_accounts#balance', as: :sub_account_balance
+
   # Custom route to fetch categories for a specific subaccount
   get 'sub_accounts/:sub_account_id/categories', to: 'categories#index', as: :sub_account_categories
 end

@@ -1,11 +1,20 @@
 class SubAccountsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_main_account
+  before_action :set_main_account, except: [:balance]
   before_action :set_sub_account, only: %i[show edit update destroy]
   before_action :authorize_owner!, only: %i[new create edit update destroy]
 
   def index
     @sub_accounts = @main_account.sub_accounts
+  end
+
+  def balance
+    @sub_account = SubAccount.find_by(id: params[:id])
+    if @sub_account
+      render json: { balance: @sub_account.balance }
+    else
+      render json: { error: "SubAccount not found" }, status: :not_found
+    end
   end
 
   def show

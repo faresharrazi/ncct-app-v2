@@ -30,6 +30,9 @@
   <div class="mb-3">
     <%= form.label :sub_account_id, "Select Account", class: "form-label" %>
     <%= form.collection_select :sub_account_id, @sub_accounts, :id, :title, { prompt: "Choose an Account" }, class: "form-select" %>
+    <div id="sub-account-balance" class="mt-2 text-muted">
+      <!-- Balance will be displayed here -->
+    </div>
   </div>
 
   <!-- Category Selection -->
@@ -56,23 +59,65 @@
 <% end %>
 
 <script>
-  document.addEventListener("turbo:load", function() {
-    const subAccountSelect = document.querySelector("[name='sub_account_transaction[sub_account_id]']");
-    const categorySelect = document.querySelector("[name='sub_account_transaction[category_id]']");
+document.addEventListener("turbo:load", function() {
+  const subAccountSelect = document.querySelector("[name='sub_account_transaction[sub_account_id]']");
+  const categorySelect = document.querySelector("[name='sub_account_transaction[category_id]']");
+  const balanceDisplay = document.getElementById("sub-account-balance");
 
-    subAccountSelect.addEventListener("change", function() {
-      const subAccountId = this.value;
-      fetch(`/sub_accounts/${subAccountId}/categories.json`)
-        .then(response => response.json())
-        .then(data => {
-          categorySelect.innerHTML = '<option value="">Choose a Category</option>';
-          data.forEach(category => {
-            const option = document.createElement("option");
-            option.value = category.id;
-            option.textContent = category.title;
-            categorySelect.appendChild(option);
-          });
+  function fetchBalanceAndCategories(subAccountId) {
+    if (!subAccountId) {
+      balanceDisplay.textContent = "";
+      categorySelect.innerHTML = '<option value="">Choose a Category</option>';
+      return;
+    }
+
+    // Fetch and display the balance
+    fetch(`/sub_accounts/${subAccountId}/balance.json`)
+      .then(response => {
+        if (!response.ok) throw new Error("Failed to fetch balance");
+        return response.json();
+      })
+      .then(data => {
+        if (data.balance !== undefined && data.balance !== null) {
+          balanceDisplay.textContent = `Balance: $${parseFloat(data.balance).toFixed(2)}`;
+        } else {
+          balanceDisplay.textContent = "Balance not available";
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching balance:", error);
+        balanceDisplay.textContent = "Error fetching balance";
+      });
+
+    // Fetch and populate categories
+    fetch(`/sub_accounts/${subAccountId}/categories.json`)
+      .then(response => {
+        if (!response.ok) throw new Error("Failed to fetch categories");
+        return response.json();
+      })
+      .then(data => {
+        categorySelect.innerHTML = '<option value="">Choose a Category</option>';
+        data.forEach(category => {
+          const option = document.createElement("option");
+          option.value = category.id;
+          option.textContent = category.title;
+          categorySelect.appendChild(option);
         });
-    });
+      })
+      .catch(error => {
+        console.error("Error fetching categories:", error);
+        categorySelect.innerHTML = '<option value="">Error loading categories</option>';
+      });
+  }
+
+  // Fetch balance and categories initially if a subaccount is selected
+  if (subAccountSelect.value) {
+    fetchBalanceAndCategories(subAccountSelect.value);
+  }
+
+  // Fetch balance and categories when dropdown value changes
+  subAccountSelect.addEventListener("change", function() {
+    fetchBalanceAndCategories(this.value);
   });
+});
 </script>

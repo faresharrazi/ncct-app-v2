@@ -19,33 +19,37 @@
       <p><%= @sub_account_transaction.description.present? ? @sub_account_transaction.description : "No description" %></p>
     </div>
     <div class="d-flex justify-content-end">
-      <!-- Repeat Transaction -->
-      <%= link_to new_main_account_sub_account_sub_account_transaction_path(
-                    @sub_account_transaction.sub_account.main_account, 
-                    @sub_account_transaction.sub_account, 
+      <!-- Repeat Transaction with Edit -->
+      <%= link_to new_sub_account_transaction_without_subaccount_path(
                     sub_account_transaction: { 
+                      sub_account_id: @sub_account_transaction.sub_account.id,
                       title: @sub_account_transaction.title, 
                       amount: @sub_account_transaction.amount, 
-                      transaction_kind: @sub_account_transaction.transaction_kind, 
-                      sub_account_id: @sub_account_transaction.sub_account_id, 
-                      category_id: @sub_account_transaction.category_id, 
-                      description: @sub_account_transaction.description 
+                      transaction_kind: @sub_account_transaction.transaction_kind,
+                      category_id: @sub_account_transaction.category_id
                     }
                   ), 
-                  class: "btn btn-outline-primary me-2" do %>
-        <i class="fas fa-redo-alt" title="Repeat Transaction"></i>
+                  class: "text-decoration-none me-2" do %>
+        <i class="fas fa-redo-alt text-primary" title="Repeat Transaction with Edit"></i>
+      <% end %>
+
+      <!-- Repeat Transaction without Edit -->
+      <%= link_to repeat_without_edit_main_account_sub_account_sub_account_transaction_path(@sub_account_transaction.sub_account.main_account, @sub_account_transaction.sub_account, @sub_account_transaction), 
+                  data: { turbo_method: :post }, 
+                  class: "text-decoration-none me-2" do %>
+        <i class="fas fa-clone text-success" title="Repeat Transaction without Edit"></i>
       <% end %>
 
       <!-- Edit Transaction -->
-      <%= link_to edit_main_account_sub_account_sub_account_transaction_path(@sub_account_transaction.sub_account.main_account, @sub_account_transaction.sub_account, @sub_account_transaction), class: "btn btn-outline-warning me-2" do %>
-        <i class="fas fa-edit" title="Edit Transaction"></i>
+      <%= link_to edit_main_account_sub_account_sub_account_transaction_path(@sub_account_transaction.sub_account.main_account, @sub_account_transaction.sub_account, @sub_account_transaction), class: "text-decoration-none me-2" do %>
+        <i class="fas fa-edit text-warning" title="Edit Transaction"></i>
       <% end %>
 
       <!-- Delete Transaction -->
-      <%= link_to main_account_sub_account_sub_account_transaction_path(@sub_account_transaction.sub_account.main_account, @sub_account_transaction.sub_account, @sub_account_transaction), 
-                  data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this transaction?" }, 
-                  class: "btn btn-outline-danger" do %>
-        <i class="fas fa-trash-alt" title="Delete Transaction"></i>
+      <%= link_to main_account_sub_account_sub_account_transaction_path(@sub_account_transaction.sub_account.main_account, @sub_account_transaction.sub_account, @sub_account_transaction),
+                  data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this transaction?" },
+                  class: "text-decoration-none" do %>
+        <i class="fas fa-trash-alt text-danger" title="Delete Transaction"></i>
       <% end %>
     </div>
   </div>
