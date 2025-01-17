@@ -48,9 +48,9 @@
             <td><%= owner.email %></td>
             <td><%= owner.created_at.strftime("%B %d, %Y") %></td>
             <td>
-              <%= link_to "Remove", main_account_shared_main_account_user_path(@main_account, owner), 
-                          data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to remove this partner?" }, 
-                          class: "btn btn-sm btn-danger" %>
+            <%= link_to "Remove", remove_main_account_shared_main_account_user_path(@main_account, owner), 
+                        data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to remove this partner?" }, 
+                        class: "btn btn-sm btn-danger" %>
             </td>
           </tr>
         <% end %>

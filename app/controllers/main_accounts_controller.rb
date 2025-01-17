@@ -58,7 +58,7 @@ class MainAccountsController < ApplicationController
 
   def authorize_owner_or_partner!
     unless @main_account.owners.include?(current_user)
-      redirect_to main_accounts_path, alert: "You do not have access to this Main Account."
+      redirect_to root_path, alert: "You do not have access to this Main Account."
     end
   end
 end

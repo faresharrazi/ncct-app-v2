@@ -21,9 +21,12 @@ Rails.application.routes.draw do
       collection do
         get :search
       end
+      member do
+        delete :remove
+      end
     end
   end
-
+  
   post 'accept_invitation/:id', to: 'shared_main_account_users#accept_invitation', as: :accept_invitation
   delete 'cancel_invitation/:main_account_id/:id', to: 'shared_main_account_users#destroy', as: :cancel_invitation  
   delete 'reject_invitation/:id', to: 'shared_main_account_users#reject_invitation', as: :reject_invitation

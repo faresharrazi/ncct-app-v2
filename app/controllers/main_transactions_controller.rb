@@ -1,6 +1,6 @@
 class MainTransactionsController < ApplicationController
   before_action :set_main_account
-  before_action :set_main_transaction, only: %i[edit update destroy repeat_without_edit]
+  before_action :set_main_transaction, only: %i[show edit update destroy repeat_without_edit]
 
   def new
     @main_transaction = @main_account.main_transactions.new(main_transaction_params)  

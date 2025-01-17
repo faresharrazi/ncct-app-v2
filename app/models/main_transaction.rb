@@ -24,10 +24,15 @@ class MainTransaction < ApplicationRecord
   end
 
   def adjust_balances_before_update
-    previous_delta = transaction_kind == 'income' ? -amount_was : amount_was
-    new_delta = transaction_kind == 'income' ? amount : -amount
-    adjust_main_account_balance(new_delta - previous_delta)
-    distribute_amount_among_subaccounts(new_delta - previous_delta)
+    # Calculate the difference between the new amount and the old amount
+    amount_difference = amount - amount_was
+
+    # Adjust the main account balance based on the transaction kind
+    if transaction_kind == 'income'
+      main_account.update!(balance: main_account.balance + amount_difference)
+    elsif transaction_kind == 'expense'
+      main_account.update!(balance: main_account.balance - amount_difference)
+    end
   end
 
   def reverse_balances_on_destroy

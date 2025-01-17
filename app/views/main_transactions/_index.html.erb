@@ -5,6 +5,7 @@
         <th>Date</th>
         <th>Title</th>
         <th>Amount</th>
+        <th>Creator</th> <!-- Add a new column for the creator -->
         <th>Action</th>
       </tr>
     </thead>
@@ -27,6 +28,11 @@
             <span class="badge <%= transaction.transaction_kind == 'expense' ? 'bg-danger' : 'bg-success' %>">
               <%= number_to_currency(transaction.amount, unit: transaction.main_account&.currency || "€") %>
             </span>
+          </td>
+
+          <!-- Creator -->
+          <td>
+            <span class="text-muted"><%= transaction.creator.full_name %></span>
           </td>
           
           <!-- Actions -->

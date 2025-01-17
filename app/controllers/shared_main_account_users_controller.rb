@@ -1,7 +1,7 @@
 class SharedMainAccountUsersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_main_account, except: [:reject_invitation, :accept_invitation]
-  before_action :set_shared_main_account_user, only: [:show, :edit, :update, :destroy]
+  before_action :set_shared_main_account_user, only: [:show, :edit, :update, :destroy, :remove]
   before_action :authorize_owner_or_partner!, only: [:index, :show, :new, :create, :edit, :update, :destroy]
 
   def index
@@ -27,7 +27,6 @@ class SharedMainAccountUsersController < ApplicationController
   end
 
   def show
-    # Display details of a specific shared user
   end
 
   def new
@@ -37,7 +36,6 @@ class SharedMainAccountUsersController < ApplicationController
   def create
     @shared_main_account_user = User.find(params[:user_id])
     if @shared_main_account_user
-      # Add the user to the new main account with pending status
       @main_account.shared_main_account_users.create(user: @shared_main_account_user, status: 'pending')
       redirect_to main_account_shared_main_account_users_path(@main_account), notice: "Partner invitation was successfully sent."
     else
@@ -46,8 +44,6 @@ class SharedMainAccountUsersController < ApplicationController
   end
 
   def edit
-    # Typically, you might not need an edit action for a join model like this
-    # But it's included here for completeness
   end
 
   def update
@@ -63,23 +59,33 @@ class SharedMainAccountUsersController < ApplicationController
     redirect_to main_account_shared_main_account_users_path(@main_account), notice: "Invitation was successfully canceled."
   end
 
+def remove    
+    user_to_remove = @shared_main_account_user.user
+    @shared_main_account_user.destroy
+
+    @main_account.owners.delete(user_to_remove)
+
+    new_main_account = MainAccount.create!(
+      title: "Main Account",
+      available_percentage: 100.0,
+      currency: "€",
+      balance: 0.0,
+      shareable_balance: 0.0
+    )
+    new_main_account.owners << user_to_remove
+    user_to_remove.update(main_account: new_main_account)
+
+    redirect_to main_account_shared_main_account_users_path(@main_account), notice: "Partner was successfully removed."
+  end
+
   def accept_invitation
-    Rails.logger.debug "Accept action called for SharedMainAccountUser with ID: #{params[:id]}"
     invitation = SharedMainAccountUser.find(params[:id])
-    Rails.logger.debug "Invitation: #{invitation.inspect}"
     if invitation.user == current_user && invitation.status == 'pending'
-      # Destroy the current user's main account if it exists
       current_user.main_account&.destroy
-      # Update the invitation status to 'accepted'
       invitation.update(status: 'accepted')
-      # Assign the main account from the invitation to the current user
       current_user.update(main_account: invitation.main_account)
-      # Add the current user to the owners of the main account
       invitation.main_account.owners << current_user
-      # Reload the current user to ensure the main account is correctly associated
       current_user.reload
-      Rails.logger.debug "Current User Main Account: #{current_user.main_account.inspect}"
-      # Redirect to the main account's shared main account users path
       redirect_to main_account_shared_main_account_users_path(current_user.main_account), notice: "Invitation accepted. You are now a partner."
     else
       redirect_to main_account_shared_main_account_users_path(current_user.main_account), alert: "Failed to accept invitation."
@@ -103,7 +109,7 @@ class SharedMainAccountUsersController < ApplicationController
   end
 
   def set_shared_main_account_user
-    @shared_main_account_user = @main_account.shared_main_account_users.find(params[:id])
+    @shared_main_account_user = @main_account.shared_main_account_users.find_by(user_id: params[:id])
   end
 
   def shared_main_account_user_params
