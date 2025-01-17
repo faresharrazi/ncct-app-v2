@@ -92,7 +92,7 @@ class SubAccountTransactionsController < ApplicationController
 
   def destroy
     @sub_account_transaction.destroy
-    redirect_to all_sub_account_transactions_path, notice: "Transaction was successfully deleted."
+    redirect_back fallback_location: main_account_sub_account_sub_account_transactions_path(@main_account, @sub_account), notice: "Transaction was successfully deleted."
   end
 
   private

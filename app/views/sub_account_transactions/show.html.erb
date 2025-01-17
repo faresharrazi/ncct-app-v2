@@ -2,6 +2,10 @@
   <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
     <div class="d-flex align-items-center">
       <h1 class="h5 mb-0 me-3"><%= @sub_account_transaction.title %></h1>
+      <div class="d-flex align-items-center">
+        <i class="fas fa-user me-2"></i>
+        <span><%= @sub_account_transaction.creator.full_name %></span>
+      </div>
     </div>
     <small><%= @sub_account_transaction.created_at.strftime('%B %d, %Y - %H:%M') %></small>
   </div>

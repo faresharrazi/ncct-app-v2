@@ -1,4 +1,4 @@
-<div class="card mb-4 shadow-sm" style="<%= 'cursor: pointer;' unless current_page?(main_account_sub_account_path(main_account, sub_account)) %> min-height: 200px; max-width: 400px;" 
+<div class="card mb-4 shadow-sm" style="<%= 'cursor: pointer;' unless current_page?(main_account_sub_account_path(main_account, sub_account)) %> min-height: 200px; max-width: 300px;" 
      <% unless current_page?(main_account_sub_account_path(main_account, sub_account)) %>
        onclick="window.location='<%= main_account_sub_account_path(main_account, sub_account) %>';"
      <% end %>>

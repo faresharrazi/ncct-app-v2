@@ -20,6 +20,7 @@
         <th>Title</th>
         <th>Amount</th>
         <th>Account</th>
+        <th>Creator</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -54,21 +55,26 @@
             <% end %>
           </td>
 
-<!-- Actions -->
-<td>
-  <!-- Repeat Transaction with Edit -->
-  <%= link_to new_sub_account_transaction_without_subaccount_path(
-                sub_account_transaction: { 
-                  sub_account_id: transaction.sub_account.id,
-                  title: transaction.title, 
-                  amount: transaction.amount, 
-                  transaction_kind: transaction.transaction_kind,
-                  category_id: transaction.category_id
-                }
-              ), 
-              class: "text-decoration-none" do %>
-    <i class="fas fa-redo-alt text-primary" title="Repeat Transaction with Edit"></i>
-  <% end %>
+          <!-- Creator -->
+          <td>
+            <span class="text-muted"><%= transaction.creator.full_name %></span>
+          </td>
+
+          <!-- Actions -->
+          <td>
+            <!-- Repeat Transaction with Edit -->
+            <%= link_to new_sub_account_transaction_without_subaccount_path(
+                          sub_account_transaction: { 
+                            sub_account_id: transaction.sub_account.id,
+                            title: transaction.title, 
+                            amount: transaction.amount, 
+                            transaction_kind: transaction.transaction_kind,
+                            category_id: transaction.category_id
+                          }
+                        ), 
+                        class: "text-decoration-none" do %>
+              <i class="fas fa-redo-alt text-primary" title="Repeat Transaction with Edit"></i>
+            <% end %>
 
   <!-- Repeat Transaction without Edit -->
   <%= link_to repeat_without_edit_main_account_sub_account_sub_account_transaction_path(transaction.sub_account.main_account, transaction.sub_account, transaction), 

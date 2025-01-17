@@ -1,7 +1,7 @@
 <% if @sub_accounts.any? %>
   <div class="row">
     <% @sub_accounts.each do |sub_account| %>
-      <div class="col-12 col-md-6 col-lg-4 mb-3">
+      <div class="col-12 col-md-6 col-lg-4 mb-1">
         <%= render partial: "sub_accounts/account", locals: { sub_account: sub_account, main_account: @main_account } %>
       </div>
     <% end %>
@@ -15,7 +15,7 @@
 <% end %>
 
 <!-- Render Sub-account Transactions -->
-<div class="mt-4">
+<div class="mt-1">
   <% all_transactions = @sub_accounts.map(&:sub_account_transactions).flatten %>
   <%= render partial: 'sub_account_transactions/transactions', locals: { transactions: all_transactions, main_account: @main_account, title: "All Transactions" } %>
 </div>

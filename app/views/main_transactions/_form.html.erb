@@ -12,22 +12,24 @@
     </div>
   <% end %>
 
-  <!-- Title -->
-  <div class="mb-3">
-    <%= form.label :title, "Title", class: "form-label" %>
-    <%= form.text_field :title, class: "form-control", placeholder: "Enter transaction title", autofocus: true %>
+  <div class="row mb-3">
+    <!-- Title -->
+    <div class="col-6">
+      <%= form.label :title, "Title", class: "form-label" %>
+      <%= form.text_field :title, class: "form-control", placeholder: "Enter transaction title", autofocus: true %>
+    </div>
+
+    <!-- Amount -->
+    <div class="col-6">
+      <%= form.label :amount, "Amount (#{@main_account&.currency || '€'})", class: "form-label" %>
+      <%= form.number_field :amount, step: 0.01, class: "form-control", placeholder: "Enter amount" %>
+    </div>
   </div>
 
   <!-- Description -->
   <div class="mb-3">
     <%= form.label :description, "Description", class: "form-label" %>
     <%= form.text_area :description, class: "form-control", rows: 4, placeholder: "Enter optional description" %>
-  </div>
-
-  <!-- Amount -->
-  <div class="mb-3">
-    <%= form.label :amount, "Amount (#{@main_account&.currency || '€'})", class: "form-label" %>
-    <%= form.number_field :amount, step: 0.01, class: "form-control", placeholder: "Enter amount" %>
   </div>
 
   <!-- Transaction Kind -->

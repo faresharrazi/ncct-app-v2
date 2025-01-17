@@ -1,7 +1,27 @@
-<div class="container mt-4">
-      <% flash.each do |key, message| %>
-        <div class="alert alert-<%= key == 'notice' ? 'success' : 'danger' %> alert-dismissible fade show" role="alert">
-          <%= message %>
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-      <% end %>
+<div id="alert-message" class="alert-container">
+  <% flash.each do |key, message| %>
+    <div id="alert-<%= key %>" class="alert alert-<%= key == 'notice' ? 'success' : 'danger' %> alert-dismissible fade show" role="alert">
+      <%= message %>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  <% end %>
+</div>
+
+<script>
+  document.addEventListener('turbo:load', function() {
+    setTimeout(function() {
+      var alertContainer = document.getElementById('alert-message');
+      if (alertContainer) {
+        var alerts = alertContainer.querySelectorAll('.alert');
+        alerts.forEach(function(alert) {
+          console.log('Alert detected:', alert);
+          alert.classList.remove('show');
+          alert.classList.add('fade');
+          setTimeout(function() {
+            alert.remove();
+          }, 150); // Allow time for fade out
+        });
+      }
+    }, 2000); // 2 seconds
+  });
+</script>
