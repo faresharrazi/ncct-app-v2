@@ -1,8 +1,8 @@
 class SharedMainAccountUsersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_main_account, except: [:reject_invitation, :accept_invitation]
-  before_action :set_shared_main_account_user, only: [:show, :edit, :update, :destroy, :remove]
-  before_action :authorize_owner_or_partner!, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+  before_action :set_user_to_remove, only: [:remove]
+  before_action :authorize_owner_or_partner!, only: [:index, :show, :new, :create, :edit, :update, :destroy, :remove]
 
   def index
     @main_account = current_user.main_account
@@ -26,13 +26,6 @@ class SharedMainAccountUsersController < ApplicationController
     render :index
   end
 
-  def show
-  end
-
-  def new
-    @shared_main_account_user = User.new
-  end
-
   def create
     @shared_main_account_user = User.find(params[:user_id])
     if @shared_main_account_user
@@ -43,26 +36,16 @@ class SharedMainAccountUsersController < ApplicationController
     end
   end
 
-  def edit
-  end
-
-  def update
-    if @shared_main_account_user.update(shared_main_account_user_params)
-      redirect_to main_account_shared_main_account_users_path(@main_account), notice: "Partner was successfully updated."
-    else
-      render :edit
-    end
-  end
-
   def destroy
+    @shared_main_account_user = @main_account.shared_main_account_users.find(params[:id])
     @shared_main_account_user.destroy
     redirect_to main_account_shared_main_account_users_path(@main_account), notice: "Invitation was successfully canceled."
   end
 
-def remove    
-    user_to_remove = @shared_main_account_user.user
-    @shared_main_account_user.destroy
-
+  def remove
+    user_to_remove = @user_to_remove
+    shared_main_account_user = @main_account.shared_main_account_users.find_by(user_id: user_to_remove.id)
+    shared_main_account_user&.destroy
     @main_account.owners.delete(user_to_remove)
 
     new_main_account = MainAccount.create!(
@@ -108,8 +91,8 @@ def remove
     @main_account = MainAccount.find(params[:main_account_id])
   end
 
-  def set_shared_main_account_user
-    @shared_main_account_user = @main_account.shared_main_account_users.find_by(user_id: params[:id])
+  def set_user_to_remove
+    @user_to_remove = User.find(params[:id])
   end
 
   def shared_main_account_user_params
@@ -118,7 +101,7 @@ def remove
 
   def authorize_owner_or_partner!
     unless @main_account.owners.include?(current_user) || @main_account.shared_main_account_users.exists?(user: current_user, status: 'accepted')
-      redirect_to main_accounts_path, alert: "Only the owner or partners can perform this action."
+      redirect_to root_path, alert: "You have been deleted from the Shared Account."
     end
   end
 end

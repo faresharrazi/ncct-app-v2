@@ -1,4 +1,3 @@
-
 <% if (@owners - [current_user]).any? || @invitations.any? || @sent_invitations.any? %>
   <table class="table table-striped">
     <thead class="table-dark">
@@ -43,6 +42,7 @@
       <% end %>
       <% @owners.each do |owner| %>
         <% unless owner == current_user %>
+          <% shared_main_account_user = @main_account.shared_main_account_users.find_by(user_id: owner.id) %>
           <tr>
             <td><%= "#{owner.first_name} #{owner.last_name}" %></td>
             <td><%= owner.email %></td>
