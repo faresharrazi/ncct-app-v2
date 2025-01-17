@@ -6,8 +6,11 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
 
   # Associations
-  belongs_to :main_account, optional: true  
-  has_many :main_transactions, through: :main_accounts, source: :main_transactions
+  belongs_to :main_account, optional: true
+  has_many :main_transactions, through: :main_account, source: :main_transactions
+  has_many :main_accounts_users, dependent: :destroy, class_name: 'MainAccountsUser'
+  has_many :shared_main_account_users, dependent: :destroy
+
 
   # Validations
   validates :first_name, presence: true
