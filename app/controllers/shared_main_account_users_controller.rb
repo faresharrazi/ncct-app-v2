@@ -8,6 +8,18 @@ class SharedMainAccountUsersController < ApplicationController
     @shared_users = @main_account.owners.where.not(id: current_user.id)
   end
 
+  def search
+    @shared_users = @main_account.owners.where.not(id: current_user.id)
+    query = params[:query]
+    if query.present?
+      @search_results = User.where.not(id: @main_account.owners.pluck(:id))
+                            .where("first_name LIKE ? OR last_name LIKE ? OR email LIKE ?", "%#{query}%", "%#{query}%", "%#{query}%")
+    else
+      @search_results = []
+    end
+    render :index
+  end
+
   def show
     # Display details of a specific shared user
   end

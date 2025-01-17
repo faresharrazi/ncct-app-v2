@@ -1,42 +1,7 @@
 <h1>Partners</h1>
-<% if @shared_users.empty? %>
-  <div class="alert alert-info mb-3">
-    <i class="fas fa-info-circle me-2"></i>No partners have been added yet.
-  </div>
-<% end %>
 
-<div class="mb-4">
-  <%= form_with url: main_account_shared_main_account_users_path(@main_account), method: :post, local: true do |form| %>
-    <div class="input-group mb-3">
-      <%= form.collection_select :user_id, User.where.not(id: @main_account.owners.pluck(:id)), :id, :full_name, prompt: "Choose a user", class: "form-select" %>
-      <button class="btn btn-success" type="submit">Add Partner</button>
-    </div>
-  <% end %>
-</div>
+<%= render 'search' %>
 
-<% if @shared_users.any? %>
-  <table class="table table-striped">
-    <thead class="table-dark">
-      <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Joined At</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @shared_users.each do |shared_user| %>
-        <tr>
-          <td><%= "#{shared_user.first_name} #{shared_user.last_name}" %></td>
-          <td><%= shared_user.email %></td>
-          <td><%= shared_user.created_at.strftime("%B %d, %Y") %></td>
-          <td>
-            <%= link_to "Remove", main_account_shared_main_account_user_path(@main_account, shared_user), 
-                        data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to remove this partner?" }, 
-                        class: "btn btn-sm btn-danger" %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% end %>
+<%= render 'message' %>
+
+<%= render 'partners' %>

@@ -1,0 +1,31 @@
+<div class="mb-4">
+  <%= form_with url: search_main_account_shared_main_account_users_path(@main_account), method: :get, local: true do |form| %>
+    <div class="input-group mb-3">
+      <%= form.text_field :query, placeholder: "Search by first name, last name, or email", class: "form-control" %>
+      <button class="btn btn-primary" type="submit">Search</button>
+    </div>
+  <% end %>
+</div>
+
+<% if @search_results.present? %>
+  <div class="row">
+    <% @search_results.each do |user| %>
+      <div class="col-12 col-md-6 col-lg-4 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title"><%= "#{user.first_name} #{user.last_name}" %></h5>
+            <p class="card-text"><%= user.email %></p>
+            <%= form_with url: main_account_shared_main_account_users_path(@main_account), method: :post, local: true do |form| %>
+              <%= form.hidden_field :user_id, value: user.id %>
+              <button class="btn btn-success" type="submit">Add Partner</button>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% elsif params[:query].present? %>
+  <div class="alert alert-warning">
+    No user found.
+  </div>
+<% end %>

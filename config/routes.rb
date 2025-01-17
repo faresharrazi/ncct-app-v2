@@ -17,7 +17,11 @@ Rails.application.routes.draw do
       end
       resources :categories, only: [:index, :show, :new, :create, :edit, :update, :destroy]
     end
-    resources :shared_main_account_users, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+    resources :shared_main_account_users do
+      collection do
+        get :search
+      end
+    end
   end
 
   # Custom route to show all subaccount transactions

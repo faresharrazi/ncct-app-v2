@@ -1,0 +1,26 @@
+<% if @shared_users.any? %>
+  <table class="table table-striped">
+    <thead class="table-dark">
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Joined At</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @shared_users.each do |shared_user| %>
+        <tr>
+          <td><%= "#{shared_user.first_name} #{shared_user.last_name}" %></td>
+          <td><%= shared_user.email %></td>
+          <td><%= shared_user.created_at.strftime("%B %d, %Y") %></td>
+          <td>
+            <%= link_to "Remove", main_account_shared_main_account_user_path(@main_account, shared_user), 
+                        data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to remove this partner?" }, 
+                        class: "btn btn-sm btn-danger" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
