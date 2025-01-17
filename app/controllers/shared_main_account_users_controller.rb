@@ -1,12 +1,11 @@
-# app/controllers/shared_main_account_users_controller.rb
 class SharedMainAccountUsersController < ApplicationController
   before_action :authenticate_user!
   before_action :set_main_account
   before_action :set_shared_main_account_user, only: [:show, :edit, :update, :destroy]
-  before_action :authorize_owner!, only: [:index, :show, :new, :create, :edit, :update, :destroy]
+  before_action :authorize_owner_or_partner!, only: [:index, :show, :new, :create, :edit, :update, :destroy]
 
   def index
-    @shared_users = @main_account.shared_main_account_users.includes(:user)
+    @shared_users = @main_account.owners.where.not(id: current_user.id)
   end
 
   def show
@@ -14,15 +13,20 @@ class SharedMainAccountUsersController < ApplicationController
   end
 
   def new
-    @shared_main_account_user = @main_account.shared_main_account_users.build
+    @shared_main_account_user = User.new
   end
 
   def create
-    @shared_main_account_user = @main_account.shared_main_account_users.build(shared_main_account_user_params)
-    if @shared_main_account_user.save
+    @shared_main_account_user = User.find(params[:user_id])
+    if @shared_main_account_user
+      # Remove the user from their current main account
+      @shared_main_account_user.main_account&.owners&.delete(@shared_main_account_user)
+      # Add the user to the new main account
+      @main_account.owners << @shared_main_account_user
+      @shared_main_account_user.update(main_account: @main_account)
       redirect_to main_account_shared_main_account_users_path(@main_account), notice: "Partner was successfully added."
     else
-      render :new
+      redirect_to main_account_shared_main_account_users_path(@main_account), alert: "Failed to add partner."
     end
   end
 
@@ -41,6 +45,7 @@ class SharedMainAccountUsersController < ApplicationController
 
   def destroy
     @shared_main_account_user.destroy
+    reassign_to_new_main_account(@shared_main_account_user.user)
     redirect_to main_account_shared_main_account_users_path(@main_account), notice: "Partner was successfully removed."
   end
 
@@ -48,22 +53,24 @@ class SharedMainAccountUsersController < ApplicationController
 
   def set_main_account
     @main_account = MainAccount.find(params[:main_account_id])
-    unless @main_account.owner == current_user
-      redirect_to main_accounts_path, alert: "Only the owner can manage partners for this Main Account."
-    end
   end
 
   def set_shared_main_account_user
-    @shared_main_account_user = @main_account.shared_main_account_users.find(params[:id])
+    @shared_main_account_user = @main_account.owners.find(params[:id])
   end
 
   def shared_main_account_user_params
     params.require(:shared_main_account_user).permit(:user_id)
   end
 
-  def authorize_owner!
-    unless @main_account.owner == current_user
-      redirect_to main_accounts_path, alert: "Only the owner can perform this action."
+  def authorize_owner_or_partner!
+    unless @main_account.owners.include?(current_user)
+      redirect_to main_accounts_path, alert: "Only the owner or partners can perform this action."
     end
+  end
+
+  def reassign_to_new_main_account(user)
+    new_main_account = MainAccount.create(owner: user, title: "New Main Account")
+    user.update(main_account: new_main_account)
   end
 end

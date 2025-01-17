@@ -29,9 +29,9 @@
   <!-- SubAccount Selection -->
   <div class="mb-3">
     <%= form.label :sub_account_id, "Select Account", class: "form-label" %>
-    <%= form.collection_select :sub_account_id, @sub_accounts, :id, :title, { prompt: "Choose an Account" }, class: "form-select" %>
-    <div id="sub-account-balance" class="mt-2 text-muted">
-      <!-- Balance will be displayed here -->
+    <div class="d-flex align-items-center">
+      <%= form.collection_select :sub_account_id, @sub_accounts, :id, :title, { prompt: "Choose an Account" }, class: "form-select" %>
+      <span id="sub-account-balance" class="badge bg-info fs-6 ms-3"></span>
     </div>
   </div>
 
@@ -79,7 +79,7 @@ document.addEventListener("turbo:load", function() {
       })
       .then(data => {
         if (data.balance !== undefined && data.balance !== null) {
-          balanceDisplay.textContent = `Balance: $${parseFloat(data.balance).toFixed(2)}`;
+          balanceDisplay.textContent = `$${parseFloat(data.balance).toFixed(2)}`;
         } else {
           balanceDisplay.textContent = "Balance not available";
         }

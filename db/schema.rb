@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_01_16_140200) do
+ActiveRecord::Schema[8.0].define(version: 2025_01_17_055830) do
   create_table "categories", force: :cascade do |t|
     t.integer "sub_account_id"
     t.string "title"
@@ -21,7 +21,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_16_140200) do
   end
 
   create_table "main_accounts", force: :cascade do |t|
-    t.integer "owner_id", null: false
     t.string "title", default: "Main Account"
     t.decimal "balance", precision: 15, scale: 2, default: "0.0"
     t.decimal "available_percentage", precision: 5, scale: 2, default: "100.0"
@@ -29,7 +28,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_16_140200) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.decimal "shareable_balance", precision: 15, scale: 2, default: "0.0"
-    t.index ["owner_id"], name: "index_main_accounts_on_owner_id"
+  end
+
+  create_table "main_accounts_users", id: false, force: :cascade do |t|
+    t.integer "main_account_id", null: false
+    t.integer "user_id", null: false
+    t.index ["main_account_id"], name: "index_main_accounts_users_on_main_account_id"
+    t.index ["user_id"], name: "index_main_accounts_users_on_user_id"
   end
 
   create_table "main_transactions", force: :cascade do |t|
@@ -97,12 +102,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_01_16_140200) do
     t.string "last_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "main_account_id"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["main_account_id"], name: "index_users_on_main_account_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "categories", "sub_accounts"
-  add_foreign_key "main_accounts", "users", column: "owner_id"
   add_foreign_key "main_transactions", "main_accounts"
   add_foreign_key "main_transactions", "users", column: "creator_id"
   add_foreign_key "shared_main_account_users", "main_accounts"

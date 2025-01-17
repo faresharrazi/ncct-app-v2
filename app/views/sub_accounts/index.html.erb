@@ -7,7 +7,7 @@
     <% end %>
 <% end %>
 
-<% if @main_account.owner == current_user && @main_account.available_percentage > 0 %>
+<% if owner_or_partner?(@main_account) && @main_account.available_percentage > 0 %>
     <div class="col-12 col-md-6 col-lg-4">
       <%= render partial: "sub_accounts/new_account_card", locals: { main_account: @main_account } %>
     </div>

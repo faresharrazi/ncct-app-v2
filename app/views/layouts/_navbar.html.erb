@@ -2,9 +2,9 @@
   <div class="container">
     <% if user_signed_in? %>
       <div class="d-flex align-items-center">
-        <%= link_to main_account_path(current_user.main_accounts.first), class: "navbar-brand fs-3 fw-bold" do %>
+        <%= link_to main_account_path(current_user.main_account), class: "navbar-brand fs-3 fw-bold" do %>
           <span class="badge bg-success fs-5" title="Total Balance">
-            <%= number_to_currency(current_user.main_accounts.first.balance, unit: current_user.main_accounts.first.currency) %>
+            <%= number_to_currency(current_user.main_account.balance, unit: current_user.main_account.currency) %>
           </span>
         <% end %>
       </div>
@@ -16,16 +16,16 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <!-- Subaccounts -->
-          <% if current_user.main_accounts.any? && current_user.main_accounts.first.sub_accounts.any? %>
+          <% if current_user.main_account && current_user.main_account.sub_accounts.any? %>
             <li class="nav-item">
               <%= link_to "Accounts", 
-                          main_account_sub_accounts_path(current_user.main_accounts.first), 
-                          class: "nav-link #{'active' if current_page?(main_account_sub_accounts_path(current_user.main_accounts.first))}" %>
+                          main_account_sub_accounts_path(current_user.main_account), 
+                          class: "nav-link #{'active' if current_page?(main_account_sub_accounts_path(current_user.main_account))}" %>
             </li>
           <% end %>
 
           <!-- Transactions -->
-          <% if current_user.main_accounts.any? && current_user.main_accounts.first.sub_accounts.any? %>
+          <% if current_user.main_account && current_user.main_account.sub_accounts.any? %>
             <li class="nav-item">
               <%= link_to "Transactions", all_sub_account_transactions_path, class: "nav-link #{'active' if current_page?(all_sub_account_transactions_path)}" %>
             </li>
@@ -35,7 +35,7 @@
         <!-- Profile Dropdown -->
         <ul class="navbar-nav mb-2 mb-lg-0">
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle #{'active' if current_page?(edit_user_registration_path(current_user)) || current_page?(main_account_shared_main_account_users_path(current_user.main_accounts.first))}" 
+            <a class="nav-link dropdown-toggle #{'active' if current_page?(edit_user_registration_path(current_user)) || current_page?(main_account_shared_main_account_users_path(current_user.main_account))}" 
                href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="fas fa-user"></i> <%= current_user.full_name %>
             </a>
@@ -44,6 +44,10 @@
                 <%= link_to "Settings", 
                             edit_user_registration_path(current_user), 
                             class: "dropdown-item #{'active' if current_page?(edit_user_registration_path(current_user))}" %>
+              </li>
+                <%= link_to "Partners", 
+                          main_account_shared_main_account_users_path(current_user.main_account), 
+                          class: "dropdown-item #{'active' if current_page?(main_account_shared_main_account_users_path(current_user.main_account))}" %>
               </li>
               <li>
                 <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "dropdown-item" %>

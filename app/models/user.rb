@@ -6,10 +6,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
 
   # Associations
-  has_many :main_accounts, foreign_key: :owner_id, dependent: :destroy
+  belongs_to :main_account, optional: true  
   has_many :main_transactions, through: :main_accounts, source: :main_transactions
-  has_many :shared_main_account_users, dependent: :destroy
-  has_many :shared_main_accounts, through: :shared_main_account_users, source: :main_account
 
   # Validations
   validates :first_name, presence: true
@@ -26,12 +24,15 @@ class User < ApplicationRecord
 
   # Automatically create a default main account for the user after they are created
   def create_main_account
-    main_accounts.create!(
+    main_account = MainAccount.create!(
       title: "Main Account",
       available_percentage: 100.0,
       currency: "€",
       balance: 0.0, # Initialize with a default balance
       shareable_balance: 0.0 # Initialize with a default shareable balance
     )
+    main_account.owners << self
+    self.main_account = main_account
+    save!
   end
 end

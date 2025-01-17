@@ -3,7 +3,7 @@ class SubAccount < ApplicationRecord
   has_many :sub_account_transactions, dependent: :destroy
   has_many :categories, dependent: :destroy
 
-  validates :title, presence: true
+  validates :title, presence: true, uniqueness: { scope: :main_account_id, message: "Account title should be unique" }  
   validates :percentage, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100 }
 
   after_create :initialize_balance_from_shareable_balance

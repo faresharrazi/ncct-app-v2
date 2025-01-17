@@ -2,7 +2,7 @@ class SubAccountsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_main_account, except: [:balance]
   before_action :set_sub_account, only: %i[show edit update destroy]
-  before_action :authorize_owner!, only: %i[new create edit update destroy]
+  before_action :authorize_owner_or_partner!, only: %i[new create edit update destroy]
 
   def index
     @sub_accounts = @main_account.sub_accounts
@@ -86,14 +86,13 @@ class SubAccountsController < ApplicationController
 
   ### AUTHORIZATION ###
 
-  def authorize_owner!
-    unless @main_account&.owner == current_user
-      redirect_to main_account_sub_accounts_path(@main_account),
-                  alert: "Only the owner can perform this action."
+  def authorize_owner_or_partner!
+    unless accessible_account?
+      redirect_to main_accounts_path, alert: "You do not have access to this Main Account."
     end
   end
 
   def accessible_account?
-    @main_account&.owner == current_user || @main_account&.partners&.include?(current_user)
+    @main_account&.owners&.include?(current_user)
   end
 end

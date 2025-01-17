@@ -8,13 +8,13 @@
   </div>
   <div class="card-footer d-flex justify-content-between">
     <!-- Edit Link -->
-    <% if @main_account.owner == current_user %>
+    <% if owner_or_partner?(@main_account) %>
       <%= link_to "Edit", 
                   edit_main_account_sub_account_category_path(@main_account, @sub_account, @category), 
                   class: "btn btn-primary btn-sm" %>
     <% end %>
     <!-- Delete Link -->
-    <% if @main_account.owner == current_user %>
+    <% if owner_or_partner?(@main_account) %>
       <%= link_to "Delete", 
                   main_account_sub_account_category_path(@main_account, @sub_account, @category), 
                   method: :delete, 

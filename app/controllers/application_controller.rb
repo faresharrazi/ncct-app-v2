@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
 
   # Devise Redirects
   def after_sign_in_path_for(resource)
-    resource.main_accounts.first ? main_account_path(resource.main_accounts.first) : main_accounts_path
+    resource.main_account ? main_account_path(resource.main_account) : main_account_path
   end
   
   def after_sign_out_path_for(_resource_or_scope)

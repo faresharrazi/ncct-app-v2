@@ -1,5 +1,5 @@
 class MainAccount < ApplicationRecord
-  belongs_to :owner, class_name: 'User', foreign_key: 'owner_id'
+  has_and_belongs_to_many :owners, class_name: 'User', join_table: 'main_accounts_users'
   has_many :sub_accounts, dependent: :destroy
   has_many :main_transactions, dependent: :destroy
 

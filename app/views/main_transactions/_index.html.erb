@@ -67,7 +67,7 @@
       <% end %>
     </tbody>
   </table>
-<% elsif current_user.main_accounts.any? && current_user.main_accounts.first.sub_accounts.any? %>
+<% elsif current_user.main_account && current_user.main_account.sub_accounts.any? %>
   <p class="alert alert-info">
     <i class="fas fa-info-circle me-2"></i>No transactions added yet.
   </p>
