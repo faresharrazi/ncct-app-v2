@@ -24,6 +24,10 @@ Rails.application.routes.draw do
     end
   end
 
+  post 'accept_invitation/:id', to: 'shared_main_account_users#accept_invitation', as: :accept_invitation
+  delete 'cancel_invitation/:main_account_id/:id', to: 'shared_main_account_users#destroy', as: :cancel_invitation  
+  delete 'reject_invitation/:id', to: 'shared_main_account_users#reject_invitation', as: :reject_invitation
+
   # Custom route to show all subaccount transactions
   get 'sub_account_transactions', to: 'sub_account_transactions#all', as: :all_sub_account_transactions
   

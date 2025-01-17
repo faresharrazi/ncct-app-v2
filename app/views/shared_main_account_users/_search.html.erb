@@ -15,9 +15,16 @@
           <div class="card-body">
             <h5 class="card-title"><%= "#{user.first_name} #{user.last_name}" %></h5>
             <p class="card-text"><%= user.email %></p>
-            <%= form_with url: main_account_shared_main_account_users_path(@main_account), method: :post, local: true do |form| %>
-              <%= form.hidden_field :user_id, value: user.id %>
-              <button class="btn btn-success" type="submit">Add Partner</button>
+            <% shared_user = @main_account.shared_main_account_users.find_by(user_id: user.id) %>
+            <% if shared_user && shared_user.status == 'pending' %>
+            <%= link_to "Cancel Invitation", cancel_invitation_path(@main_account, shared_user), 
+                        data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to cancel this invitation?" }, 
+                        class: "btn btn-danger" %>
+            <% else %>
+              <%= form_with url: main_account_shared_main_account_users_path(@main_account), method: :post, local: true do |form| %>
+                <%= form.hidden_field :user_id, value: user.id %>
+                <button class="btn btn-success" type="submit">Add Partner</button>
+              <% end %>
             <% end %>
           </div>
         </div>

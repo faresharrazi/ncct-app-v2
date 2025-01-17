@@ -1,4 +1,5 @@
-<% if @shared_users.any? %>
+
+<% if (@owners - [current_user]).any? || @invitations.any? || @sent_invitations.any? %>
   <table class="table table-striped">
     <thead class="table-dark">
       <tr>
@@ -9,17 +10,50 @@
       </tr>
     </thead>
     <tbody>
-      <% @shared_users.each do |shared_user| %>
-        <tr>
-          <td><%= "#{shared_user.first_name} #{shared_user.last_name}" %></td>
-          <td><%= shared_user.email %></td>
-          <td><%= shared_user.created_at.strftime("%B %d, %Y") %></td>
-          <td>
-            <%= link_to "Remove", main_account_shared_main_account_user_path(@main_account, shared_user), 
-                        data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to remove this partner?" }, 
+      <% if @invitations.any? %>
+        <% @invitations.each do |invitation| %>
+          <tr>
+            <td><%= "#{invitation.main_account.owners.first.first_name} #{invitation.main_account.owners.first.last_name}" %></td>
+            <td><%= invitation.main_account.owners.first.email %></td>
+            <td><%= invitation.created_at.strftime("%B %d, %Y") %></td>
+            <td>
+              <%= link_to "Accept Invitation", accept_invitation_path(invitation), 
+                          data: { turbo_method: :post, turbo_confirm: "Accepting this invitation will delete your current main account. Are you sure?" }, 
+                          class: "btn btn-sm btn-success" %>
+              <%= link_to "Reject Invitation", reject_invitation_path(invitation), 
+                          data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to reject this invitation?" }, 
+                          class: "btn btn-sm btn-danger" %>
+            </td>
+          </tr>
+        <% end %>
+      <% end %>
+      <% if @sent_invitations.any? %>
+        <% @sent_invitations.each do |invitation| %>
+          <tr>
+            <td><%= "#{invitation.user.first_name} #{invitation.user.last_name}" %> <span class="badge bg-warning">Pending</span></td>
+            <td><%= invitation.user.email %></td>
+            <td><%= invitation.created_at.strftime("%B %d, %Y") %></td>
+            <td>
+            <%= link_to "Cancel Invitation", cancel_invitation_path(@main_account, invitation), 
+                        data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to cancel this invitation?" }, 
                         class: "btn btn-sm btn-danger" %>
-          </td>
-        </tr>
+                        </td>
+          </tr>
+        <% end %>
+      <% end %>
+      <% @owners.each do |owner| %>
+        <% unless owner == current_user %>
+          <tr>
+            <td><%= "#{owner.first_name} #{owner.last_name}" %></td>
+            <td><%= owner.email %></td>
+            <td><%= owner.created_at.strftime("%B %d, %Y") %></td>
+            <td>
+              <%= link_to "Remove", main_account_shared_main_account_user_path(@main_account, owner), 
+                          data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to remove this partner?" }, 
+                          class: "btn btn-sm btn-danger" %>
+            </td>
+          </tr>
+        <% end %>
       <% end %>
     </tbody>
   </table>

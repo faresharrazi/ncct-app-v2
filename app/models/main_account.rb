@@ -2,6 +2,8 @@ class MainAccount < ApplicationRecord
   has_and_belongs_to_many :owners, class_name: 'User', join_table: 'main_accounts_users'
   has_many :sub_accounts, dependent: :destroy
   has_many :main_transactions, dependent: :destroy
+  has_many :shared_main_account_users, dependent: :destroy
+  has_many :users, through: :shared_main_account_users
 
   validates :title, :currency, presence: true
 

@@ -21,7 +21,7 @@
         <td><%= number_to_currency(main_account.balance, unit: "") %></td>
         <td><%= main_account.available_percentage %>%</td>
         <td>
-          <% if main_account.owner == current_user %>
+          <% if owner_or_partner?(main_account) %>
             <%= link_to "Edit", edit_main_account_path(main_account) %> |
             <%= link_to "Delete", main_account_path(main_account), method: :delete, data: { confirm: "Are you sure you want to delete this Main Account?" } %>
           <% else %>
