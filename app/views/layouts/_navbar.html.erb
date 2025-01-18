@@ -41,9 +41,7 @@
             </a>
             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
               <li>
-                <%= link_to "Settings", 
-                            edit_user_registration_path(current_user), 
-                            class: "dropdown-item #{'active' if current_page?(edit_user_registration_path(current_user))}" %>
+                <%= link_to "Settings", settings_path(section: 'profile'), class: "dropdown-item" %>   
               </li>
                 <%= link_to "Partners", 
                           main_account_shared_main_account_users_path(current_user.main_account), 
