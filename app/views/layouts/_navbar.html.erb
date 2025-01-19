@@ -2,10 +2,11 @@
   <div class="container">
     <% if user_signed_in? %>
       <div class="d-flex align-items-center">
-        <%= link_to main_account_path(current_user.main_account), class: "navbar-brand fs-3 fw-bold" do %>
-          <span class="badge bg-success fs-5" title="Total Balance">
-            <%= number_to_currency(current_user.main_account.balance, unit: current_user.main_account.currency) %>
-          </span>
+        <%= link_to main_account_path(current_user.main_account), class: "btn btn-success btn-sm fw-bold me-2" do %>
+          <%= number_to_currency(current_user.main_account.balance, unit: current_user.main_account.currency) %>
+        <% end %>
+        <% if current_user.main_account && current_user.main_account.sub_accounts.any? %>
+          <%= link_to "New Transaction", new_sub_account_transaction_without_subaccount_path, class: "btn btn-outline-success btn-sm" %>        
         <% end %>
       </div>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
@@ -43,6 +44,7 @@
               <li>
                 <%= link_to "Settings", settings_path(section: 'profile'), class: "dropdown-item" %>   
               </li>
+              <li>
                 <%= link_to "Partners", 
                           main_account_shared_main_account_users_path(current_user.main_account), 
                           class: "dropdown-item #{'active' if current_page?(main_account_shared_main_account_users_path(current_user.main_account))}" %>

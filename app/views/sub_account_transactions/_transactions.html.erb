@@ -2,17 +2,8 @@
   <div class="alert alert-info">
     <i class="fas fa-info-circle me-2"></i>No Transactions added yet.
   </div>
-<% end %>
 
-<% if defined?(category) %>
-  <%= link_to "New Transaction", new_sub_account_transaction_without_subaccount_path(sub_account_transaction: { sub_account_id: category.sub_account.id, category_id: category.id }), class: "btn btn-success mb-3" %>
-<% elsif defined?(sub_account) %>
-  <%= link_to "New Transaction", new_sub_account_transaction_without_subaccount_path(sub_account_transaction: { sub_account_id: sub_account.id }), class: "btn btn-success mb-3" %>
 <% else %>
-  <%= link_to "New Transaction", new_sub_account_transaction_without_subaccount_path, class: "btn btn-success mb-3" %>
-<% end %>
-
-<% if transactions.any? %>
   <table class="table table-striped">
     <thead>
       <tr>

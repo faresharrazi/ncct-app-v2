@@ -52,6 +52,10 @@
 
   <div class="d-flex justify-content-between">
     <%= form.submit "Save Account", class: "btn btn-primary" %>
-    <%= link_to "Cancel", main_account_sub_accounts_path(@main_account), class: "btn btn-secondary" %>
+    <% if @sub_account.persisted? %>
+      <%= link_to "Cancel", main_account_sub_account_path(@main_account, @sub_account), class: "btn btn-secondary" %>
+    <% else %>
+      <%= link_to "Cancel", main_account_path(@main_account), class: "btn btn-secondary" %>
+    <% end %>  
   </div>
 <% end %>

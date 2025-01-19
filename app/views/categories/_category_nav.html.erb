@@ -1,0 +1,9 @@
+<div class="mb-1 mt-2 text-center">
+  <div class="d-flex justify-content-center flex-wrap">
+    <% @sub_account.categories.each do |category| %>
+      <% if category != @category %>
+        <%= link_to category.title, main_account_sub_account_category_path(@main_account, @sub_account, category), class: "badge bg-primary text-decoration-none me-2 mb-2" %>
+      <% end %>
+    <% end %>
+  </div>
+</div>

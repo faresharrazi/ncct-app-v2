@@ -1,30 +1,28 @@
-<div class="card shadow-sm" style="max-width: 600px; margin: 0 auto;">
-  <div class="card-header bg-primary text-white">
-    <h1 class="h5 mb-0"><%= @category.title %></h1>
-  </div>
-  <div class="card-body">
-    <!-- Description -->
-    <p class="mb-0"><%= @category.description.presence || "No description" %></p>
-  </div>
-  <div class="card-footer d-flex justify-content-between">
-    <!-- Edit Link -->
-    <% if owner_or_partner?(@main_account) %>
-      <%= link_to "Edit", 
-                  edit_main_account_sub_account_category_path(@main_account, @sub_account, @category), 
-                  class: "btn btn-primary btn-sm" %>
-    <% end %>
-    <!-- Delete Link -->
-    <% if owner_or_partner?(@main_account) %>
-      <%= link_to "Delete", 
-                  main_account_sub_account_category_path(@main_account, @sub_account, @category), 
-                  method: :delete, 
-                  data: { confirm: "Are you sure you want to delete this category?" }, 
-                  class: "btn btn-danger btn-sm" %>
-    <% end %>
-  </div>
+<%= link_to "Back to #{@sub_account.title}", main_account_sub_account_path(@sub_account.main_account, @sub_account), 
+              class: "text-link" %>
+
+<!-- Category Navigation -->
+<div style="margin: 0 auto;">
+  <%= render partial: "categories/category_nav", locals: { main_account: @main_account, sub_account: @sub_account, category: @category } %>
 </div>
+
+<!-- Category Card -->
+<%= render 'categories/category_card', category: @category %>
 
 <!-- Transactions -->
 <div class="mt-4">
   <%= render partial: 'sub_account_transactions/transactions', locals: { transactions: @category.sub_account_transactions, main_account: @main_account, title: "Transactions for '#{@category.title}'", category: @category } %>
 </div>
+
+<style>
+.text-link {
+  color: #007bff; /* Bootstrap primary color */
+  text-decoration: none;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.text-link:hover {
+  text-decoration: underline;
+}
+</style>
