@@ -1,4 +1,4 @@
-<%= form_with(model: [@main_account, sub_account], local: true, data: { turbo: false }, class: "needs-validation") do |form| %>
+<%= form_with(model: [@selected_main_account, sub_account], local: true, data: { turbo: false }, class: "needs-validation") do |form| %>
   <% if sub_account.errors.any? %>
     <div class="alert alert-danger">
       <h4 class="alert-heading"><%= pluralize(sub_account.errors.count, "error") %> prohibited this SubAccount from being saved:</h4>
@@ -53,9 +53,9 @@
   <div class="d-flex justify-content-between">
     <%= form.submit "Save Account", class: "btn btn-primary" %>
     <% if @sub_account.persisted? %>
-      <%= link_to "Cancel", main_account_sub_account_path(@main_account, @sub_account), class: "btn btn-secondary" %>
+      <%= link_to "Cancel", main_account_sub_account_path(@selected_main_account, @sub_account), class: "btn btn-secondary" %>
     <% else %>
-      <%= link_to "Cancel", main_account_path(@main_account), class: "btn btn-secondary" %>
+      <%= link_to "Cancel", main_account_path(@selected_main_account), class: "btn btn-secondary" %>
     <% end %>  
   </div>
 <% end %>

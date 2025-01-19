@@ -1,45 +1,19 @@
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <h1 class="mb-0 d-flex align-items-center">
-    <%= @main_account.title %>
-  </h1>
-</div>
+<%= render 'main_accounts/main_account_title' %>
+
+<% Rails.logger.debug "Number of owners: #{@main_account.owners.count}" %>
+
+<% if @main_account.owners.count > 1 %>
+  <div class="owners-list row mt-2">
+    <% @main_account.owners.each do |owner| %>
+      <div class="col-3">
+        <%= render 'main_accounts/owner_card', owner: owner, main_account: @main_account %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
 
 <%= render 'main_accounts/messages' %>
 
-<% if @main_account.balance == 0 %>
-  <%= form_with(model: [@main_account, MainTransaction.new], local: true, class: "needs-validation") do |form| %>
-    <% if form.object.errors.any? %>
-      <div class="alert alert-danger">
-        <h4 class="alert-heading"><%= pluralize(form.object.errors.count, "error") %> prohibited this transaction from being saved:</h4>
-        <ul class="mb-0">
-          <% form.object.errors.full_messages.each do |message| %>
-            <li><%= message %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
-
-    <div class="mb-3">
-      <%= form.label :title, class: "form-label" %>
-      <%= form.text_field :title, autofocus: true, class: "form-control" %>
-    </div>
-
-    <div class="mb-3">
-      <%= form.label :description, class: "form-label" %>
-      <%= form.text_area :description, class: "form-control" %>
-    </div>
-
-    <div class="mb-3">
-      <%= form.label :amount, class: "form-label" %>
-      <%= form.number_field :amount, class: "form-control" %>
-    </div>
-
-    <%= form.hidden_field :transaction_kind, value: 'income' %>
-
-    <div class="d-flex justify-content-between">
-      <%= form.submit "Submit Income", class: "btn btn-primary" %>
-    </div>
-  <% end %>
-<% end %>
+<%= render 'main_accounts/zero_balance' %>
 
 <%= render 'main_transactions/index' %>

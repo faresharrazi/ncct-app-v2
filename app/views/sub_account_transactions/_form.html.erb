@@ -23,7 +23,7 @@
 
     <!-- Amount -->
     <div class="col-6">
-      <%= form.label :amount, "Amount (#{@main_account&.currency || '€'})", class: "form-label" %>
+      <%= form.label :amount, "Amount (#{@selected_main_account&.currency || '€'})", class: "form-label" %>
       <%= form.number_field :amount, class: "form-control", placeholder: "Enter transaction amount" %>
     </div>
   </div>

@@ -5,6 +5,10 @@ Rails.application.routes.draw do
   devise_for :users
 
   resources :main_accounts do
+    member do
+      post 'leave'
+      post 'switch'
+    end
     resources :main_transactions do
       member do
         post 'repeat_without_edit'

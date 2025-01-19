@@ -1,18 +1,3 @@
-<nav class="nav nav-pills flex-column flex-sm-row mt-3">
-    <a class="flex-sm-fill text-sm-center nav-link <%= 'active' if params[:preference] == 'main_account' %>" href="<%= settings_path(section: 'preferences', preference: 'main_account') %>">Main Account</a>
-    <% if current_user.main_account && current_user.main_account.sub_accounts.any? %>
-        <a class="flex-sm-fill text-sm-center nav-link <%= 'active' if params[:preference] == 'navigation' %>" href="<%= settings_path(section: 'preferences', preference: 'navigation') %>">Navigation</a>
-    <% end %>
-    <a class="flex-sm-fill text-sm-center nav-link <%= 'active' if params[:preference] == 'theme' %>" href="<%= settings_path(section: 'preferences', preference: 'theme') %>">Theme</a>
-</nav>
+<%= render 'main_accounts/form', main_account: @selected_main_account %>
 
-<% case params[:preference] %>
-<% when 'main_account' %>
-    <%= render 'pages/preferences/main_account' %>
-<% when 'navigation' %>
-    <%= render 'pages/preferences/navigation' %>
-<% when 'theme' %>
-    <%= render 'pages/preferences/theme' %>
-<% else %>
-    <%= render 'pages/preferences/main_account' %>
-<% end %>
+<%= link_to "Delete Main Account", @selected_main_account, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-outline-danger mt-2" %>

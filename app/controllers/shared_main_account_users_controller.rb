@@ -5,14 +5,12 @@ class SharedMainAccountUsersController < ApplicationController
   before_action :authorize_owner_or_partner!, only: [:index, :show, :new, :create, :edit, :update, :destroy, :remove]
 
   def index
-    @main_account = current_user.main_account
     @owners = @main_account.owners || []
     @invitations = SharedMainAccountUser.where(user: current_user, status: 'pending') || []
     @sent_invitations = @main_account.shared_main_account_users.where(status: 'pending') || []
   end
 
   def search
-    @main_account = current_user.main_account
     @owners = @main_account.owners || []
     @invitations = SharedMainAccountUser.where(user: current_user, status: 'pending') || []
     @sent_invitations = @main_account.shared_main_account_users.where(status: 'pending') || []
@@ -48,40 +46,30 @@ class SharedMainAccountUsersController < ApplicationController
     shared_main_account_user&.destroy
     @main_account.owners.delete(user_to_remove)
 
-    new_main_account = MainAccount.create!(
-      title: "Main Account",
-      available_percentage: 100.0,
-      currency: "€",
-      balance: 0.0,
-      shareable_balance: 0.0
-    )
-    new_main_account.owners << user_to_remove
-    user_to_remove.update(main_account: new_main_account)
-
     redirect_to main_account_shared_main_account_users_path(@main_account), notice: "Partner was successfully removed."
   end
 
-  def accept_invitation
-    invitation = SharedMainAccountUser.find(params[:id])
-    if invitation.user == current_user && invitation.status == 'pending'
-      current_user.main_account&.destroy
-      invitation.update(status: 'accepted')
-      current_user.update(main_account: invitation.main_account)
-      invitation.main_account.owners << current_user
-      current_user.reload
-      redirect_to main_account_shared_main_account_users_path(current_user.main_account), notice: "Invitation accepted. You are now a partner."
-    else
-      redirect_to main_account_shared_main_account_users_path(current_user.main_account), alert: "Failed to accept invitation."
-    end
+def accept_invitation
+  invitation = SharedMainAccountUser.find(params[:id])
+  if invitation.user == current_user && invitation.status == 'pending'
+    invitation.update(status: 'accepted')
+    current_user.main_accounts << invitation.main_account unless current_user.main_accounts.include?(invitation.main_account)
+    invitation.main_account.owners << current_user unless invitation.main_account.owners.include?(current_user)
+    session[:selected_main_account_id] = invitation.main_account.id
+    current_user.reload
+    redirect_to main_account_path(invitation.main_account), notice: "Invitation accepted. You are now a partner."
+  else
+    redirect_to main_account_shared_main_account_users_path(invitation.main_account), alert: "Failed to accept invitation."
   end
+end
 
   def reject_invitation
     invitation = SharedMainAccountUser.find(params[:id])
     if invitation.user == current_user && invitation.status == 'pending'
       invitation.destroy
-      redirect_to main_account_shared_main_account_users_path(current_user.main_account), notice: "Invitation rejected."
+      redirect_to main_account_shared_main_account_users_path(invitation.main_account), notice: "Invitation rejected."
     else
-      redirect_to main_account_shared_main_account_users_path(current_user.main_account), alert: "Failed to reject invitation."
+      redirect_to main_account_shared_main_account_users_path(invitation.main_account), alert: "Failed to reject invitation."
     end
   end
 

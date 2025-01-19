@@ -1,4 +1,4 @@
-<%= form_with(model: [@main_account, @shared_main_account_user], local: true) do |form| %>
+<%= form_with(model: [@selected_main_account, @shared_main_account_user], local: true) do |form| %>
   <% if @shared_main_account_user.errors.any? %>
     <div id="error_explanation" class="alert alert-danger">
       <h2>
@@ -14,7 +14,7 @@
 
   <div class="mb-3">
     <%= form.label :user_id, "Select User" %>
-    <%= form.collection_select :user_id, User.where.not(id: @main_account.owners.pluck(:id)), :id, :full_name, prompt: "Choose a user", class: "form-select" %>
+    <%= form.collection_select :user_id, User.where.not(id: @selected_main_account.owners.pluck(:id)), :id, :full_name, prompt: "Choose a user", class: "form-select" %>
   </div>
 
   <div class="actions">

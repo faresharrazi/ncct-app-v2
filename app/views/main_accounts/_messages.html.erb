@@ -1,10 +1,10 @@
-<% if @main_account.balance == 0 %>
+  <% if @selected_main_account && @selected_main_account.balance == 0 %>
   <div class="alert alert-warning">
-    <i class="fas fa-info-circle me-2"></i>Your balance is 0<%= @main_account.currency %>. Please add a new income to increase the balance.
+    <i class="fas fa-info-circle me-2"></i>Your balance is 0<%= @selected_main_account.currency %>. Please add a new income to increase the balance.
   </div>
-<% elsif @main_account.available_percentage > 0 %>
+<% elsif @selected_main_account && @selected_main_account.available_percentage > 0 %>
   <div class="alert alert-info">
-    <i class="fas fa-info-circle me-2"></i>You have <%= @main_account.available_percentage %>% available percentage. Please create new accounts to allocate your funds.
-    <%= link_to "Create Account", new_main_account_sub_account_path(@main_account), class: "btn btn-primary btn-sm ms-2" %>
+    <i class="fas fa-info-circle me-2"></i>You have <%= @selected_main_account.available_percentage %>% available percentage. Please create new accounts to allocate your funds.
+    <%= link_to "Create Account", new_main_account_sub_account_path(@selected_main_account), class: "btn btn-primary btn-sm ms-2" %>
   </div>
 <% end %>

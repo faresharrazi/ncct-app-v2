@@ -1,14 +1,14 @@
 <!-- Account Navigation -->
 <div class="d-flex justify-content-center">
-  <%= render partial: "sub_accounts/account_nav", locals: { main_account: @main_account, sub_account: @sub_account } %>
+  <%= render partial: "sub_accounts/account_nav", locals: { main_account: @selected_main_account, sub_account: @sub_account } %>
 </div>
 
 <!-- Account Card -->
 <div class="d-flex justify-content-center mb-4">
-  <%= render partial: "sub_accounts/extended_account", locals: { sub_account: @sub_account, main_account: @main_account } %>
+  <%= render partial: "sub_accounts/extended_account", locals: { sub_account: @sub_account, main_account: @selected_main_account } %>
 </div>
 
 <!-- Transactions -->
 <div class="mt-4">
-  <%= render partial: 'sub_account_transactions/transactions', locals: { transactions: @sub_account.sub_account_transactions, main_account: @main_account, title: "Transactions for '#{@sub_account.title}'", sub_account: @sub_account } %>
+  <%= render partial: 'sub_account_transactions/transactions', locals: { transactions: @sub_account.sub_account_transactions, main_account: @selected_main_account, title: "Transactions for '#{@sub_account.title}'", sub_account: @sub_account } %>
 </div>

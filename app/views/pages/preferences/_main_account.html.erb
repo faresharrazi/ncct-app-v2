@@ -1,3 +1,5 @@
-<h1>Edit Main Account</h1>
+<h3>Edit Main Account</h3>
 
-<%= render 'main_accounts/form', main_account: @main_account %>
+<%= render 'main_accounts/form', main_account: @selected_main_account %>
+
+<%= link_to "Delete Main Account", @selected_main_account, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "btn btn-danger" %>

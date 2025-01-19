@@ -1,14 +1,18 @@
 <div class="container">
     <nav class="nav nav-pills nav-justified">
         <a class="nav-link <%= 'active' if params[:section] == 'profile' %>" href="<%= settings_path(section: 'profile') %>">Profile</a>
-        <a class="nav-link <%= 'active' if params[:section] == 'preferences' %>" href="<%= settings_path(section: 'preferences') %>">Preferences</a>
+        <% if @selected_main_account.present? %>
+            <a class="nav-link <%= 'active' if params[:section] == 'preferences' %>" href="<%= settings_path(section: 'preferences') %>">Main</a>
+        <% end %>
         <a class="nav-link <%= 'active' if params[:section] == 'cancel_account' %>" href="<%= settings_path(section: 'cancel_account') %>">Cancel</a>
     </nav>
     <% case params[:section] %>
         <% when 'profile' %>
             <%= render 'devise/registrations/edit', resource: @resource, resource_name: @resource_name %>
         <% when 'preferences' %>
-            <%= render 'preferences' %>
+            <% if @selected_main_account.present? %>
+                <%= render 'preferences' %>
+            <% end %>
         <% when 'cancel_account' %>
             <%= render 'cancel_account', resource: @resource, resource_name: @resource_name %>
     <% else %>

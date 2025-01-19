@@ -1,8 +1,8 @@
 <div class="mb-2" style="min-width: 300px;">
   <ul class="list-group">
-    <% @main_account.sub_accounts.where.not(id: @sub_account.id).each do |sub_account| %>
+    <% @selected_main_account.sub_accounts.where.not(id: @sub_account.id).each do |sub_account| %>
       <li class="list-group-item d-flex justify-content-between align-items-center">
-        <%= link_to sub_account.title, main_account_sub_account_path(@main_account, sub_account), class: "text-decoration-none" %>
+        <%= link_to sub_account.title, main_account_sub_account_path(@selected_main_account, sub_account), class: "text-decoration-none" %>
         <span class="badge bg-primary rounded-pill">$<%= sub_account.balance %></span>
       </li>
     <% end %>

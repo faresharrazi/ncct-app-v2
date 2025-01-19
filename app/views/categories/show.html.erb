@@ -3,7 +3,7 @@
 
 <!-- Category Navigation -->
 <div style="margin: 0 auto;">
-  <%= render partial: "categories/category_nav", locals: { main_account: @main_account, sub_account: @sub_account, category: @category } %>
+  <%= render partial: "categories/category_nav", locals: { main_account: @selected_main_account, sub_account: @sub_account, category: @category } %>
 </div>
 
 <!-- Category Card -->
@@ -11,7 +11,7 @@
 
 <!-- Transactions -->
 <div class="mt-4">
-  <%= render partial: 'sub_account_transactions/transactions', locals: { transactions: @category.sub_account_transactions, main_account: @main_account, title: "Transactions for '#{@category.title}'", category: @category } %>
+  <%= render partial: 'sub_account_transactions/transactions', locals: { transactions: @category.sub_account_transactions, main_account: @selected_main_account, title: "Transactions for '#{@category.title}'", category: @category } %>
 </div>
 
 <style>

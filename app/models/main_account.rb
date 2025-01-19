@@ -4,7 +4,7 @@ class MainAccount < ApplicationRecord
   has_many :main_transactions, dependent: :destroy
   has_many :shared_main_account_users, dependent: :destroy
   has_many :users, through: :shared_main_account_users
-
+  
   validates :title, :currency, presence: true
 
   def calculate_balance

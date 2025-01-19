@@ -1,0 +1,30 @@
+<div class="d-flex justify-content-between align-items-center mb-1">
+  <div class="d-flex align-items-center">
+    <div class="dropdown me-3">
+      <button class="btn btn-secondary dropdown-toggle" type="button" id="mainAccountsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <%= @selected_main_account&.title || "No Main Account Selected" %>
+        <% if @selected_main_account && @selected_main_account.owners.count > 1 %>
+          (SHARED)
+        <% end %>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="mainAccountsDropdown">
+        <% current_user.main_accounts.where.not(id: @selected_main_account&.id).each do |main_account| %>
+          <li>
+            <%= link_to switch_main_account_path(main_account), method: :post, class: "dropdown-item", data: { turbo_method: :post } do %>
+              <%= main_account.title %>
+              <% if main_account.owners.count > 1 %>
+                (SHARED)
+              <% end %>
+            <% end %>
+          </li>
+        <% end %>
+        <li>
+          <%= link_to "Create New Main Account", new_main_account_path, class: "dropdown-item text-primary fw-bold" %>
+        </li>
+      </ul>
+    </div>
+    <% if @selected_main_account && @selected_main_account.balance != 0 %>
+      <%= link_to "New Income/Expense", new_main_account_main_transaction_path(@selected_main_account), class: "btn btn-outline-success btn-sm" %>
+    <% end %>
+  </div>
+</div>

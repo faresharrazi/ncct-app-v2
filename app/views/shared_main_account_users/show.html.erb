@@ -15,5 +15,5 @@
   <%= @shared_main_account_user.created_at.strftime("%B %d, %Y") %>
 </p>
 
-<%= link_to "Edit Partner", edit_main_account_shared_main_account_user_path(@main_account, @shared_main_account_user), class: "button" %> |
-<%= link_to "Back to Partners", main_account_shared_main_account_users_path(@main_account), class: "button" %>
+<%= link_to "Edit Partner", edit_main_account_shared_main_account_user_path(@selected_main_account, @shared_main_account_user), class: "button" %> |
+<%= link_to "Back to Partners", main_account_shared_main_account_users_path(@selected_main_account), class: "button" %>

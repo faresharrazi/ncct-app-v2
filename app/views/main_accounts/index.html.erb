@@ -14,6 +14,7 @@
   </thead>
 
   <tbody>
+ 
     <% @main_accounts.each do |main_account| %>
       <tr>
         <td><%= link_to main_account.title, main_account_path(main_account) %></td>
@@ -30,5 +31,6 @@
         </td>
       </tr>
     <% end %>
+   
   </tbody>
 </table>

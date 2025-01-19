@@ -45,7 +45,7 @@ class MainTransactionsController < ApplicationController
 
   def destroy
     @main_transaction.destroy
-    redirect_to main_account_path(current_user.main_account),
+    redirect_to main_account_path(@main_account),
                 notice: "Transaction was successfully destroyed."
   end
 

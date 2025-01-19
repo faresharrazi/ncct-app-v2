@@ -7,9 +7,13 @@ class SubAccountTransactionsController < ApplicationController
     @transactions = @sub_account.sub_account_transactions
   end
 
-  def all
-    @main_account = MainAccount.first # Adjust this to set the correct main account
-    @transactions = SubAccountTransaction.joins(:sub_account).includes(:sub_account)
+ def all
+    @main_account = current_user.main_accounts.find_by(id: session[:selected_main_account_id])
+    if @main_account.nil?
+      redirect_to main_accounts_path, alert: "Please select a main account."
+      return
+    end
+    @transactions = SubAccountTransaction.joins(:sub_account).where(sub_accounts: { main_account_id: @main_account.id }).includes(:sub_account)
   end
 
   def show
@@ -26,7 +30,7 @@ class SubAccountTransactionsController < ApplicationController
   def new_without_subaccount
     @sub_account_transaction = SubAccountTransaction.new(sub_account_transaction_params)
     @sub_account_transaction.transaction_kind ||= 'expense'
-    @main_account = current_user.main_account
+    @main_account = @selected_main_account
     @sub_accounts = @main_account.sub_accounts
     if params[:sub_account_transaction].present?
       @categories = Category.where(sub_account_id: params[:sub_account_transaction][:sub_account_id])
@@ -99,7 +103,7 @@ class SubAccountTransactionsController < ApplicationController
   private
 
   def set_main_account_and_sub_account
-    @main_account = current_user.main_account
+    @main_account = @selected_main_account
     if @main_account
       @sub_account = @main_account.sub_accounts.find(params[:sub_account_id]) if params[:sub_account_id]
     end

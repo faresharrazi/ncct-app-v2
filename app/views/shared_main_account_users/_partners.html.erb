@@ -17,7 +17,7 @@
             <td><%= invitation.created_at.strftime("%B %d, %Y") %></td>
             <td>
               <%= link_to "Accept Invitation", accept_invitation_path(invitation), 
-                          data: { turbo_method: :post, turbo_confirm: "Accepting this invitation will delete your current main account. Are you sure?" }, 
+                          data: { turbo_method: :post, turbo_confirm: "Are you sure you want to join this account?" }, 
                           class: "btn btn-sm btn-success" %>
               <%= link_to "Reject Invitation", reject_invitation_path(invitation), 
                           data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to reject this invitation?" }, 
@@ -33,7 +33,7 @@
             <td><%= invitation.user.email %></td>
             <td><%= invitation.created_at.strftime("%B %d, %Y") %></td>
             <td>
-            <%= link_to "Cancel Invitation", cancel_invitation_path(@main_account, invitation), 
+            <%= link_to "Cancel Invitation", cancel_invitation_path(@selected_main_account, invitation), 
                         data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to cancel this invitation?" }, 
                         class: "btn btn-sm btn-danger" %>
                         </td>
@@ -42,13 +42,13 @@
       <% end %>
       <% @owners.each do |owner| %>
         <% unless owner == current_user %>
-          <% shared_main_account_user = @main_account.shared_main_account_users.find_by(user_id: owner.id) %>
+          <% shared_main_account_user = @selected_main_account.shared_main_account_users.find_by(user_id: owner.id) %>
           <tr>
             <td><%= "#{owner.first_name} #{owner.last_name}" %></td>
             <td><%= owner.email %></td>
             <td><%= owner.created_at.strftime("%B %d, %Y") %></td>
             <td>
-            <%= link_to "Remove", remove_main_account_shared_main_account_user_path(@main_account, owner), 
+            <%= link_to "Remove", remove_main_account_shared_main_account_user_path(@selected_main_account, owner), 
                         data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to remove this partner?" }, 
                         class: "btn btn-sm btn-danger" %>
             </td>

@@ -2,11 +2,13 @@
   <div class="container">
     <% if user_signed_in? %>
       <div class="d-flex align-items-center">
-        <%= link_to main_account_path(current_user.main_account), class: "btn btn-success btn-sm fw-bold me-2" do %>
-          <%= number_to_currency(current_user.main_account.balance, unit: current_user.main_account.currency) %>
-        <% end %>
-        <% if current_user.main_account && current_user.main_account.sub_accounts.any? %>
-          <%= link_to "New Transaction", new_sub_account_transaction_without_subaccount_path, class: "btn btn-outline-success btn-sm" %>        
+        <% if @selected_main_account %>
+          <%= link_to main_account_path(@selected_main_account), class: "btn btn-success btn-sm fw-bold me-2" do %>
+            <%= number_to_currency(@selected_main_account.balance, unit: @selected_main_account.currency) %>
+          <% end %>
+          <% if @selected_main_account.sub_accounts.any? %>
+            <%= link_to "New Transaction", new_sub_account_transaction_without_subaccount_path, class: "btn btn-outline-success btn-sm" %>
+          <% end %>
         <% end %>
       </div>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
@@ -16,17 +18,18 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
           <!-- Subaccounts -->
-          <% if current_user.main_account && current_user.main_account.sub_accounts.any? %>
+          <% if @selected_main_account && @selected_main_account.sub_accounts.any? %>
             <li class="nav-item">
               <%= link_to "Accounts", 
-                          main_account_sub_accounts_path(current_user.main_account), 
-                          class: "nav-link #{'active' if current_page?(main_account_sub_accounts_path(current_user.main_account))}" %>
+                          main_account_sub_accounts_path(@selected_main_account), 
+                          class: "nav-link #{'active' if current_page?(main_account_sub_accounts_path(@selected_main_account))}" %>
             </li>
           <% end %>
 
           <!-- Transactions -->
-          <% if current_user.main_account && current_user.main_account.sub_accounts.any? %>
+          <% if @selected_main_account && @selected_main_account.sub_accounts.any? %>
             <li class="nav-item">
               <%= link_to "Transactions", all_sub_account_transactions_path, class: "nav-link #{'active' if current_page?(all_sub_account_transactions_path)}" %>
             </li>
@@ -36,7 +39,7 @@
         <!-- Profile Dropdown -->
         <ul class="navbar-nav mb-2 mb-lg-0">
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle #{'active' if current_page?(edit_user_registration_path(current_user)) || current_page?(main_account_shared_main_account_users_path(current_user.main_account))}" 
+            <a class="nav-link dropdown-toggle #{'active' if current_page?(edit_user_registration_path(current_user)) || current_page?(main_account_shared_main_account_users_path(@selected_main_account))}" 
                href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <i class="fas fa-user"></i> <%= current_user.full_name %>
             </a>
@@ -45,10 +48,12 @@
                 <%= link_to "Settings", settings_path(section: 'profile'), class: "dropdown-item" %>   
               </li>
               <li>
-                <%= link_to "Partners", 
-                          main_account_shared_main_account_users_path(current_user.main_account), 
-                          class: "dropdown-item #{'active' if current_page?(main_account_shared_main_account_users_path(current_user.main_account))}" %>
-              </li>
+                <% if @selected_main_account %>
+                  <%= link_to "Partners", 
+                          main_account_shared_main_account_users_path(@selected_main_account), 
+                          class: "dropdown-item #{'active' if current_page?(main_account_shared_main_account_users_path(@selected_main_account))}" %>
+                 </li>
+               <% end %>
               <li>
                 <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "dropdown-item" %>
               </li>

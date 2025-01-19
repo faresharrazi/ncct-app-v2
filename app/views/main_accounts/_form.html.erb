@@ -16,22 +16,28 @@
   </div>
 
   <div class="mb-3">
-    <label class="form-label">Available Percentage</label>
-    <input type="text" class="form-control bg-light" value="<%= main_account.available_percentage %>%" readonly disabled>
-  </div>
-
-  <div class="mb-3">
-    <label class="form-label">Balance</label>
-    <input type="text" class="form-control bg-light" value="<%= number_to_currency(main_account.balance, unit: "") %>" readonly disabled>
-  </div>
-
-  <div class="mb-3">
     <%= form.label :currency, class: "form-label" %>
     <%= form.select :currency, options_for_select(['€', 'EUR', 'USD', 'GBP', 'JPY', 'CHF', 'CAD', 'AUD'], selected: main_account.currency), prompt: "Select Currency", class: "form-select" %>
   </div>
 
+  <% unless main_account.new_record? %>
+    <div class="mb-3">
+      <label class="form-label">Available Percentage</label>
+      <input type="text" class="form-control bg-light" value="<%= main_account.available_percentage %>%" readonly disabled>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Balance</label>
+      <input type="text" class="form-control bg-light" value="<%= number_to_currency(main_account.balance, unit: "") %>" readonly disabled>
+    </div>
+  <% end %>
+
   <div class="d-flex justify-content-between">
     <%= form.submit "Save Changes", class: "btn btn-primary" %>
-    <%= link_to "Cancel", main_account_path(main_account), class: "btn btn-secondary" %>
+    <% if @selected_main_account %>
+      <%= link_to "Cancel", main_account_path(@selected_main_account), class: "btn btn-secondary" %>
+    <% else %>
+      <%= link_to "Cancel", main_accounts_path, class: "btn btn-secondary" %>
+    <% end %>  
   </div>
 <% end %>
