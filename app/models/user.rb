@@ -10,6 +10,8 @@ class User < ApplicationRecord
   has_many :main_transactions, through: :main_account, source: :main_transactions
   has_many :main_accounts_users, dependent: :destroy, class_name: 'MainAccountsUser'
   has_many :shared_main_account_users, dependent: :destroy
+  has_many :sub_accounts, through: :main_account
+
 
 
   # Validations

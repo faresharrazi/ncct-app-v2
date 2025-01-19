@@ -11,5 +11,6 @@ class PagesController < ApplicationController
   def settings
     @resource = current_user
     @resource_name = :user
+    @main_account = current_user.main_account
   end
 end

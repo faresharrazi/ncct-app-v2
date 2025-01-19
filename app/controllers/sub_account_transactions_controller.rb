@@ -26,7 +26,8 @@ class SubAccountTransactionsController < ApplicationController
   def new_without_subaccount
     @sub_account_transaction = SubAccountTransaction.new(sub_account_transaction_params)
     @sub_account_transaction.transaction_kind ||= 'expense'
-    @sub_accounts = SubAccount.all
+    @main_account = current_user.main_account
+    @sub_accounts = @main_account.sub_accounts
     if params[:sub_account_transaction].present?
       @categories = Category.where(sub_account_id: params[:sub_account_transaction][:sub_account_id])
     else
@@ -98,8 +99,10 @@ class SubAccountTransactionsController < ApplicationController
   private
 
   def set_main_account_and_sub_account
-    @main_account = MainAccount.find(params[:main_account_id]) if params[:main_account_id]
-    @sub_account = @main_account.sub_accounts.find(params[:sub_account_id]) if @main_account && params[:sub_account_id]
+    @main_account = current_user.main_account
+    if @main_account
+      @sub_account = @main_account.sub_accounts.find(params[:sub_account_id]) if params[:sub_account_id]
+    end
   end
 
   def set_transaction

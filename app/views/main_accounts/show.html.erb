@@ -1,11 +1,6 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
   <h1 class="mb-0 d-flex align-items-center">
     <%= @main_account.title %>
-    <% if owner_or_partner?(@main_account) %>
-      <%= link_to edit_main_account_path(@main_account), class: "text-decoration-none ms-2" do %>
-        <i class="fas fa-edit text-primary" title="Edit Main Account" style="font-size: 0.75em;"></i>
-      <% end %>
-    <% end %>
   </h1>
 </div>
 
