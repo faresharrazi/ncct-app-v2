@@ -1,0 +1,21 @@
+<%= form_with url: all_sub_account_transactions_path, method: :get, local: true, html: { class: 'centered-form' } do %>
+  <div class="input-group">
+    <%= text_field_tag :search, params[:search], class: "form-control", placeholder: "Search by title" %>
+    <div class="input-group-append">
+      <%= submit_tag "Search", class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
+  <%= link_to "Clear Search and Filters", all_sub_account_transactions_path, class: "clear btn btn-link" %>
+<% end %>
+
+<style>
+  .centered-form {
+    margin: 0 auto;
+    max-width: 400px;
+  }
+
+    .clear {
+    text-decoration: none;
+  }
+
+</style>

@@ -1,0 +1,43 @@
+<td>
+  <div class="dropdown">
+    <button class="btn btn-link dropdown-toggle" type="button" id="actionsDropdown<%= transaction.id %>" data-bs-toggle="dropdown" aria-expanded="false">
+        Action
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="actionsDropdown">
+      <li>
+        <%= link_to new_sub_account_transaction_without_subaccount_path(
+                      sub_account_transaction: { 
+                        sub_account_id: transaction.sub_account.id,
+                        title: transaction.title, 
+                        amount: transaction.amount, 
+                        transaction_kind: transaction.transaction_kind,
+                        category_id: transaction.category_id
+                      }
+                    ), 
+                    class: "dropdown-item" do %>
+          <i class="fas fa-redo-alt text-primary"></i> New
+        <% end %>
+      </li>
+      <li>
+        <%= link_to repeat_without_edit_main_account_sub_account_sub_account_transaction_path(transaction.sub_account.main_account, transaction.sub_account, transaction), 
+                    data: { turbo_method: :post }, 
+                    class: "dropdown-item" do %>
+          <i class="fas fa-clone text-success"></i> Duplicate
+        <% end %>
+      </li>
+      <li>
+        <%= link_to edit_main_account_sub_account_sub_account_transaction_path(transaction.sub_account.main_account, transaction.sub_account, transaction), 
+                    class: "dropdown-item" do %>
+          <i class="fas fa-edit text-warning"></i> Edit
+        <% end %>
+      </li>
+      <li>
+        <%= link_to main_account_sub_account_sub_account_transaction_path(transaction.sub_account.main_account, transaction.sub_account, transaction), 
+                    data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this transaction?" }, 
+                    class: "dropdown-item" do %>
+          <i class="fas fa-trash-alt text-danger"></i> Delete
+        <% end %>
+      </li>
+    </ul>
+  </div>
+</td>

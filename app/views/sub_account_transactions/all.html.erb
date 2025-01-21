@@ -1,1 +1,24 @@
-<%= render partial: 'sub_account_transactions/transactions', locals: { transactions: @transactions, main_account: @selected_main_account, title: "All Transactions" } %>
+
+<%= render 'sub_account_transactions/search_sort_filter/search' %>
+
+<%= render partial: 'sub_account_transactions/all_transactions', locals: { transactions: @transactions, main_account: @selected_main_account, title: "All Transactions" } %>
+
+<style>
+    .table th a {
+    text-decoration: none;
+    color: inherit;
+    }
+
+    .table th a:hover {
+    text-decoration: none;
+    color: inherit;
+    }
+
+    .dropdown-menu {
+    min-width: 100px;
+    }
+
+    .form-control[multiple] {
+    height: auto;
+    }
+</style>
