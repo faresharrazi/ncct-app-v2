@@ -25,9 +25,11 @@ class SubAccountTransactionsController < ApplicationController
     @sub_account_transaction.transaction_kind ||= 'expense'
     @sub_accounts = current_user.main_accounts.includes(:sub_accounts).map(&:sub_accounts).flatten
     @categories = Category.where(sub_account_id: @sub_accounts.pluck(:id))
+    session[:return_to] = request.referer
   end
 
   def new_without_subaccount
+    session[:return_to] = request.referer
     @sub_account_transaction = SubAccountTransaction.new(sub_account_transaction_params)
     @sub_account_transaction.transaction_kind ||= 'expense'
     @main_account = @selected_main_account
@@ -67,7 +69,7 @@ class SubAccountTransactionsController < ApplicationController
     @sub_account_transaction.creator = current_user
 
     if @sub_account_transaction.save
-      redirect_to all_sub_account_transactions_path, notice: "Transaction was successfully created."
+     redirect_to session.delete(:return_to) || all_sub_account_transactions_path, notice: "Transaction was successfully created."
     else
       @sub_accounts = SubAccount.all
       @categories = Category.where(sub_account_id: params[:sub_account_transaction][:sub_account_id])
