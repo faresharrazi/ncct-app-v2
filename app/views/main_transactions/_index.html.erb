@@ -5,8 +5,7 @@
         <th>Date</th>
         <th>Title</th>
         <th>Amount</th>
-        <th>Creator</th> <!-- Add a new column for the creator -->
-        <th>Action</th>
+        <th>Creator</th>
       </tr>
     </thead>
 
@@ -37,37 +36,46 @@
           
           <!-- Actions -->
           <td>
-            <!-- Repeat Transaction with Edit -->
-            <%= link_to new_main_account_main_transaction_path(
-                          transaction.main_account, 
-                          main_transaction: { 
-                            title: transaction.title, 
-                            amount: transaction.amount, 
-                            transaction_kind: transaction.transaction_kind 
-                          }
-                        ), 
-                        class: "text-decoration-none" do %>
-              <i class="fas fa-redo-alt text-primary" title="Repeat Transaction with Edit"></i>
-            <% end %>
-
-            <!-- Repeat Transaction without Edit -->
-            <%= link_to repeat_without_edit_main_account_main_transaction_path(transaction.main_account, transaction), 
-                        data: { turbo_method: :post }, 
-                        class: "text-decoration-none" do %>
-              <i class="fas fa-clone text-success" title="Repeat Transaction without Edit"></i>
-            <% end %>
-
-            <!-- Edit Transaction -->
-            <%= link_to edit_main_account_main_transaction_path(transaction.main_account, transaction), class: "text-decoration-none" do %>
-              <i class="fas fa-edit text-warning" title="Edit Transaction"></i>
-            <% end %>
-
-            <!-- Delete Transaction -->
-            <%= link_to main_account_main_transaction_path(transaction.main_account, transaction), 
-                        data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this transaction?" }, 
-                        class: "text-decoration-none" do %>
-              <i class="fas fa-trash-alt text-danger" title="Delete Transaction"></i>
-            <% end %>
+            <div class="dropdown">
+              <button class="btn btn-link dropdown-toggle" type="button" id="actionsDropdown<%= transaction.id %>" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa-solid fa-screwdriver-wrench"></i>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="actionsDropdown<%= transaction.id %>">
+                <li>
+                  <%= link_to new_main_account_main_transaction_path(
+                                transaction.main_account, 
+                                main_transaction: { 
+                                  title: transaction.title, 
+                                  amount: transaction.amount, 
+                                  transaction_kind: transaction.transaction_kind 
+                                }
+                              ), 
+                              class: "dropdown-item" do %>
+                    <i class="fas fa-redo-alt text-primary"></i> New
+                  <% end %>
+                </li>
+                <li>
+                  <%= link_to repeat_without_edit_main_account_main_transaction_path(transaction.main_account, transaction), 
+                              data: { turbo_method: :post }, 
+                              class: "dropdown-item" do %>
+                    <i class="fas fa-clone text-success"></i> Duplicate
+                  <% end %>
+                </li>
+                <li>
+                  <%= link_to edit_main_account_main_transaction_path(transaction.main_account, transaction), 
+                              class: "dropdown-item" do %>
+                    <i class="fas fa-edit text-warning"></i> Edit
+                  <% end %>
+                </li>
+                <li>
+                  <%= link_to main_account_main_transaction_path(transaction.main_account, transaction), 
+                              data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this transaction?" }, 
+                              class: "dropdown-item" do %>
+                    <i class="fas fa-trash-alt text-danger"></i> Delete
+                  <% end %>
+                </li>
+              </ul>
+            </div>
           </td>
         </tr>
       <% end %>

@@ -1,65 +1,56 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container">
     <% if user_signed_in? %>
-      <div class="d-flex align-items-center">
+      <div class="d-flex align-items-center justify-content-center w-100" style="max-width: 600px; margin: 0 auto;">
         <% if @selected_main_account %>
           <%= link_to main_account_path(@selected_main_account), class: "btn btn-success btn-sm fw-bold me-2" do %>
             <%= number_to_currency(@selected_main_account.balance, unit: @selected_main_account.currency) %>
           <% end %>
-          <% if @selected_main_account.sub_accounts.any? %>
-            <%= link_to "New Transaction", new_sub_account_transaction_without_subaccount_path, class: "btn btn-outline-success btn-sm" %>
+        <% end %>
+
+        <!-- Subaccounts -->
+        <% if @selected_main_account && @selected_main_account.sub_accounts.any? %>
+          <%= link_to main_account_sub_accounts_path(@selected_main_account), class: "nav-link #{'text-black' if current_page?(main_account_sub_accounts_path(@selected_main_account))} text-success" do %>
+            <i class="fas fa-wallet"></i>
           <% end %>
         <% end %>
-      </div>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" 
-              aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
 
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-
-          <!-- Subaccounts -->
-          <% if @selected_main_account && @selected_main_account.sub_accounts.any? %>
-            <li class="nav-item">
-              <%= link_to "Accounts", 
-                          main_account_sub_accounts_path(@selected_main_account), 
-                          class: "nav-link #{'active' if current_page?(main_account_sub_accounts_path(@selected_main_account))}" %>
-            </li>
+        <!-- Transactions -->
+        <% if @selected_main_account && @selected_main_account.sub_accounts.any? %>
+          <%= link_to all_sub_account_transactions_path, class: "nav-link #{'text-black' if current_page?(all_sub_account_transactions_path)} text-success" do %>
+            <i class="fas fa-exchange-alt"></i>
           <% end %>
+        <% end %>
 
-          <!-- Transactions -->
-          <% if @selected_main_account && @selected_main_account.sub_accounts.any? %>
-            <li class="nav-item">
-              <%= link_to "Transactions", all_sub_account_transactions_path, class: "nav-link #{'active' if current_page?(all_sub_account_transactions_path)}" %>
-            </li>
+        <!-- New Transaction -->
+        <% if @selected_main_account.sub_accounts.any? %>
+          <%= link_to new_sub_account_transaction_without_subaccount_path, class: "nav-link #{'text-black' if current_page?(new_sub_account_transaction_without_subaccount_path)} text-success" do %>
+            <i class="fas fa-plus"></i>
           <% end %>
-        </ul>
+        <% end %>
 
         <!-- Profile Dropdown -->
-        <ul class="navbar-nav mb-2 mb-lg-0">
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle #{'active' if current_page?(edit_user_registration_path(current_user)) || current_page?(main_account_shared_main_account_users_path(@selected_main_account))}" 
-               href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <i class="fas fa-user"></i> <%= current_user.full_name %>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+        <div class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle #{'text-black' if profile_active?} text-success" 
+             href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-user"></i>
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+            <li>
+              <%= link_to "Settings", settings_path(section: 'profile'), class: "dropdown-item #{'active' if current_page?(settings_path(section: 'profile'))}" %>   
+            </li>
+            <% if @selected_main_account %>
               <li>
-                <%= link_to "Settings", settings_path(section: 'profile'), class: "dropdown-item" %>   
+                <%= link_to "Partners", 
+                        main_account_shared_main_account_users_path(@selected_main_account), 
+                        class: "dropdown-item #{'active' if current_page?(main_account_shared_main_account_users_path(@selected_main_account))}" %>
               </li>
-              <li>
-                <% if @selected_main_account %>
-                  <%= link_to "Partners", 
-                          main_account_shared_main_account_users_path(@selected_main_account), 
-                          class: "dropdown-item #{'active' if current_page?(main_account_shared_main_account_users_path(@selected_main_account))}" %>
-                 </li>
-               <% end %>
-              <li>
-                <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "dropdown-item" %>
-              </li>
-            </ul>
-          </li>
-        </ul>
+            <% end %>
+            <li>
+              <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "dropdown-item" %>
+            </li>
+          </ul>
+        </div>
       </div>
     <% else %>
       <div class="w-100 text-center">
@@ -68,3 +59,42 @@
     <% end %>
   </div>
 </nav>
+
+<style>
+
+  .navbar .nav-link, .navbar .btn-outline-success {
+    color: #28a745; /* Bootstrap success green color */
+    font-size: 1rem;
+    margin: 0 15px; /* Increased space between icons */
+  }
+
+  .navbar .nav-link i, .navbar .btn-outline-success i {
+    font-size: 1.5rem; /* Increased icon size */
+  }
+
+  .navbar .nav-link.text-black, .navbar .nav-link:focus, .navbar .nav-link:hover {
+    color: #000; /* Black color on click */
+  }
+
+  .navbar .btn-outline-success {
+    border-color: #28a745; /* Bootstrap success green color */
+  }
+
+  .navbar .btn-outline-success:hover {
+    background-color: #28a745; /* Bootstrap success green color */
+    color: #fff;
+  }
+
+  .navbar .dropdown-menu {
+    min-width: 200px;
+  }
+
+  .navbar .dropdown-item {
+    font-size: 1rem;
+  }
+
+  .navbar .dropdown-item.active, .navbar .dropdown-item:focus, .navbar .dropdown-item:hover {
+    color: #000; /* Black color on click */
+  }
+
+</style>

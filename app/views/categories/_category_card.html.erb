@@ -25,7 +25,16 @@
     </div>
   </div>
   <div class="card-body">
+    <% total_spent = @category.sub_account_transactions.sum(:amount) %>
+    <div class="d-flex align-items-center mb-2">
+      <i class="fas fa-money-bill-wave text-danger me-2"></i>
+      <p class="card-text fs-5 text-danger mb-0">
+        <%= number_to_currency(total_spent, unit: @selected_main_account.currency) %>
+      </p>
+    </div>
     <!-- Description -->
-    <p class="mb-0"><%= @category.description.presence || "No description" %></p>
+    <% if @category.description.present? %>
+      <p class="mb-0"><%= @category.description %></p>
+    <% end %>
   </div>
 </div>

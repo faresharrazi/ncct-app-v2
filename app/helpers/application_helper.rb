@@ -10,4 +10,8 @@ module ApplicationHelper
       "#{column}_asc"
     end
   end
+
+ def profile_active?
+    request.path.start_with?('/settings')
+  end
 end

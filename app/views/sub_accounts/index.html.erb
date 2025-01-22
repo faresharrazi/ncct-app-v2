@@ -1,14 +1,16 @@
 <% if @sub_accounts.any? %>
-  <div class="row">
+  <div class="row justify-content-center">
     <% @sub_accounts.each do |sub_account| %>
-      <div class="col-12 col-md-4 col-lg-3 mb-1">
+      <div class="col-12 col-md-6 col-lg-4 mb-1 d-flex justify-content-center">
         <%= render partial: "sub_accounts/account", locals: { sub_account: sub_account, main_account: @selected_main_account } %>
       </div>
     <% end %>
+  </div>
 <% end %>
 
 <% if owner_or_partner?(@selected_main_account) && @selected_main_account.available_percentage > 0 %>
-    <div class="col-12 col-md-4 col-lg-3">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6 col-lg-4 mb-1 d-flex justify-content-center">
       <%= render partial: "sub_accounts/new_account_card", locals: { main_account: @selected_main_account } %>
     </div>
   </div>
@@ -19,3 +21,15 @@
   <% all_transactions = @sub_accounts.map(&:sub_account_transactions).flatten %>
   <%= render partial: 'sub_account_transactions/transactions', locals: { transactions: all_transactions, main_account: @selected_main_account, title: "All Transactions" } %>
 </div>
+
+<style>
+  .row.justify-content-center {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .card {
+    margin: 0 auto;
+  }
+</style>
