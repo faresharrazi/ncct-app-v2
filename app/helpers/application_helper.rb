@@ -1,4 +1,5 @@
 module ApplicationHelper
+  
   def owner_or_partner?(main_account)
     main_account.owners.include?(current_user)
   end
@@ -11,7 +12,8 @@ module ApplicationHelper
     end
   end
 
- def profile_active?
-    request.path.start_with?('/settings')
+  def profile_active?
+    request.path == '/settings' && ['profile', 'preferences', 'cancel_account'].include?(params[:section])
   end
+
 end

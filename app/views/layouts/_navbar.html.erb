@@ -2,11 +2,6 @@
   <div class="container">
     <% if user_signed_in? %>
       <div class="d-flex align-items-center justify-content-center w-100" style="max-width: 600px; margin: 0 auto;">
-        <% if @selected_main_account %>
-          <%= link_to main_account_path(@selected_main_account), class: "btn btn-success btn-sm fw-bold me-2" do %>
-            <%= number_to_currency(@selected_main_account.balance, unit: @selected_main_account.currency) %>
-          <% end %>
-        <% end %>
 
         <!-- Subaccounts -->
         <% if @selected_main_account && @selected_main_account.sub_accounts.any? %>
@@ -22,6 +17,13 @@
           <% end %>
         <% end %>
 
+        <!-- Main account -->
+        <% if @selected_main_account %>
+          <%= link_to main_account_path(@selected_main_account), class: "btn #{current_page?(main_account_path(@selected_main_account)) ? 'btn-dark' : 'btn-success'} btn-sm fw-bold me-2" do %>
+            <%= number_to_currency(@selected_main_account.balance, unit: @selected_main_account.currency) %>
+          <% end %>
+        <% end %>
+
         <!-- New Transaction -->
         <% if @selected_main_account.sub_accounts.any? %>
           <%= link_to new_sub_account_transaction_without_subaccount_path, class: "nav-link #{'text-black' if current_page?(new_sub_account_transaction_without_subaccount_path)} text-success" do %>
@@ -31,9 +33,9 @@
 
         <!-- Profile Dropdown -->
         <div class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle #{'text-black' if profile_active?} text-success" 
+          <a class="nav-link dropdown-toggle text-success" 
              href="#" id="profileDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fas fa-user"></i>
+              <i class="fas fa-user" style="color: <%= profile_active? ? 'black' : 'inherit' %>;"></i>
           </a>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
             <li>
@@ -62,39 +64,39 @@
 
 <style>
 
-  .navbar .nav-link, .navbar .btn-outline-success {
-    color: #28a745; /* Bootstrap success green color */
-    font-size: 1rem;
-    margin: 0 15px; /* Increased space between icons */
-  }
+.navbar .nav-link, .navbar .btn-outline-success {
+  color: #28a745; /* Bootstrap success green color */
+  font-size: 1rem;
+  margin: 0 15px; /* Increased space between icons */
+}
 
-  .navbar .nav-link i, .navbar .btn-outline-success i {
-    font-size: 1.5rem; /* Increased icon size */
-  }
+.navbar .nav-link i, .navbar .btn-outline-success i {
+  font-size: 1.5rem; /* Increased icon size */
+}
 
-  .navbar .nav-link.text-black, .navbar .nav-link:focus, .navbar .nav-link:hover {
-    color: #000; /* Black color on click */
-  }
+.navbar .nav-link.text-black, .navbar .nav-link.active, .navbar .nav-link:focus, .navbar .nav-link:hover {
+  color: #000; /* Black color on click */
+}
 
-  .navbar .btn-outline-success {
-    border-color: #28a745; /* Bootstrap success green color */
-  }
+.navbar .btn-outline-success {
+  border-color: #28a745; /* Bootstrap success green color */
+}
 
-  .navbar .btn-outline-success:hover {
-    background-color: #28a745; /* Bootstrap success green color */
-    color: #fff;
-  }
+.navbar .btn-outline-success:hover {
+  background-color: #28a745; /* Bootstrap success green color */
+  color: #fff;
+}
 
-  .navbar .dropdown-menu {
-    min-width: 200px;
-  }
+.navbar .dropdown-menu {
+  min-width: 200px;
+}
 
-  .navbar .dropdown-item {
-    font-size: 1rem;
-  }
+.navbar .dropdown-item {
+  font-size: 1rem;
+}
 
-  .navbar .dropdown-item.active, .navbar .dropdown-item:focus, .navbar .dropdown-item:hover {
-    color: #000; /* Black color on click */
-  }
+.navbar .dropdown-item.active {
+  color: #FFF; /* Black color on click */
+}
 
 </style>

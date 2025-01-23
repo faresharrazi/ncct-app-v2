@@ -1,34 +1,31 @@
-<div class="card mb-4 shadow-sm" style="<%= 'cursor: pointer;' unless current_page?(main_account_sub_account_path(main_account, sub_account)) %> min-height: 200px; min-width: 280px;" 
+<div class="card mb-1 shadow-sm" style="<%= 'cursor: pointer;' unless current_page?(main_account_sub_account_path(main_account, sub_account)) %> min-height: 100px; min-width: 140px;" 
      <% unless current_page?(main_account_sub_account_path(main_account, sub_account)) %>
        onclick="window.location='<%= main_account_sub_account_path(main_account, sub_account) %>';"
      <% end %>>
-  <div class="card-body">
+  <div class="card-body p-2">
     <div class="d-flex justify-content-between align-items-center">
-      <h4 class="card-title mb-0">
+      <h5 class="card-title mb-0">
         <%= sub_account.title %>
-      </h4>
+      </h5>
     </div>
-    <hr>
+    <hr class="my-1">
 
-      <div class="d-flex align-items-center mb-2">
-        <i class="fas fa-wallet text-success me-2"></i>
-        <p class="card-text fs-3 fw-bold text-success mb-0">
-          <%= number_to_currency(sub_account.balance, unit: main_account.currency) %>
-        </p>
-      </div>
+    <div class="d-flex align-items-center mb-1">
+      <i class="fas fa-wallet text-success me-1"></i>
+      <p class="card-text fs-5 fw-bold text-success mb-0">
+        <%= number_to_currency(sub_account.balance, unit: main_account.currency) %>
+      </p>
+    </div>
         
-        <% total_spent = sub_account.sub_account_transactions.sum(:amount) %>
-      <div class="d-flex align-items-center mb-2">
-        <i class="fas fa-money-bill-wave text-danger me-2"></i>
-        <p class="card-text fs-5 text-danger mb-0">
-          <%= number_to_currency(total_spent, unit: main_account.currency) %>
-        </p>
-      </div>
-    <p class="card-text">
+    <% total_spent = sub_account.sub_account_transactions.sum(:amount) %>
+    <div class="d-flex align-items-center mb-1">
+      <i class="fas fa-money-bill-wave text-danger me-1"></i>
+      <p class="card-text fs-6 text-danger mb-0">
+        <%= number_to_currency(total_spent, unit: main_account.currency) %>
+      </p>
+    </div>
+    <p class="card-text mb-1">
       <i class="fas fa-receipt"></i> <%= sub_account.sub_account_transactions.count %> Transactions
-    </p>
-    <p class="card-text">
-      <i class="fas fa-percentage"></i> <%= sub_account.percentage %>%
     </p>
   </div>
 </div>

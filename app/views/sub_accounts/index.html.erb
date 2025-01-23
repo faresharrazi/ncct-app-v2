@@ -1,7 +1,7 @@
 <% if @sub_accounts.any? %>
   <div class="row justify-content-center">
     <% @sub_accounts.each do |sub_account| %>
-      <div class="col-12 col-md-6 col-lg-4 mb-1 d-flex justify-content-center">
+      <div class="col-4 col-sm-4 col-md-4 col-lg-2 mb-1 d-flex justify-content-center">
         <%= render partial: "sub_accounts/account", locals: { sub_account: sub_account, main_account: @selected_main_account } %>
       </div>
     <% end %>
