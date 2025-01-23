@@ -5,12 +5,10 @@
         <%= render partial: "sub_accounts/account", locals: { sub_account: sub_account, main_account: @selected_main_account } %>
       </div>
     <% end %>
-  </div>
 <% end %>
 
 <% if owner_or_partner?(@selected_main_account) && @selected_main_account.available_percentage > 0 %>
-  <div class="row justify-content-center">
-    <div class="col-12 col-md-6 col-lg-4 mb-1 d-flex justify-content-center">
+    <div class="col-4 col-sm-4 col-md-4 col-lg-2 mb-1 d-flex justify-content-center">
       <%= render partial: "sub_accounts/new_account_card", locals: { main_account: @selected_main_account } %>
     </div>
   </div>

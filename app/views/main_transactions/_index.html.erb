@@ -5,7 +5,6 @@
         <th>Date</th>
         <th>Title</th>
         <th>Amount</th>
-        <th>Creator</th>
       </tr>
     </thead>
 
@@ -14,12 +13,12 @@
         <tr>
           <!-- Date -->
           <td>
-            <span class="text-muted"><%= l(transaction.created_at, format: :short) %></span>
+            <span class="text-muted"><%= l(transaction.created_at.to_date, format: :short) %></span>
           </td>
 
           <!-- Title -->
           <td>
-            <%= link_to transaction.title, main_account_main_transaction_path(transaction.main_account, transaction), class: "fw-bold text-decoration-none" %>
+            <%= link_to transaction.title.truncate(20), main_account_main_transaction_path(transaction.main_account, transaction), class: "fw-bold text-decoration-none" %>
           </td>
 
           <!-- Amount -->
@@ -28,19 +27,14 @@
               <%= number_to_currency(transaction.amount, unit: transaction.main_account&.currency || "€") %>
             </span>
           </td>
-
-          <!-- Creator -->
-          <td>
-            <span class="text-muted"><%= transaction.creator.full_name %></span>
-          </td>
           
           <!-- Actions -->
           <td>
-            <div class="dropdown">
-              <button class="btn btn-link dropdown-toggle" type="button" id="actionsDropdown<%= transaction.id %>" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fa-solid fa-screwdriver-wrench"></i>
+            <div class="btn-group">
+              <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-cog"></i>
               </button>
-              <ul class="dropdown-menu" aria-labelledby="actionsDropdown<%= transaction.id %>">
+              <ul class="dropdown-menu">
                 <li>
                   <%= link_to new_main_account_main_transaction_path(
                                 transaction.main_account, 
@@ -70,7 +64,7 @@
                 <li>
                   <%= link_to main_account_main_transaction_path(transaction.main_account, transaction), 
                               data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this transaction?" }, 
-                              class: "dropdown-item" do %>
+                              class: "dropdown-item text-danger" do %>
                     <i class="fas fa-trash-alt text-danger"></i> Delete
                   <% end %>
                 </li>

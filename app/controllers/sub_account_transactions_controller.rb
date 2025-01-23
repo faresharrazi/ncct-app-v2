@@ -8,6 +8,9 @@ class SubAccountTransactionsController < ApplicationController
   end
 
   def all
+    if params[:columns]
+      session[:selected_columns] = params[:columns].split(',')
+    end
     @main_account = current_user.main_accounts.find_by(id: session[:selected_main_account_id])
     if @main_account.nil?
       redirect_to main_accounts_path, alert: "Please select a main account."
@@ -18,7 +21,7 @@ class SubAccountTransactionsController < ApplicationController
     @transactions = search_transactions(@transactions)
     @transactions = filter_transactions(@transactions)
     @transactions = sort_transactions(@transactions)
-  end
+    @selected_columns = session[:selected_columns] || ['account', 'creator', 'category']  end
 
   def show
     @sub_account_transaction = SubAccountTransaction.find(params[:id])
@@ -94,8 +97,7 @@ class SubAccountTransactionsController < ApplicationController
   def update
     @sub_account_transaction = SubAccountTransaction.find(params[:id])
     if @sub_account_transaction.update(transaction_params)
-      redirect_to main_account_sub_account_sub_account_transaction_path(@main_account, @sub_account, @sub_account_transaction),
-                  notice: "Transaction was successfully updated."
+      redirect_to session.delete(:return_to) || all_sub_account_transactions_path, notice: "Transaction was successfully created."
     else
       render :edit, status: :unprocessable_entity
     end

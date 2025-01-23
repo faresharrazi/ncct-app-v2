@@ -1,7 +1,5 @@
 <%= render 'main_accounts/main_account_title' %>
 
-<% Rails.logger.debug "Number of owners: #{@main_account.owners.count}" %>
-
 <% if @main_account.owners.count > 1 %>
   <div class="owners-list row mt-2">
     <% @main_account.owners.each do |owner| %>

@@ -1,7 +1,8 @@
+<% if @transactions.any? %>
+  <%= render 'sub_account_transactions/search_sort_filter/search_and_select' %>
+<% end %>
 
-<%= render 'sub_account_transactions/search_sort_filter/search' %>
-
-<%= render partial: 'sub_account_transactions/all_transactions', locals: { transactions: @transactions, main_account: @selected_main_account, title: "All Transactions" } %>
+<%= render partial: 'sub_account_transactions/all_transactions', locals: { transactions: @transactions, main_account: @selected_main_account, title: "All Transactions", selected_columns: @selected_columns } %>
 
 <style>
     .table th a {
@@ -22,3 +23,19 @@
     height: auto;
     }
 </style>
+
+<script>
+  document.addEventListener('turbo:load', function() {
+    const checkboxes = document.querySelectorAll('.dropdown-menu .form-check-input');
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        const selectedColumns = Array.from(checkboxes)
+          .filter(checkbox => checkbox.checked)
+          .map(checkbox => checkbox.value);
+        const url = new URL(window.location.href);
+        url.searchParams.set('columns', selectedColumns.join(','));
+        window.location.href = url.toString();
+      });
+    });
+  });
+</script>

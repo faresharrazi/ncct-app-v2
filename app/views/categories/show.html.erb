@@ -10,7 +10,7 @@
 <%= render 'categories/category_card', category: @category %>
 
 <!-- Transactions -->
-<div class="mt-4">
+<div class="mt-2">
   <%= render partial: 'sub_account_transactions/transactions', locals: { transactions: @category.sub_account_transactions, main_account: @selected_main_account, title: "Transactions for '#{@category.title}'", category: @category } %>
 </div>
 

@@ -1,10 +1,10 @@
-<div class="card mb-4 shadow-sm" style="cursor: pointer; background-color: #e9ecef; min-height: 200px; max-width: 280px;" onclick="window.location='<%= new_main_account_sub_account_path(main_account) %>';">
-  <div class="card-body d-flex flex-column justify-content-center align-items-center text-center">
-    <p class="card-text">
+<div class="card mb-1 shadow-sm" style="cursor: pointer; max-height: 130px; min-width: 140px; background-color: #d6d8db;" onclick="window.location='<%= new_main_account_sub_account_path(main_account) %>';">
+  <div class="card-body p-2 d-flex flex-column justify-content-center align-items-center text-center">
+    <p class="card-text mb-1">
       <i class="fas fa-info-circle"></i> Available: <%= main_account.available_percentage %>%
     </p>
-    <hr class="w-100">
-    <%= link_to new_main_account_sub_account_path(main_account), class: "btn btn-primary" do %>
+    <hr class="my-1 w-100">
+    <%= link_to new_main_account_sub_account_path(main_account), class: "btn btn-primary btn-sm" do %>
       <i class="fas fa-plus"></i> New Account
     <% end %>
   </div>

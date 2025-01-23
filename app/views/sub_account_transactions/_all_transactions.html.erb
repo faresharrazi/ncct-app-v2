@@ -4,53 +4,23 @@
   </div>
 
 <% else %>
-  <table class="table table-striped">
-    <%= render 'sub_account_transactions/all_transactions_table_head' %>
-    <tbody>
+  <div class="table-responsive">
+    <table class="table table-striped table-sm">
+      <%= render 'sub_account_transactions/all_transactions_table_head', selected_columns: selected_columns %>
       <% transactions.each do |transaction| %>
-        <tr>
-          <!-- Date -->
-          <td>
-            <span class="text-muted"><%= l(transaction.created_at, format: :short) %></span>
-          </td>
-
-          <!-- Title -->
-          <td>
-            <%= link_to transaction.title, 
-                        main_account_sub_account_sub_account_transaction_path(transaction.sub_account.main_account, transaction.sub_account, transaction), 
-                        class: "fw-bold text-decoration-none" %>
-          </td>
-
-          <!-- Amount -->
-          <td>
-            <span class="badge <%= transaction.transaction_kind == 'expense' ? 'bg-danger' : 'bg-success' %>">
-              <%= number_to_currency(transaction.amount, unit: transaction.sub_account.main_account.currency) %>
-            </span>
-          </td>
-          
-          <!-- Account -->
-          <td>
-            <% if !current_page?(main_account_sub_account_path(transaction.sub_account.main_account, transaction.sub_account)) %>
-              <%= link_to transaction.sub_account.title, main_account_sub_account_path(transaction.sub_account.main_account, transaction.sub_account), class: "fw-bold text-decoration-none" %>
-            <% else %>
-              <span class="fw-bold"><%= transaction.sub_account.title %></span>
-            <% end %>
-          </td>
-
-          <!-- Creator -->
-          <td>
-            <span class="text-muted"><%= transaction.creator.full_name %></span>
-          </td>
-
-          <!-- Category -->
-          <td>
-            <span class="text-muted"><%= transaction.category.title if transaction.category %></span>
-          </td>
-
-          <%= render 'sub_account_transactions/all_transactions_table_actions', transaction: transaction %>           
-
-        </tr>
+        <%= render 'sub_account_transactions/transaction_body', transaction: transaction, selected_columns: selected_columns %>
       <% end %>
-    </tbody>
-  </table>
+      </tbody>
+    </table>
+  </div>
 <% end %>
+
+<style>
+.table-responsive {
+  overflow-x: auto;
+}
+
+.table-sm th, .table-sm td {
+  padding: 0.3rem;
+}
+</style>

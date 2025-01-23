@@ -109,80 +109,87 @@
         </ul>
       </div>
     </th>
-    <th>
-      <div class="dropdown">
-        <button class="btn btn-link dropdown-toggle" type="button" id="accountDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-          Account
-          <% if params[:sort] == "account_asc" %>
-            <i class="fas fa-arrow-up"></i>
-          <% elsif params[:sort] == "account_desc" %>
-            <i class="fas fa-arrow-down"></i>
-          <% end %>
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="accountDropdown">
-          <li><%= link_to "A-Z", all_sub_account_transactions_path(params.permit!.to_h.merge(sort: toggle_sort(params[:sort], "account"))) %></li>
-          <li><%= link_to "Z-A", all_sub_account_transactions_path(params.permit!.to_h.merge(sort: toggle_sort(params[:sort], "account"))) %></li>
-          <li>
-            <%= form_with url: all_sub_account_transactions_path, method: :get, local: true do %>
-              <div class="form-group">
-                <%= label_tag :sub_account_id, "Filter by Account" %>
-                <%= select_tag :sub_account_id, options_from_collection_for_select(SubAccount.all, :id, :title, params[:sub_account_id]), include_blank: true, class: "form-control", multiple: true %>
-              </div>
-              <%= submit_tag "Filter", class: "btn btn-primary" %>
+    <% if selected_columns.include?('account') %>
+      <th>
+        <div class="dropdown">
+          <button class="btn btn-link dropdown-toggle" type="button" id="accountDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            Account
+            <% if params[:sort] == "account_asc" %>
+              <i class="fas fa-arrow-up"></i>
+            <% elsif params[:sort] == "account_desc" %>
+              <i class="fas fa-arrow-down"></i>
             <% end %>
-          </li>
-        </ul>
-      </div>
-    </th>
-    <th>
-      <div class="dropdown">
-        <button class="btn btn-link dropdown-toggle" type="button" id="creatorDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-          Creator
-          <% if params[:sort] == "creator_asc" %>
-            <i class="fas fa-arrow-up"></i>
-          <% elsif params[:sort] == "creator_desc" %>
-            <i class="fas fa-arrow-down"></i>
-          <% end %>
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="creatorDropdown">
-          <li><%= link_to "A-Z", all_sub_account_transactions_path(params.permit!.to_h.merge(sort: toggle_sort(params[:sort], "creator"))) %></li>
-          <li><%= link_to "Z-A", all_sub_account_transactions_path(params.permit!.to_h.merge(sort: toggle_sort(params[:sort], "creator"))) %></li>
-          <li>
-            <%= form_with url: all_sub_account_transactions_path, method: :get, local: true do %>
-              <div class="form-group">
-                <%= label_tag :creator_id, "Filter by Creator" %>
-                <%= select_tag :creator_id, options_from_collection_for_select(User.all, :id, :full_name, params[:creator_id]), include_blank: true, class: "form-control", multiple: true %>
-              </div>
-              <%= submit_tag "Filter", class: "btn btn-primary" %>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="accountDropdown">
+            <li><%= link_to "A-Z", all_sub_account_transactions_path(params.permit!.to_h.merge(sort: toggle_sort(params[:sort], "account"))) %></li>
+            <li><%= link_to "Z-A", all_sub_account_transactions_path(params.permit!.to_h.merge(sort: toggle_sort(params[:sort], "account"))) %></li>
+            <li>
+              <%= form_with url: all_sub_account_transactions_path, method: :get, local: true do %>
+                <div class="form-group">
+                  <%= label_tag :sub_account_id, "Filter by Account" %>
+                  <%= select_tag :sub_account_id, options_from_collection_for_select(SubAccount.all, :id, :title, params[:sub_account_id]), include_blank: true, class: "form-control", multiple: true %>
+                </div>
+                <%= submit_tag "Filter", class: "btn btn-primary" %>
+              <% end %>
+            </li>
+          </ul>
+        </div>
+      </th>
+    <% end %>
+    <% if selected_columns.include?('creator') %>
+      <th>
+        <div class="dropdown">
+          <button class="btn btn-link dropdown-toggle" type="button" id="creatorDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            Creator
+            <% if params[:sort] == "creator_asc" %>
+              <i class="fas fa-arrow-up"></i>
+            <% elsif params[:sort] == "creator_desc" %>
+              <i class="fas fa-arrow-down"></i>
             <% end %>
-          </li>
-        </ul>
-      </div>
-    </th>
-    <th>
-      <div class="dropdown">
-        <button class="btn btn-link dropdown-toggle" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-          Category
-          <% if params[:sort] == "category_asc" %>
-            <i class="fas fa-arrow-up"></i>
-          <% elsif params[:sort] == "category_desc" %>
-            <i class="fas fa-arrow-down"></i>
-          <% end %>
-        </button>
-        <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
-          <li><%= link_to "A-Z", all_sub_account_transactions_path(params.permit!.to_h.merge(sort: toggle_sort(params[:sort], "category"))) %></li>
-          <li><%= link_to "Z-A", all_sub_account_transactions_path(params.permit!.to_h.merge(sort: toggle_sort(params[:sort], "category"))) %></li>
-          <li>
-            <%= form_with url: all_sub_account_transactions_path, method: :get, local: true do %>
-              <div class="form-group">
-                <%= label_tag :category_id, "Filter by Category" %>
-                <%= select_tag :category_id, options_from_collection_for_select(Category.all, :id, :title, params[:category_id]), include_blank: true, class: "form-control", multiple: true %>
-              </div>
-              <%= submit_tag "Filter", class: "btn btn-primary" %>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="creatorDropdown">
+            <li><%= link_to "A-Z", all_sub_account_transactions_path(params.permit!.to_h.merge(sort: toggle_sort(params[:sort], "creator"))) %></li>
+            <li><%= link_to "Z-A", all_sub_account_transactions_path(params.permit!.to_h.merge(sort: toggle_sort(params[:sort], "creator"))) %></li>
+            <li>
+              <%= form_with url: all_sub_account_transactions_path, method: :get, local: true do %>
+                <div class="form-group">
+                  <%= label_tag :creator_id, "Filter by Creator" %>
+                  <%= select_tag :creator_id, options_from_collection_for_select(User.all, :id, :full_name, params[:creator_id]), include_blank: true, class: "form-control", multiple: true %>
+                </div>
+                <%= submit_tag "Filter", class: "btn btn-primary" %>
+              <% end %>
+            </li>
+          </ul>
+        </div>
+      </th>
+    <% end %>
+    <% if selected_columns.include?('category') %>
+      <th>
+        <div class="dropdown">
+          <button class="btn btn-link dropdown-toggle" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            Category
+            <% if params[:sort] == "category_asc" %>
+              <i class="fas fa-arrow-up"></i>
+            <% elsif params[:sort] == "category_desc" %>
+              <i class="fas fa-arrow-down"></i>
             <% end %>
-          </li>
-        </ul>
-      </div>
-    </th>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+            <li><%= link_to "A-Z", all_sub_account_transactions_path(params.permit!.to_h.merge(sort: toggle_sort(params[:sort], "category"))) %></li>
+            <li><%= link_to "Z-A", all_sub_account_transactions_path(params.permit!.to_h.merge(sort: toggle_sort(params[:sort], "category"))) %></li>
+            <li>
+              <%= form_with url: all_sub_account_transactions_path, method: :get, local: true do %>
+                <div class="form-group">
+                  <%= label_tag :category_id, "Filter by Category" %>
+                  <%= select_tag :category_id, options_from_collection_for_select(Category.all, :id, :title, params[:category_id]), include_blank: true, class: "form-control", multiple: true %>
+                </div>
+                <%= submit_tag "Filter", class: "btn btn-primary" %>
+              <% end %>
+            </li>
+          </ul>
+        </div>
+      </th>
+    <% end %>
+    <th>Action</th>
   </tr>
 </thead>
