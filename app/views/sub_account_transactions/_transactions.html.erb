@@ -10,7 +10,6 @@
         <th>Date</th>
         <th>Title</th>
         <th>Amount</th>
-        <th>Account</th>
       </tr>
     </thead>
     <tbody>
@@ -34,22 +33,11 @@
               <%= number_to_currency(transaction.amount, unit: transaction.sub_account.main_account.currency) %>
             </span>
           </td>
-          
-          <!-- Account -->
-          <td>
-            <% account_title = transaction.sub_account.title.truncate(10) %>
-            <% if !current_page?(main_account_sub_account_path(transaction.sub_account.main_account, transaction.sub_account)) %>
-              <%= link_to account_title, main_account_sub_account_path(transaction.sub_account.main_account, transaction.sub_account), class: "fw-bold text-decoration-none" %>
-            <% else %>
-              <span class="fw-bold"><%= account_title %></span>
-            <% end %>
-          </td>
 
           <!-- Actions -->
           <td>
             <div class="btn-group">
               <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fas fa-cog"></i>
               </button>
               <ul class="dropdown-menu">
                 <li>

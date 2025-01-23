@@ -1,19 +1,19 @@
-<tr>
+<tr class="text-center">
   <!-- Date -->
   <td>
-    <span class="text-muted"><%= l(transaction.created_at.to_date, format: :short) %></span>
+    <span class="text-muted fs-6"><%= l(transaction.created_at.to_date, format: :short) %></span>
   </td>
 
   <!-- Title -->
   <td>
     <%= link_to transaction.title.truncate(10), 
                 main_account_sub_account_sub_account_transaction_path(transaction.sub_account.main_account, transaction.sub_account, transaction), 
-                class: "fw-bold text-decoration-none" %>
+                class: "fw-bold text-decoration-none fs-6" %>
   </td>
 
   <!-- Amount -->
   <td>
-    <span class="badge <%= transaction.transaction_kind == 'expense' ? 'bg-danger' : 'bg-success' %>">
+    <span class="badge <%= transaction.transaction_kind == 'expense' ? 'bg-danger' : 'bg-success' %> fs-6">
       <%= number_to_currency(transaction.amount, unit: transaction.sub_account.main_account.currency) %>
     </span>
   </td>
@@ -23,9 +23,9 @@
     <td>
       <% account_title = transaction.sub_account.title.truncate(10) %>
       <% if !current_page?(main_account_sub_account_path(transaction.sub_account.main_account, transaction.sub_account)) %>
-        <%= link_to account_title, main_account_sub_account_path(transaction.sub_account.main_account, transaction.sub_account), class: "fw-bold text-decoration-none" %>
+        <%= link_to account_title, main_account_sub_account_path(transaction.sub_account.main_account, transaction.sub_account), class: "fw-bold text-decoration-none fs-6" %>
       <% else %>
-        <span class="fw-bold"><%= account_title %></span>
+        <span class="fs-6"><%= account_title %></span>
       <% end %>
     </td>
   <% end %>
@@ -33,14 +33,14 @@
   <!-- Creator -->
   <% if selected_columns.include?('creator') %>
     <td>
-      <span class="text-muted"><%= transaction.creator.full_name.truncate(10) %></span>
+      <span class="text-muted fs-6"><%= transaction.creator.full_name.truncate(10) %></span>
     </td>
   <% end %>
 
   <!-- Category -->
   <% if selected_columns.include?('category') %>
     <td>
-      <span class="text-muted"><%= transaction.category&.title&.truncate(10) %></span>
+      <span class="text-muted fs-6"><%= transaction.category&.title&.truncate(10) %></span>
     </td>
   <% end %>
 
@@ -48,7 +48,6 @@
   <td>
     <div class="btn-group">
       <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="fas fa-cog"></i>
       </button>
       <ul class="dropdown-menu">
         <li>

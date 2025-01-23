@@ -49,7 +49,7 @@
             <i class="fas fa-arrow-down"></i>
           <% end %>
         </button>
-        <ul class="dropdown-menu" aria-labelledby="dateDropdown">
+        <ul class="dropdown-menu p-2" aria-labelledby="dateDropdown">
           <li><%= link_to "Newest", all_sub_account_transactions_path(params.permit!.to_h.merge(sort: toggle_sort(params[:sort], "date"))) %></li>
           <li><%= link_to "Oldest", all_sub_account_transactions_path(params.permit!.to_h.merge(sort: toggle_sort(params[:sort], "date"))) %></li>
           <li>
@@ -87,7 +87,7 @@
             <i class="fas fa-arrow-down"></i>
           <% end %>
         </button>
-        <ul class="dropdown-menu" aria-labelledby="titleDropdown">
+        <ul class="dropdown-menu p-2" aria-labelledby="titleDropdown">
           <li><%= link_to "A-Z", all_sub_account_transactions_path(params.permit!.to_h.merge(sort: toggle_sort(params[:sort], "title"))) %></li>
           <li><%= link_to "Z-A", all_sub_account_transactions_path(params.permit!.to_h.merge(sort: toggle_sort(params[:sort], "title"))) %></li>
         </ul>
@@ -103,7 +103,7 @@
             <i class="fas fa-arrow-down"></i>
           <% end %>
         </button>
-        <ul class="dropdown-menu" aria-labelledby="amountDropdown">
+        <ul class="dropdown-menu p-2" aria-labelledby="amountDropdown">
           <li><%= link_to "Ascending", all_sub_account_transactions_path(params.permit!.to_h.merge(sort: toggle_sort(params[:sort], "amount"))) %></li>
           <li><%= link_to "Descending", all_sub_account_transactions_path(params.permit!.to_h.merge(sort: toggle_sort(params[:sort], "amount"))) %></li>
         </ul>
@@ -120,7 +120,7 @@
               <i class="fas fa-arrow-down"></i>
             <% end %>
           </button>
-          <ul class="dropdown-menu" aria-labelledby="accountDropdown">
+          <ul class="dropdown-menu p-2" aria-labelledby="accountDropdown">
             <li><%= link_to "A-Z", all_sub_account_transactions_path(params.permit!.to_h.merge(sort: toggle_sort(params[:sort], "account"))) %></li>
             <li><%= link_to "Z-A", all_sub_account_transactions_path(params.permit!.to_h.merge(sort: toggle_sort(params[:sort], "account"))) %></li>
             <li>
@@ -147,7 +147,7 @@
               <i class="fas fa-arrow-down"></i>
             <% end %>
           </button>
-          <ul class="dropdown-menu" aria-labelledby="creatorDropdown">
+          <ul class="dropdown-menu p-2" aria-labelledby="creatorDropdown">
             <li><%= link_to "A-Z", all_sub_account_transactions_path(params.permit!.to_h.merge(sort: toggle_sort(params[:sort], "creator"))) %></li>
             <li><%= link_to "Z-A", all_sub_account_transactions_path(params.permit!.to_h.merge(sort: toggle_sort(params[:sort], "creator"))) %></li>
             <li>
@@ -174,7 +174,7 @@
               <i class="fas fa-arrow-down"></i>
             <% end %>
           </button>
-          <ul class="dropdown-menu" aria-labelledby="categoryDropdown">
+          <ul class="dropdown-menu p-2" aria-labelledby="categoryDropdown">
             <li><%= link_to "A-Z", all_sub_account_transactions_path(params.permit!.to_h.merge(sort: toggle_sort(params[:sort], "category"))) %></li>
             <li><%= link_to "Z-A", all_sub_account_transactions_path(params.permit!.to_h.merge(sort: toggle_sort(params[:sort], "category"))) %></li>
             <li>
@@ -190,7 +190,6 @@
         </div>
       </th>
     <% end %>
-    <th>Action</th>
   </tr>
 </thead>
 

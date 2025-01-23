@@ -1,11 +1,11 @@
-<div class="card mb-1 shadow-sm" style="<%= 'cursor: pointer;' unless current_page?(main_account_sub_account_path(main_account, sub_account)) %> max-height: 130px;" 
+<div class="card mb-1 shadow-sm" style="<%= 'cursor: pointer;' unless current_page?(main_account_sub_account_path(main_account, sub_account)) %> max-height: 130px; min-width: 150px;" 
      <% unless current_page?(main_account_sub_account_path(main_account, sub_account)) %>
        onclick="window.location='<%= main_account_sub_account_path(main_account, sub_account) %>';"
      <% end %>>
   <div class="card-body p-1">
     <div class="d-flex justify-content-between align-items-center">
       <h6 class="card-title mb-0">
-        <%= sub_account.title.truncate(10) %>
+        <%= sub_account.title.truncate(15) %>
       </h6>
     </div>
     <hr class="my-1">
