@@ -22,10 +22,12 @@ production:
     <<: *default
     database: ncct_app_production_cache
     migrations_paths: db/cache_migrate
+
   queue:
     <<: *default
     database: ncct_app_production_queue
     migrations_paths: db/queue_migrate
+
   cable:
     <<: *default
     database: ncct_app_production_cable
