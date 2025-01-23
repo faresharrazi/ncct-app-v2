@@ -12,7 +12,6 @@ test:
   database: ncct_app_test
 
 production:
-  adapter: postgresql
   <<: *default
   database: <%= ENV['DATABASE_URL'] %>
 
