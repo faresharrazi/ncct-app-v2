@@ -1,4 +1,4 @@
-<div class="card shadow-sm" style="<%= 'cursor: pointer;' unless current_page?(main_account_sub_account_path(main_account, sub_account)) %> min-width: 400px; padding: 0;" 
+<div class="card shadow-sm" style="<%= 'cursor: pointer;' unless current_page?(main_account_sub_account_path(main_account, sub_account)) %> max-width: 400px; padding: 0;" 
      <% unless current_page?(main_account_sub_account_path(main_account, sub_account)) %>
        onclick="window.location='<%= main_account_sub_account_path(main_account, sub_account) %>';"
      <% end %>>
@@ -7,10 +7,6 @@
   <div class="d-flex justify-content-between align-items-center p-3">
     <div class="d-flex align-items-center">
       <h5 class="card-title mb-0 me-3"><%= sub_account.title.truncate(20) %></h5>
-      <p class="mb-0 me-3"><i class="fas fa-percentage"></i> <%= sub_account.percentage %></p>
-      <p class="card-text mb-0 me-3">
-        <i class="fas fa-receipt"></i> <%= sub_account.sub_account_transactions.count %>
-      </p>
     </div>
     <div class="btn-group">
       <%= link_to new_sub_account_transaction_without_subaccount_path(sub_account_transaction: { sub_account_id: sub_account.id }), class: "btn btn-success btn-sm" do %>
@@ -46,7 +42,7 @@
     <hr class="m-0">
     <div class="p-3">
 
-      <div class="d-flex align-items-center mb-2">
+      <div class="d-flex align-items-center">
         <i class="fas fa-wallet text-success me-2"></i>
         <p class="card-text fs-3 fw-bold text-success mb-0">
           <%= number_to_currency(sub_account.balance, unit: main_account.currency) %>
@@ -58,7 +54,13 @@
           <%= number_to_currency(total_spent, unit: main_account.currency) %>
         </p>
       </div>
-      
+
+       <p class="card-text mb-0">
+        <i class="fas fa-receipt"></i> <%= sub_account.sub_account_transactions.count %>
+      </p>
+
+      <p class="mb-0 me-3"><i class="fas fa-percentage"></i> <%= sub_account.percentage %></p>
+     
       <!-- Categories -->
       Categories:
         <% sub_account.categories.each do |category| %>

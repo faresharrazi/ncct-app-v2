@@ -21,7 +21,7 @@ class SubAccountTransactionsController < ApplicationController
     @transactions = search_transactions(@transactions)
     @transactions = filter_transactions(@transactions)
     @transactions = sort_transactions(@transactions)
-    @selected_columns = session[:selected_columns] || ['account', 'creator', 'category']  end
+    @selected_columns = session[:selected_columns] || []  end
 
   def show
     @sub_account_transaction = SubAccountTransaction.find(params[:id])

@@ -21,6 +21,14 @@
 }
 
 .table-sm th, .table-sm td {
-  padding: 0.3rem;
+  padding: 0.2rem; /* Reduce padding */
+  font-size: 0.875rem; /* Reduce font size */
+}
+
+@media (max-width: 576px) {
+  .table-sm th, .table-sm td {
+    padding: 0.1rem; /* Further reduce padding on small screens */
+    font-size: 0.75rem; /* Further reduce font size on small screens */
+  }
 }
 </style>
