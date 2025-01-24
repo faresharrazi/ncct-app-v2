@@ -2,7 +2,8 @@
   <%= render 'sub_account_transactions/search_sort_filter/search_and_select' %>
 <% end %>
 
-<%= render partial: 'sub_account_transactions/all_transactions', locals: { transactions: @transactions, main_account: @selected_main_account, title: "All Transactions", selected_columns: @selected_columns } %>
+<% sorted_transactions = @transactions.sort_by(&:created_at).reverse %>
+<%= render partial: 'sub_account_transactions/all_transactions', locals: { transactions: sorted_transactions, main_account: @selected_main_account, title: "All Transactions", selected_columns: @selected_columns } %>
 
 <style>
     .table th a {

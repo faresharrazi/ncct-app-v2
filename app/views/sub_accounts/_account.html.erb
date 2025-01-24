@@ -17,8 +17,7 @@
       </p>
     </div>
         
-    <% total_spent = sub_account.sub_account_transactions.sum(:amount) %>
-    <div class="d-flex align-items-center mb-1">
+      <% total_spent = sub_account.sub_account_transactions.where(transaction_kind: 'expense').sum(:amount) %>    <div class="d-flex align-items-center mb-1">
       <i class="fas fa-money-bill-wave text-danger me-1"></i>
       <p class="card-text fs-7 text-danger mb-0">
         <%= number_to_currency(total_spent, unit: main_account.currency) %>

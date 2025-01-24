@@ -11,7 +11,7 @@ class MainTransactionsController < ApplicationController
     @main_transaction.creator = current_user
 
     if @main_transaction.save
-      redirect_to main_account_path(@main_account), notice: "Transaction was successfully created."
+      redirect_to main_account_path(@main_account), notice: "Transaction created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -27,9 +27,9 @@ class MainTransactionsController < ApplicationController
     )
 
     if @new_transaction.save
-      redirect_to main_account_path(@main_account), notice: 'Transaction was successfully duplicated.'
+      redirect_to main_account_path(@main_account), notice: 'Transaction duplicated.'
     else
-      redirect_to main_account_path(@main_account), alert: 'Failed to duplicate the transaction.'
+      redirect_to main_account_path(@main_account), alert: 'Failed to duplicate.'
     end
   end
 
@@ -37,7 +37,7 @@ class MainTransactionsController < ApplicationController
 
   def update
     if @main_transaction.update(main_transaction_params)
-      redirect_to main_account_path(@main_account), notice: "Transaction was successfully updated."
+      redirect_to main_account_path(@main_account), notice: "Transaction updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -46,7 +46,7 @@ class MainTransactionsController < ApplicationController
   def destroy
     @main_transaction.destroy
     redirect_to main_account_path(@main_account),
-                notice: "Transaction was successfully destroyed."
+                notice: "Transaction destroyed."
   end
 
   private

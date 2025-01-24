@@ -10,5 +10,6 @@
 
 <!-- Transactions -->
 <div class="mt-2">
-  <%= render partial: 'sub_account_transactions/transactions', locals: { transactions: @sub_account.sub_account_transactions, main_account: @selected_main_account, title: "Transactions for '#{@sub_account.title}'", sub_account: @sub_account } %>
+  <% sorted_transactions = @sub_account.sub_account_transactions.order(created_at: :desc) %>
+  <%= render partial: 'sub_account_transactions/transactions', locals: { transactions: sorted_transactions, main_account: @selected_main_account, title: "Transactions for '#{@sub_account.title}'", sub_account: @sub_account } %>
 </div>

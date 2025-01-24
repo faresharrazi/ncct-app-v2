@@ -1,13 +1,5 @@
 <% if @main_transactions.any? %>
   <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Title</th>
-        <th>Amount</th>
-      </tr>
-    </thead>
-
     <tbody>
       <% @main_transactions.each do |transaction| %>
         <tr>
@@ -31,8 +23,9 @@
           <!-- Actions -->
           <td>
             <div class="btn-group">
-              <button type="button" class="btn btn-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-              </button>
+              <div class="dropdown-toggle p-1" data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;">
+                <!-- No icon or text here -->
+              </div>
               <ul class="dropdown-menu">
                 <li>
                   <%= link_to new_main_account_main_transaction_path(

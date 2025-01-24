@@ -21,7 +21,7 @@ class CategoriesController < ApplicationController
   def create
     @category = @sub_account.categories.build(category_params)
     if @category.save
-      redirect_to main_account_sub_account_categories_path(@main_account, @sub_account), notice: 'Category was successfully created.'
+      redirect_to main_account_sub_account_categories_path(@main_account, @sub_account), notice: 'Category created.'
     else
       render :new
     end
@@ -31,7 +31,7 @@ class CategoriesController < ApplicationController
 
   def update
     if @category.update(category_params)
-      redirect_to main_account_sub_account_categories_path(@main_account, @sub_account), notice: 'Category was successfully updated.'
+      redirect_to main_account_sub_account_categories_path(@main_account, @sub_account), notice: 'Category updated.'
     else
       render :edit
     end
@@ -39,7 +39,7 @@ class CategoriesController < ApplicationController
 
   def destroy
     @category.destroy
-    redirect_to main_account_sub_account_categories_path(@main_account, @sub_account), notice: 'Category was successfully deleted.'
+    redirect_to main_account_sub_account_categories_path(@main_account, @sub_account), notice: 'Category deleted.'
   end
 
   private

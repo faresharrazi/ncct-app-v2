@@ -10,7 +10,7 @@ class MainAccountsController < ApplicationController
 
   def show
     if @main_account.nil?
-      redirect_to new_main_account_path, notice: "Please create a new main account."
+      redirect_to new_main_account_path, notice: "Create a new main account."
     else
       @main_transactions = @main_account.main_transactions.order(created_at: :desc)
       @sub_accounts = @main_account.sub_accounts.order(:created_at)
@@ -28,7 +28,7 @@ class MainAccountsController < ApplicationController
       @main_account.owners << current_user
       @selected_main_account = @main_account
       session[:selected_main_account_id] = @selected_main_account.id
-      redirect_to @main_account, notice: "Main Account was successfully created."
+      redirect_to @main_account, notice: "Main Account created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -40,7 +40,7 @@ class MainAccountsController < ApplicationController
     if @main_account.update(main_account_params)
       @selected_main_account = @main_account
       session[:selected_main_account_id] = @selected_main_account.id
-      redirect_to @main_account, notice: "Main Account was successfully updated."
+      redirect_to @main_account, notice: "Main Account updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -55,9 +55,9 @@ class MainAccountsController < ApplicationController
     set_selected_main_account
     Rails.logger.debug "After destroy, selected main account: #{@selected_main_account.inspect}"
     if @selected_main_account
-      redirect_to main_account_path(@selected_main_account), notice: "Main Account was successfully deleted."
+      redirect_to main_account_path(@selected_main_account), notice: "Main Account deleted."
     else
-      redirect_to new_main_account_path, notice: "Main Account was successfully deleted. Please create a new main account."
+      redirect_to new_main_account_path, notice: "Main Account deleted."
     end
   end
 
@@ -88,7 +88,7 @@ class MainAccountsController < ApplicationController
 
   def authorize_owner_or_partner!
     unless @main_account.owners.include?(current_user)
-      redirect_to root_path, alert: "You no longer have access to this Main Account."
+      redirect_to root_path, alert: "You no longer have access"
     end
   end
 end

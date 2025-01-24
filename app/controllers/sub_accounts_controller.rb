@@ -19,7 +19,7 @@ class SubAccountsController < ApplicationController
 
   def show
     unless accessible_account?
-      redirect_to main_accounts_path, alert: "You do not have access to this Account."
+      redirect_to main_accounts_path, alert: "No access to this Account."
     end
   end
 
@@ -35,7 +35,7 @@ class SubAccountsController < ApplicationController
 
     if @sub_account.save
       redirect_to main_account_sub_accounts_path(@main_account),
-                  notice: "Account was successfully created."
+                  notice: "Account created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -48,7 +48,7 @@ class SubAccountsController < ApplicationController
   def update
     if @sub_account.update(sub_account_params)
       redirect_to main_account_sub_account_path(@main_account, @sub_account),
-                  notice: "Account was successfully updated."
+                  notice: "Account updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -57,7 +57,7 @@ class SubAccountsController < ApplicationController
   def destroy
     @sub_account.destroy
     redirect_to main_account_sub_accounts_path(@main_account),
-                notice: "Account and all associated categories were successfully deleted."
+                notice: "Account deleted."
   end
 
   private
@@ -67,7 +67,7 @@ class SubAccountsController < ApplicationController
   def set_main_account
     @main_account = MainAccount.find_by(id: params[:main_account_id])
     unless @main_account && accessible_account?
-      redirect_to main_accounts_path, alert: "You do not have access to this Main Account."
+      redirect_to main_accounts_path, alert: "No access to this Account."
     end
   end
 
@@ -88,7 +88,7 @@ class SubAccountsController < ApplicationController
 
   def authorize_owner_or_partner!
     unless accessible_account?
-      redirect_to main_accounts_path, alert: "You do not have access to this Main Account."
+      redirect_to main_accounts_path, alert: "No access to this Account."
     end
   end
 

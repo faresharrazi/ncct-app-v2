@@ -28,16 +28,16 @@ class SharedMainAccountUsersController < ApplicationController
     @shared_main_account_user = User.find(params[:user_id])
     if @shared_main_account_user
       @main_account.shared_main_account_users.create(user: @shared_main_account_user, status: 'pending')
-      redirect_to main_account_shared_main_account_users_path(@main_account), notice: "Partner invitation was successfully sent."
+      redirect_to main_account_shared_main_account_users_path(@main_account), notice: "Invitation sent."
     else
-      redirect_to main_account_shared_main_account_users_path(@main_account), alert: "Failed to send partner invitation."
+      redirect_to main_account_shared_main_account_users_path(@main_account), alert: "Failed to send invitation."
     end
   end
 
   def destroy
     @shared_main_account_user = @main_account.shared_main_account_users.find(params[:id])
     @shared_main_account_user.destroy
-    redirect_to main_account_shared_main_account_users_path(@main_account), notice: "Invitation was successfully canceled."
+    redirect_to main_account_shared_main_account_users_path(@main_account), notice: "Invitation canceled."
   end
 
   def remove
@@ -46,7 +46,7 @@ class SharedMainAccountUsersController < ApplicationController
     shared_main_account_user&.destroy
     @main_account.owners.delete(user_to_remove)
 
-    redirect_to main_account_shared_main_account_users_path(@main_account), notice: "Partner was successfully removed."
+    redirect_to main_account_shared_main_account_users_path(@main_account), notice: "Partner removed."
   end
 
 def accept_invitation
@@ -57,7 +57,7 @@ def accept_invitation
     invitation.main_account.owners << current_user unless invitation.main_account.owners.include?(current_user)
     session[:selected_main_account_id] = invitation.main_account.id
     current_user.reload
-    redirect_to main_account_path(invitation.main_account), notice: "Invitation accepted. You are now a partner."
+    redirect_to main_account_path(invitation.main_account), notice: "Invitation accepted."
   else
     redirect_to main_account_shared_main_account_users_path(invitation.main_account), alert: "Failed to accept invitation."
   end
@@ -89,7 +89,7 @@ end
 
   def authorize_owner_or_partner!
     unless @main_account.owners.include?(current_user) || @main_account.shared_main_account_users.exists?(user: current_user, status: 'accepted')
-      redirect_to root_path, alert: "You have been deleted from the Shared Account."
+      redirect_to root_path, alert: "No access to this Account."
     end
   end
 end

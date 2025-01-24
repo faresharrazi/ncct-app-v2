@@ -4,7 +4,7 @@ class SubAccountTransactionsController < ApplicationController
   before_action :set_transaction, only: %i[show edit update destroy repeat_without_edit]
 
   def index
-    @transactions = @sub_account.sub_account_transactions
+    @transactions = @sub_account.sub_account_transactions.order(created_at: :desc)
   end
 
   def all
@@ -59,9 +59,9 @@ class SubAccountTransactionsController < ApplicationController
     )
 
     if @new_transaction.save
-      redirect_back fallback_location: main_account_sub_account_sub_account_transactions_path(@main_account, @sub_account), notice: 'Transaction was successfully duplicated.'
+      redirect_back fallback_location: main_account_sub_account_sub_account_transactions_path(@main_account, @sub_account), notice: 'Transaction duplicated.'
     else
-      redirect_back fallback_location: main_account_sub_account_sub_account_transactions_path(@main_account, @sub_account), alert: 'Failed to duplicate the transaction.'
+      redirect_back fallback_location: main_account_sub_account_sub_account_transactions_path(@main_account, @sub_account), alert: 'Failed to duplicate.'
     end
   end
 
@@ -76,7 +76,7 @@ class SubAccountTransactionsController < ApplicationController
     @sub_account_transaction.creator = current_user
 
     if @sub_account_transaction.save
-     redirect_to session.delete(:return_to) || all_sub_account_transactions_path, notice: "Transaction was successfully created."
+     redirect_to session.delete(:return_to) || all_sub_account_transactions_path, notice: "Transaction created."
     else
       @sub_accounts = SubAccount.all
       @categories = Category.where(sub_account_id: params[:sub_account_transaction][:sub_account_id])
@@ -97,7 +97,7 @@ class SubAccountTransactionsController < ApplicationController
   def update
     @sub_account_transaction = SubAccountTransaction.find(params[:id])
     if @sub_account_transaction.update(transaction_params)
-      redirect_to session.delete(:return_to) || all_sub_account_transactions_path, notice: "Transaction was successfully created."
+      redirect_to session.delete(:return_to) || all_sub_account_transactions_path, notice: "Transaction updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -105,7 +105,7 @@ class SubAccountTransactionsController < ApplicationController
 
   def destroy
     @sub_account_transaction.destroy
-    redirect_back fallback_location: main_account_sub_account_sub_account_transactions_path(@main_account, @sub_account), notice: "Transaction was successfully deleted."
+    redirect_back fallback_location: main_account_sub_account_sub_account_transactions_path(@main_account, @sub_account), notice: "Transaction deleted."
   end
 
   private

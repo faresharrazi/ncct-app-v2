@@ -38,10 +38,10 @@
 </div>
 
 <thead>
-  <tr>
+  <tr class="text-left">
     <th>
       <div class="dropdown">
-        <button class="btn btn-link dropdown-toggle" type="button" id="dateDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <button class="btn btn-link dropdown-toggle p-0" type="button" id="dateDropdown" data-bs-toggle="dropdown" aria-expanded="false">
           Date
           <% if params[:sort] == "date_asc" %>
             <i class="fas fa-arrow-up"></i>
@@ -79,7 +79,7 @@
     </th>
     <th>
       <div class="dropdown">
-        <button class="btn btn-link dropdown-toggle" type="button" id="titleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <button class="btn btn-link dropdown-toggle p-0" type="button" id="titleDropdown" data-bs-toggle="dropdown" aria-expanded="false">
           Title
           <% if params[:sort] == "title_asc" %>
             <i class="fas fa-arrow-up"></i>
@@ -95,7 +95,7 @@
     </th>
     <th>
       <div class="dropdown">
-        <button class="btn btn-link dropdown-toggle" type="button" id="amountDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        <button class="btn btn-link dropdown-toggle p-0" type="button" id="amountDropdown" data-bs-toggle="dropdown" aria-expanded="false">
           Amount
           <% if params[:sort] == "amount_asc" %>
             <i class="fas fa-arrow-up"></i>
@@ -112,7 +112,7 @@
     <% if selected_columns.include?('account') %>
       <th>
         <div class="dropdown">
-          <button class="btn btn-link dropdown-toggle" type="button" id="accountDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+          <button class="btn btn-link dropdown-toggle p-0" type="button" id="accountDropdown" data-bs-toggle="dropdown" aria-expanded="false">
             Account
             <% if params[:sort] == "account_asc" %>
               <i class="fas fa-arrow-up"></i>
@@ -139,7 +139,7 @@
     <% if selected_columns.include?('creator') %>
       <th>
         <div class="dropdown">
-          <button class="btn btn-link dropdown-toggle" type="button" id="creatorDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+          <button class="btn btn-link dropdown-toggle p-0" type="button" id="creatorDropdown" data-bs-toggle="dropdown" aria-expanded="false">
             Creator
             <% if params[:sort] == "creator_asc" %>
               <i class="fas fa-arrow-up"></i>
@@ -166,7 +166,7 @@
     <% if selected_columns.include?('category') %>
       <th>
         <div class="dropdown">
-          <button class="btn btn-link dropdown-toggle" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+          <button class="btn btn-link dropdown-toggle p-0" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false">
             Category
             <% if params[:sort] == "category_asc" %>
               <i class="fas fa-arrow-up"></i>
