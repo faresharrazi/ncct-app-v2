@@ -1,24 +1,14 @@
-# README
+# NCCT App
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Welcome to the NCCT App! This application helps you manage your accounts and transactions efficiently.
 
-Things you may want to cover:
+## Deployed Application
 
-* Ruby version
+You can access the deployed application [here](https://ncct-61a2de3b7a72.herokuapp.com/).
 
-* System dependencies
+## Features
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+- Manage multiple accounts
+- Track income and expenses
+- View detailed transaction history
+- Generate reports and insights (Coming soon)
