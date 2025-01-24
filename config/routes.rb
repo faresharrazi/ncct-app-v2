@@ -15,6 +15,9 @@ Rails.application.routes.draw do
       end
     end
     resources :sub_accounts do
+      member do
+        post :update_total_spent_period
+      end
       resources :sub_account_transactions do
         member do
           post 'repeat_without_edit'
