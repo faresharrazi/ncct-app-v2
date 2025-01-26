@@ -11,6 +11,9 @@ class SubAccountTransactionsController < ApplicationController
     if params[:columns]
       session[:selected_columns] = params[:columns].split(',')
     end
+    @selected_columns = session[:selected_columns] || []
+    Rails.logger.debug "Selected Columns: #{@selected_columns.inspect}"
+    
     @main_account = current_user.main_accounts.find_by(id: session[:selected_main_account_id])
     if @main_account.nil?
       redirect_to main_accounts_path, alert: "Please select a main account."
@@ -21,7 +24,7 @@ class SubAccountTransactionsController < ApplicationController
     @transactions = search_transactions(@transactions)
     @transactions = filter_transactions(@transactions)
     @transactions = sort_transactions(@transactions)
-    @selected_columns = session[:selected_columns] || []  end
+  end
 
   def show
     @sub_account_transaction = SubAccountTransaction.find(params[:id])
@@ -159,31 +162,35 @@ class SubAccountTransactionsController < ApplicationController
   end
 
   def sort_transactions(transactions)
-    case params[:sort]
-    when "amount_asc"
-      transactions = transactions.order(amount: :asc)
-    when "amount_desc"
-      transactions = transactions.order(amount: :desc)
-    when "date_asc"
-      transactions = transactions.order(created_at: :asc)
-    when "date_desc"
-      transactions = transactions.order(created_at: :desc)
-    when "title_asc"
-      transactions = transactions.order(:title)
-    when "title_desc"
-      transactions = transactions.order(title: :desc)
-    when "creator_asc"
-      transactions = transactions.joins(:creator).order(Arel.sql("users.first_name || ' ' || users.last_name ASC"))
-    when "creator_desc"
-      transactions = transactions.joins(:creator).order(Arel.sql("users.first_name || ' ' || users.last_name DESC"))
-    when "account_asc"
-      transactions = transactions.joins(:sub_account).order(Arel.sql("sub_accounts.title ASC"))
-    when "account_desc"
-      transactions = transactions.joins(:sub_account).order(Arel.sql("sub_accounts.title DESC"))
-    when "category_asc"
-      transactions = transactions.joins(:category).order(Arel.sql("categories.title ASC"))
-    when "category_desc"
-      transactions = transactions.joins(:category).order(Arel.sql("categories.title DESC"))
+    if params[:sort].present?
+      case params[:sort]
+      when "amount_asc"
+        transactions = transactions.order(amount: :asc)
+      when "amount_desc"
+        transactions = transactions.order(amount: :desc)
+      when "date_asc"
+        transactions = transactions.order(created_at: :asc)
+      when "date_desc"
+        transactions = transactions.order(created_at: :desc)
+      when "title_asc"
+        transactions = transactions.order(:title)
+      when "title_desc"
+        transactions = transactions.order(title: :desc)
+      when "creator_asc"
+        transactions = transactions.joins(:creator).order(Arel.sql("users.first_name || ' ' || users.last_name ASC"))
+      when "creator_desc"
+        transactions = transactions.joins(:creator).order(Arel.sql("users.first_name || ' ' || users.last_name DESC"))
+      when "account_asc"
+        transactions = transactions.joins(:sub_account).order(Arel.sql("sub_accounts.title ASC"))
+      when "account_desc"
+        transactions = transactions.joins(:sub_account).order(Arel.sql("sub_accounts.title DESC"))
+      when "category_asc"
+        transactions = transactions.joins(:category).order(Arel.sql("categories.title ASC"))
+      when "category_desc"
+        transactions = transactions.joins(:category).order(Arel.sql("categories.title DESC"))
+      end
+    else
+      transactions = transactions.order(created_at: :desc) # Default sorting by newest first
     end
     transactions
   end

@@ -1,0 +1,234 @@
+<%= form_with url: all_sub_account_transactions_path, method: :get, local: true, html: { class: 'centered-form mb-1' } do %>
+  <div class="input-group">
+    <%= text_field_tag :search, params[:search], class: "form-control", placeholder: "Search by title" %>
+    <div class="input-group-append">
+      <%= submit_tag "Search", class: "btn btn-outline-secondary" %>
+    </div>
+  </div>
+<% end %>
+<div class="accordion centered-form" id="filterAccordion">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingFilters">
+      <button class="accordion-button collapsed p-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilters" aria-expanded="false" aria-controls="collapseFilters">
+        Filters
+      </button>
+    </h2>
+    <div id="collapseFilters" class="accordion-collapse collapse" aria-labelledby="headingFilters" data-bs-parent="#filterAccordion">
+      <div class="accordion-body">
+        <%= form_with url: all_sub_account_transactions_path, method: :get, local: true do %>
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <%= label_tag :start_date, "Start Date" %>
+                <%= date_field_tag :start_date, params[:start_date], class: "form-control" %>
+              </div>
+              <div class="form-group">
+                <%= label_tag :end_date, "End Date" %>
+                <%= date_field_tag :end_date, params[:end_date], class: "form-control" %>
+              </div>
+              <div class="form-group">
+                <%= label_tag :month, "Month" %>
+                <%= month_field_tag :month, params[:month], class: "form-control" %>
+              </div>
+            </div>
+            <% if selected_columns && selected_columns.include?('account') %>
+              <div class="col-12 mt-1">
+                <div class="form-group">
+                  <%= label_tag :sub_account_id, "By Account" %>
+                  <div class="checkbox-list">
+                    <div class="form-check">
+                      <%= check_box_tag 'sub_account_id[]', 'all', false, id: 'select_all_accounts', class: 'form-check-input' %>
+                      <%= label_tag 'select_all_accounts', 'Select All', class: 'form-check-label' %>
+                    </div>
+                    <% SubAccount.all.each do |sub_account| %>
+                      <div class="form-check">
+                        <%= check_box_tag 'sub_account_id[]', sub_account.id, params[:sub_account_id]&.include?(sub_account.id.to_s), id: "sub_account_#{sub_account.id}", class: 'form-check-input sub-account-checkbox' %>
+                        <%= label_tag "sub_account_#{sub_account.id}", sub_account.title, class: 'form-check-label' %>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+            <% if selected_columns && selected_columns.include?('creator') %>
+              <div class="col-12 mt-1">
+                <div class="form-group">
+                  <%= label_tag :creator_id, "By Creator" %>
+                  <div class="checkbox-list">
+                    <div class="form-check">
+                      <%= check_box_tag 'creator_id[]', 'all', false, id: 'select_all_creators', class: 'form-check-input' %>
+                      <%= label_tag 'select_all_creators', 'Select All', class: 'form-check-label' %>
+                    </div>
+                    <% User.all.each do |creator| %>
+                      <div class="form-check">
+                        <%= check_box_tag 'creator_id[]', creator.id, params[:creator_id]&.include?(creator.id.to_s), id: "creator_#{creator.id}", class: 'form-check-input creator-checkbox' %>
+                        <%= label_tag "creator_#{creator.id}", creator.full_name, class: 'form-check-label' %>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+            <% if selected_columns && selected_columns.include?('category') %>
+              <div class="col-12 mt-1">
+                <div class="form-group">
+                  <%= label_tag :category_id, "By Category" %>
+                  <div class="checkbox-list">
+                    <div class="form-check">
+                      <%= check_box_tag 'category_id[]', 'all', false, id: 'select_all_categories', class: 'form-check-input' %>
+                      <%= label_tag 'select_all_categories', 'Select All', class: 'form-check-label' %>
+                    </div>
+                    <% Category.all.each do |category| %>
+                      <div class="form-check">
+                        <%= check_box_tag 'category_id[]', category.id, params[:category_id]&.include?(category.id.to_s), id: "category_#{category.id}", class: 'form-check-input category-checkbox' %>
+                        <%= label_tag "category_#{category.id}", category.title, class: 'form-check-label' %>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          <hr class="my-3">
+          <div class="d-flex justify-content-between">
+            <%= submit_tag "Apply Filters", class: "btn btn-primary" %>
+            <%= link_to "Clear", all_sub_account_transactions_path, class: "btn btn-outline-secondary" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+  <div class="mb-3 centered-badge">
+  <% if params[:category_id].present? %>
+    <% Category.where(id: params[:category_id]).each do |category| %>
+      <span class="badge bg-info">
+        <%= category.title %>
+        <%= link_to "x", all_sub_account_transactions_path(params.permit!.to_h.except(:category_id)), class: "text-white ms-1", style: "text-decoration: none;" %>
+      </span>
+    <% end %>
+  <% end %>
+  <% if params[:sub_account_id].present? %>
+    <% SubAccount.where(id: params[:sub_account_id]).each do |sub_account| %>
+      <span class="badge bg-info">
+        <%= sub_account.title %>
+        <%= link_to "x", all_sub_account_transactions_path(params.permit!.to_h.except(:sub_account_id)), class: "text-white ms-1", style: "text-decoration: none;" %>
+      </span>
+    <% end %>
+  <% end %>
+  <% if params[:creator_id].present? %>
+    <% User.where(id: params[:creator_id]).each do |creator| %>
+      <span class="badge bg-info">
+        <%= creator.full_name %>
+        <%= link_to "x", all_sub_account_transactions_path(params.permit!.to_h.except(:creator_id)), class: "text-white ms-1", style: "text-decoration: none;" %>
+      </span>
+    <% end %>
+  <% end %>
+  <% if params[:start_date].present? && params[:end_date].present? %>
+    <span class="badge bg-info">
+      <%= "#{params[:start_date]} to #{params[:end_date]}" %>
+      <%= link_to "x", all_sub_account_transactions_path(params.permit!.to_h.except(:start_date, :end_date)), class: "text-white ms-1", style: "text-decoration: none;" %>
+    </span>
+  <% end %>
+  <% if params[:month].present? %>
+    <span class="badge bg-info">
+      <%= params[:month] %>
+      <%= link_to "x", all_sub_account_transactions_path(params.permit!.to_h.except(:month)), class: "text-white ms-1", style: "text-decoration: none;" %>
+    </span>
+  <% end %>
+</div>
+</div>
+
+<style>
+  .centered-form {
+    margin: 0 auto;
+    max-width: 400px;
+  }
+
+  .clear {
+    text-decoration: none;
+  }
+
+  .dropdown-menu {
+    min-width: 100px;
+  }
+
+  .form-control[multiple] {
+    height: auto;
+  }
+
+  .accordion-body .form-group {
+    margin-bottom: 1rem;
+  }
+
+  .accordion-body hr {
+    border: 0;
+    border-top: 2px solid #dee2e6;
+  }
+
+  .checkbox-list {
+    max-height: 150px; /* Adjust height to show 3 items */
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    padding: 0.5rem;
+    border-radius: 0.25rem;
+  }
+
+  .badge .text-white {
+    text-decoration: none;
+  }
+</style>
+
+<script>
+  document.addEventListener('turbo:load', function() {
+    // Select All functionality for Accounts
+    const selectAllAccounts = document.getElementById('select_all_accounts');
+    const accountCheckboxes = document.querySelectorAll('.sub-account-checkbox');
+    selectAllAccounts.addEventListener('change', function() {
+      accountCheckboxes.forEach(checkbox => {
+        checkbox.checked = selectAllAccounts.checked;
+      });
+    });
+
+    accountCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        if (!checkbox.checked) {
+          selectAllAccounts.checked = false;
+        }
+      });
+    });
+
+    // Select All functionality for Creators
+    const selectAllCreators = document.getElementById('select_all_creators');
+    const creatorCheckboxes = document.querySelectorAll('.creator-checkbox');
+    selectAllCreators.addEventListener('change', function() {
+      creatorCheckboxes.forEach(checkbox => {
+        checkbox.checked = selectAllCreators.checked;
+      });
+    });
+
+    creatorCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        if (!checkbox.checked) {
+          selectAllCreators.checked = false;
+        }
+      });
+    });
+
+    // Select All functionality for Categories
+    const selectAllCategories = document.getElementById('select_all_categories');
+    const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
+    selectAllCategories.addEventListener('change', function() {
+      categoryCheckboxes.forEach(checkbox => {
+        checkbox.checked = selectAllCategories.checked;
+      });
+    });
+
+    categoryCheckboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', function() {
+        if (!checkbox.checked) {
+          selectAllCategories.checked = false;
+        }
+      });
+    });
+  });
+</script>
