@@ -1,3 +1,4 @@
+<!-- Search form -->
 <%= form_with url: all_sub_account_transactions_path, method: :get, local: true, html: { class: 'centered-form mb-1' } do %>
   <div class="input-group">
     <%= text_field_tag :search, params[:search], class: "form-control", placeholder: "Search by title" %>
@@ -6,6 +7,8 @@
     </div>
   </div>
 <% end %>
+
+<!-- Filter Accordion -->
 <div class="accordion centered-form" id="filterAccordion">
   <div class="accordion-item">
     <h2 class="accordion-header" id="headingFilters">
@@ -92,50 +95,65 @@
           <hr class="my-3">
           <div class="d-flex justify-content-between">
             <%= submit_tag "Apply Filters", class: "btn btn-primary" %>
-            <%= link_to "Clear", all_sub_account_transactions_path, class: "btn btn-outline-secondary" %>
           </div>
         <% end %>
       </div>
     </div>
   </div>
-  <div class="mb-3 centered-badge">
-  <% if params[:category_id].present? %>
-    <% Category.where(id: params[:category_id]).each do |category| %>
-      <span class="badge bg-info">
-        <%= category.title %>
-        <%= link_to "x", all_sub_account_transactions_path(params.permit!.to_h.except(:category_id)), class: "text-white ms-1", style: "text-decoration: none;" %>
+
+  <!-- Filtered badges -->
+  <% if params[:category_id].present? || params[:sub_account_id].present? || params[:creator_id].present? || params[:start_date].present? || params[:end_date].present? || params[:month].present? %>
+    <div class="mb-3 centered-badge">
+      <% if params[:category_id].present? %>
+        <% Array(params[:category_id]).each do |category_id| %>
+          <% category = Category.find_by(id: category_id) %>
+          <% if category %>
+            <span class="badge bg-danger">
+              <%= category.title %>
+              <%= link_to "x", all_sub_account_transactions_path(params.permit!.to_h.except(:category_id).merge(category_id: Array(params[:category_id]) - [category_id])), class: "text-white ms-1", style: "text-decoration: none;" %>
+            </span>
+          <% end %>
+        <% end %>
+      <% end %>
+      <% if params[:sub_account_id].present? %>
+        <% Array(params[:sub_account_id]).each do |sub_account_id| %>
+          <% sub_account = SubAccount.find_by(id: sub_account_id) %>
+          <% if sub_account %>
+            <span class="badge bg-info">
+              <%= sub_account.title %>
+              <%= link_to "x", all_sub_account_transactions_path(params.permit!.to_h.except(:sub_account_id).merge(sub_account_id: Array(params[:sub_account_id]) - [sub_account_id])), class: "text-white ms-1", style: "text-decoration: none;" %>
+            </span>
+          <% end %>
+        <% end %>
+      <% end %>
+      <% if params[:creator_id].present? %>
+        <% Array(params[:creator_id]).each do |creator_id| %>
+          <% creator = User.find_by(id: creator_id) %>
+          <% if creator %>
+            <span class="badge bg-warning">
+              <%= creator.full_name %>
+              <%= link_to "x", all_sub_account_transactions_path(params.permit!.to_h.except(:creator_id).merge(creator_id: Array(params[:creator_id]) - [creator_id])), class: "text-white ms-1", style: "text-decoration: none;" %>
+            </span>
+          <% end %>
+        <% end %>
+      <% end %>
+      <% if params[:start_date].present? && params[:end_date].present? %>
+        <span class="badge bg-success">
+          <%= "#{params[:start_date]} to #{params[:end_date]}" %>
+          <%= link_to "x", all_sub_account_transactions_path(params.permit!.to_h.except(:start_date, :end_date)), class: "text-white ms-1", style: "text-decoration: none;" %>
+        </span>
+      <% end %>
+      <% if params[:month].present? %>
+        <span class="badge bg-success">
+          <%= params[:month] %>
+          <%= link_to "x", all_sub_account_transactions_path(params.permit!.to_h.except(:month)), class: "text-white ms-1", style: "text-decoration: none;" %>
+        </span>
+      <% end %>
+      <span class="badge bg-light">
+        <%= link_to "Clear All Filters", all_sub_account_transactions_path, class: "clear-filters text-primary", style: "text-decoration: none;" %>
       </span>
-    <% end %>
+    </div>
   <% end %>
-  <% if params[:sub_account_id].present? %>
-    <% SubAccount.where(id: params[:sub_account_id]).each do |sub_account| %>
-      <span class="badge bg-info">
-        <%= sub_account.title %>
-        <%= link_to "x", all_sub_account_transactions_path(params.permit!.to_h.except(:sub_account_id)), class: "text-white ms-1", style: "text-decoration: none;" %>
-      </span>
-    <% end %>
-  <% end %>
-  <% if params[:creator_id].present? %>
-    <% User.where(id: params[:creator_id]).each do |creator| %>
-      <span class="badge bg-info">
-        <%= creator.full_name %>
-        <%= link_to "x", all_sub_account_transactions_path(params.permit!.to_h.except(:creator_id)), class: "text-white ms-1", style: "text-decoration: none;" %>
-      </span>
-    <% end %>
-  <% end %>
-  <% if params[:start_date].present? && params[:end_date].present? %>
-    <span class="badge bg-info">
-      <%= "#{params[:start_date]} to #{params[:end_date]}" %>
-      <%= link_to "x", all_sub_account_transactions_path(params.permit!.to_h.except(:start_date, :end_date)), class: "text-white ms-1", style: "text-decoration: none;" %>
-    </span>
-  <% end %>
-  <% if params[:month].present? %>
-    <span class="badge bg-info">
-      <%= params[:month] %>
-      <%= link_to "x", all_sub_account_transactions_path(params.permit!.to_h.except(:month)), class: "text-white ms-1", style: "text-decoration: none;" %>
-    </span>
-  <% end %>
-</div>
 </div>
 
 <style>
@@ -175,6 +193,15 @@
 
   .badge .text-white {
     text-decoration: none;
+  }
+
+  .clear-filters {
+    color: #007bff;
+    text-decoration: none;
+  }
+
+  .clear-filters:hover {
+    text-decoration: underline;
   }
 </style>
 

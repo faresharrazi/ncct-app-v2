@@ -6,7 +6,7 @@
 <% else %>
 
   <div class="table-responsive" style="min-height: 600px;">
-    <table class="table table-striped table-sm" style="max-width: 800px; margin: 0 auto;">
+    <table class="table table-striped table-sm mt-2" style="max-width: 800px; margin: 0 auto;">
       <%= render 'sub_account_transactions/all_transactions_table_head', selected_columns: selected_columns %>
       <% transactions.each do |transaction| %>
         <%= render 'sub_account_transactions/transaction_body', transaction: transaction, selected_columns: selected_columns %>
