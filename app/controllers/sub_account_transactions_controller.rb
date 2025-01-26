@@ -24,6 +24,11 @@ class SubAccountTransactionsController < ApplicationController
     @transactions = search_transactions(@transactions)
     @transactions = filter_transactions(@transactions)
     @transactions = sort_transactions(@transactions)
+
+    # Filter options based on the current user's main account
+    @accounts = @main_account.sub_accounts
+    @creators = User.where(id: @transactions.pluck(:creator_id).uniq)
+    @categories = Category.where(id: @transactions.pluck(:category_id).uniq)
   end
 
   def show

@@ -43,7 +43,7 @@
                       <%= check_box_tag 'sub_account_id[]', 'all', false, id: 'select_all_accounts', class: 'form-check-input' %>
                       <%= label_tag 'select_all_accounts', 'Select All', class: 'form-check-label' %>
                     </div>
-                    <% SubAccount.all.each do |sub_account| %>
+                    <% @accounts.each do |sub_account| %>
                       <div class="form-check">
                         <%= check_box_tag 'sub_account_id[]', sub_account.id, params[:sub_account_id]&.include?(sub_account.id.to_s), id: "sub_account_#{sub_account.id}", class: 'form-check-input sub-account-checkbox' %>
                         <%= label_tag "sub_account_#{sub_account.id}", sub_account.title, class: 'form-check-label' %>
@@ -62,7 +62,7 @@
                       <%= check_box_tag 'creator_id[]', 'all', false, id: 'select_all_creators', class: 'form-check-input' %>
                       <%= label_tag 'select_all_creators', 'Select All', class: 'form-check-label' %>
                     </div>
-                    <% User.all.each do |creator| %>
+                    <% @creators.each do |creator| %>
                       <div class="form-check">
                         <%= check_box_tag 'creator_id[]', creator.id, params[:creator_id]&.include?(creator.id.to_s), id: "creator_#{creator.id}", class: 'form-check-input creator-checkbox' %>
                         <%= label_tag "creator_#{creator.id}", creator.full_name, class: 'form-check-label' %>
@@ -81,7 +81,7 @@
                       <%= check_box_tag 'category_id[]', 'all', false, id: 'select_all_categories', class: 'form-check-input' %>
                       <%= label_tag 'select_all_categories', 'Select All', class: 'form-check-label' %>
                     </div>
-                    <% Category.all.each do |category| %>
+                    <% @categories.each do |category| %>
                       <div class="form-check">
                         <%= check_box_tag 'category_id[]', category.id, params[:category_id]&.include?(category.id.to_s), id: "category_#{category.id}", class: 'form-check-input category-checkbox' %>
                         <%= label_tag "category_#{category.id}", category.title, class: 'form-check-label' %>
